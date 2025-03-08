@@ -58,7 +58,7 @@ const XMLUploader = () => {
 
       {error && <p className="text-red-500">{error}</p>}
 
-      {invoices !=[] && (
+      {invoices !==[] && (
         <InvoicesTable invoices={invoices} />
 
         /*<div className="bg-gray-100 p-2 mt-3 rounded text-sm">
