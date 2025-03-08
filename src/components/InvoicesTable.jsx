@@ -1,26 +1,70 @@
-const InvoicesTable = ({ invoices }) => {
+import React, { useRef } from "react";
+
+const InvoicesTable = ({ invoices, onDelete }) => {
   const head = ['Modelo', 'Marca', 'Color', 'Numero de Chasis', 'Numero de Motor', 'DUA', 'Año'];
+  const tableRef = useRef(null);
+
+  const copyTableToClipboard = () => {
+    if (!tableRef.current) return;
+
+    let tableText = "";
+    const rows = tableRef.current.querySelectorAll("tr");
+
+    rows.forEach((row) => {
+      let rowText = [];
+      row.querySelectorAll("td").forEach((cell) => {
+        rowText.push(cell.innerText.trim());
+      });
+      if (rowText.length > 0 && rowText.some((text) => text !== "")) {
+        // Add row only if it contains at least one non-empty value
+        tableText += rowText.join("\t") + "\n";
+      }
+    });
+
+    navigator.clipboard.writeText(tableText)
+      .then(() => alert("Table copied to clipboard!"))
+      .catch((err) => console.error("Failed to copy table:", err));
+    console.log(tableText);
+    
+  };
+  
   return (
-    <table className="invoices-table">
-      <thead className="invoices-table-header">
-        <tr>
-          {head.map((title) => (
-            <th className={title} key={title}>{title}</th>
-          ))}
-        </tr>
-      </thead>
-      <tbody className="invoices-list">
-        {invoices.map((invoice, index) => (
-          <tr key={index} className="invoice-item">
-            {invoice.map((item, index) => 
-              <td key={index}>
-                {item["cdc:Value"]}
-              </td>
-            )}
+    <div>
+      <button 
+        onClick={copyTableToClipboard} 
+        className="mb-2 px-3 py-2 bg-blue-500 text-white rounded-lg"
+      >
+        Copy Table
+      </button>
+      <table ref={tableRef} className="invoices-table">
+        <thead className="invoices-table-header">
+          <tr>
+            {head.map((title) => (
+              <th className={title} key={title}>{title}</th>
+            ))}
           </tr>
-        ))}
-      </tbody>
-  </table>
+        </thead>
+        <tbody className="invoices-list">
+          {invoices.map((invoice, index) => (
+            <tr id={index} key={index} className="invoice-item">
+              {invoice.map((item, index) => 
+                <td key={index}>
+                  {item["cdc:Value"]}
+                </td>
+              )}
+              <td className="border px-2 py-1 text-center">
+                <button
+                    onClick={() => onDelete(index)}
+                    className="ml-4 px-3 py-1 bg-red-500 text-white rounded-lg"
+                  >
+                    X
+                </button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+    </table>
+  </div>
   )
 }
 
