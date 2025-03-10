@@ -47,8 +47,9 @@ const InvoicesTable = ({ invoices, onDelete, selectedInvoices, onSelectInvoice }
               <td className="border border-gray-300 p-2 text-center">
                 <input
                   type="checkbox"
-                  checked={selectedInvoices.has(index)}
-                  onChange={() => onSelectInvoice(index)}
+                  checked={selectedInvoices.has(invoice[0]["cbc:ID"])}
+                  onChange={() => onSelectInvoice(invoice[0]["cbc:ID"])
+                  }
                 />
               </td>
               {invoice.map((item, index) => 

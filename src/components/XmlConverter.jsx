@@ -7,7 +7,7 @@ const XMLUploader = () => {
   const [invoices, setInvoices] = useState([]);
   const [error, setError] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedInvoices, setSelectedInvoices] = useState(new Set()); // Track selected invoices
+  const [selectedInvoices, setSelectedInvoices] = useState(new Set());
 
   const handleFileUpload = (event) => {
     const files= event.target.files;
@@ -106,25 +106,27 @@ const XMLUploader = () => {
     setInvoices((prevInvoices) => prevInvoices.filter((_, i) => i !== index));
   };
 
-  const toggleSelectInvoice = (index) => {
+  const toggleSelectInvoice = (invoiceId) => {
     setSelectedInvoices((prevSelected) => {
-      const newSelected = new Set(prevSelected);
-      if (newSelected.has(index)) {
-        newSelected.delete(index);
+      const newSet = new Set(prevSelected);
+      if (newSet.has(invoiceId)) {
+        newSet.delete(invoiceId); // Remove if already selected
       } else {
-        newSelected.add(index);
+        newSet.add(invoiceId); // Add if not selected
       }
-      return newSelected;
+      return newSet; // React detects Set changes correctly
     });
   };
 
-  const filteredInvoices = invoices.filter(
-    (invoice, index) =>
-      selectedInvoices.has(index) ||
+  const filteredInvoices = invoices.filter((invoice) => {
+    const invoiceIdObj = invoice.find((item) => item["cbc:ID"]);
+    const invoiceId = invoiceIdObj ? invoiceIdObj["cbc:ID"] : null;
+  
+    return selectedInvoices.has(invoiceId) ||
       invoice.some((item) =>
         String(item["cdc:Value"]).toLowerCase().includes(searchQuery.toLowerCase())
-      )
-  );
+      );
+  });
 
   return (
     <div className="p-4 border rounded-lg shadow-md w-96 mx-auto">
