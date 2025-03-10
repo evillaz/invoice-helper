@@ -1,7 +1,7 @@
 import React, { useRef } from "react";
 
-const InvoicesTable = ({ invoices, onDelete }) => {
-  const head = ['Modelo', 'Marca', 'Color', 'Numero de Chasis', 'Numero de Motor', 'DUA', 'Año'];
+const InvoicesTable = ({ invoices, onDelete, selectedInvoices, onSelectInvoice }) => {
+  const head = ['Select','Factura','Modelo', 'Marca', 'Color', 'Numero de Chasis', 'Numero de Motor', 'DUA', 'Año'];
   const tableRef = useRef(null);
 
   const copyTableToClipboard = () => {
@@ -16,7 +16,6 @@ const InvoicesTable = ({ invoices, onDelete }) => {
         rowText.push(cell.innerText.trim());
       });
       if (rowText.length > 0 && rowText.some((text) => text !== "")) {
-        // Add row only if it contains at least one non-empty value
         tableText += rowText.join("\t") + "\n";
       }
     });
@@ -24,8 +23,6 @@ const InvoicesTable = ({ invoices, onDelete }) => {
     navigator.clipboard.writeText(tableText)
       .then(() => alert("Table copied to clipboard!"))
       .catch((err) => console.error("Failed to copy table:", err));
-    console.log(tableText);
-    
   };
   
   return (
@@ -47,9 +44,16 @@ const InvoicesTable = ({ invoices, onDelete }) => {
         <tbody className="invoices-list">
           {invoices.map((invoice, index) => (
             <tr id={index} key={index} className="invoice-item">
+              <td className="border border-gray-300 p-2 text-center">
+                <input
+                  type="checkbox"
+                  checked={selectedInvoices.has(index)}
+                  onChange={() => onSelectInvoice(index)}
+                />
+              </td>
               {invoice.map((item, index) => 
                 <td key={index}>
-                  {item["cdc:Value"]}
+                  {item["cbc:ID"] || item["cdc:Value"]}
                 </td>
               )}
               <td className="border px-2 py-1 text-center">
