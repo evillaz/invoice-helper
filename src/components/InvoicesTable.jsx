@@ -12,7 +12,7 @@ const InvoicesTable = ({ invoices, onDelete, selectedInvoices, onSelectInvoice }
 
     rows.forEach((row) => {
       let rowText = [];
-      row.querySelectorAll("td").forEach((cell) => {
+      row.querySelectorAll("td:not(:has(input)):not(:has(button))").forEach((cell) => {
         rowText.push(cell.innerText.trim());
       });
       if (rowText.length > 0 && rowText.some((text) => text !== "")) {
@@ -47,7 +47,7 @@ const InvoicesTable = ({ invoices, onDelete, selectedInvoices, onSelectInvoice }
               <td className="border border-gray-300 p-2 text-center">
                 <input
                   type="checkbox"
-                  checked={selectedInvoices.has(invoice[0]["cbc:ID"])}
+                  checked={selectedInvoices.some((selected) => selected[0]["cbc:ID"] === invoice[0]["cbc:ID"])}
                   onChange={() => onSelectInvoice(invoice[0]["cbc:ID"])
                   }
                 />
@@ -59,7 +59,7 @@ const InvoicesTable = ({ invoices, onDelete, selectedInvoices, onSelectInvoice }
               )}
               <td className="border px-2 py-1 text-center">
                 <button
-                    onClick={() => onDelete(index)}
+                    onClick={() => onDelete(invoice[0]["cbc:ID"])}
                     className="ml-4 px-3 py-1 bg-red-500 text-white rounded-lg"
                   >
                     X
