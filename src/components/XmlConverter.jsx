@@ -1,17 +1,22 @@
 import React, { useState } from "react";
 import { XMLParser } from "fast-xml-parser";
+import { useDispatch, useSelector } from "react-redux";
+import { addInvoices, toggleSelectInvoice, removeInvoice } from "../redux/invoiceSlice";
+import { useNavigate } from "react-router-dom";
 import InvoicesTable from "./InvoicesTable";
 import SearchBar from "./SearchBar";
 
 const XMLUploader = () => {
-  const [invoices, setInvoices] = useState([]);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const invoices = useSelector((state) => state.invoices.invoices);
+  const selectedInvoices = useSelector((state) => state.invoices.selectedInvoices);
   const [error, setError] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedInvoices, setSelectedInvoices] = useState(new Set());
-
+  
   const handleFileUpload = (event) => {
-    const files= event.target.files;
-    Array.from(files).forEach(file => {
+    const files = event.target.files;
+    Array.from(files).forEach((file) => {
       if (!file) return;
 
       if (file.type !== "text/xml" && !file.name.endsWith(".xml")) {
@@ -24,11 +29,19 @@ const XMLUploader = () => {
         try {
           const parser = new XMLParser();
           const jsonObj = parser.parse(e.target.result);
-          
+
           const additionalProps =
             jsonObj?.Invoice?.["ext:UBLExtensions"]?.["ext:UBLExtension"]?.[0]
                             ?.["ext:ExtensionContent"]?.["biz:AdditionalInformation"]
                             ?.["biz:AdditionalProperty"] || [];
+          
+          const uniqueAdditionalProps = additionalProps.reduce((acc, item) => {
+            if (!acc.some((existing) => existing["cdc:ID"] === item["cdc:ID"])) {
+              acc.push(item);
+            }
+            return acc;
+          }, []);
+          
           const invoiceID = jsonObj?.Invoice?.["cbc:ID"];
               
           const invoicePattern = /^(FC|FE)\d+-\d+$/;
@@ -52,7 +65,7 @@ const XMLUploader = () => {
           }
           const backupModel = getModelFromDescription(jsonObj);
           
-          const filtered = additionalProps
+          const filtered = uniqueAdditionalProps
             .filter((item) => Object.keys(attributeMapping).includes(String(item["cdc:ID"])))
             .map((item) => ({
               ...item,
@@ -75,46 +88,15 @@ const XMLUploader = () => {
           
 
           const result = validInvoiceID ? [validInvoiceID, ...sortedFiltered] : filtered;
-
-          const newInvoiceID = validInvoiceID?.["cbc:ID"];
           
-          setInvoices((prevInvoices) => {
-            const isDuplicate = prevInvoices.some((invoice) =>
-              invoice.some((item) => item["cbc:ID"] === newInvoiceID)
-            );
-
-            if (isDuplicate) {
-              alert("This invoice "+newInvoiceID+" has already been uploaded!");
-              return prevInvoices;
-            }
-
-            return [...prevInvoices, result];
-          });
-          
+          dispatch(addInvoices([result]));
           setError("");
         } catch (err) {
           setError("Error parsing XML file.");
         }
       };
       reader.readAsText(file);
-      event.target.value='';
-    });
-  };
-  
-  
-  const deleteInvoice = (index) => {
-    setInvoices((prevInvoices) => prevInvoices.filter((_, i) => i !== index));
-  };
-
-  const toggleSelectInvoice = (invoiceId) => {
-    setSelectedInvoices((prevSelected) => {
-      const newSet = new Set(prevSelected);
-      if (newSet.has(invoiceId)) {
-        newSet.delete(invoiceId); // Remove if already selected
-      } else {
-        newSet.add(invoiceId); // Add if not selected
-      }
-      return newSet; // React detects Set changes correctly
+      event.target.value = "";
     });
   };
 
@@ -122,27 +104,37 @@ const XMLUploader = () => {
     const invoiceIdObj = invoice.find((item) => item["cbc:ID"]);
     const invoiceId = invoiceIdObj ? invoiceIdObj["cbc:ID"] : null;
   
-    return selectedInvoices.has(invoiceId) ||
-      invoice.some((item) =>
-        String(item["cdc:Value"]).toLowerCase().includes(searchQuery.toLowerCase())
-      );
+    const isSelected = selectedInvoices.some(
+      (selectedInvoice) => selectedInvoice[0]["cbc:ID"] === invoiceId
+    );
+  
+    return isSelected || invoice.some((item) =>
+      String(item["cdc:Value"]).toLowerCase().includes(searchQuery.toLowerCase())
+    );
   });
 
   return (
     <div className="p-4 border rounded-lg shadow-md w-96 mx-auto">
       <h2 className="text-xl font-bold mb-2">Upload XML File</h2>
-
       <input type="file" multiple accept=".xml" onChange={handleFileUpload} className="mb-3" />
 
       {error && <p className="text-red-500">{error}</p>}
       <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
 
+      <button
+        className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
+        onClick={() => navigate("/poaGenerator")}
+        disabled={selectedInvoices.length === 0}
+      >
+        Generate POA
+      </button>
+
       {invoices.length > 0 && (
         <InvoicesTable
           invoices={filteredInvoices}
-          onDelete={deleteInvoice}
           selectedInvoices={selectedInvoices}
-          onSelectInvoice={toggleSelectInvoice}
+          onSelectInvoice={(id) => dispatch(toggleSelectInvoice(id))}
+          onDelete={(id) => dispatch(removeInvoice(id))}
         />
       )}
     </div>
