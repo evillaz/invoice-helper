@@ -5,11 +5,10 @@ import POAGenerator from './components/POAGenerator';
 import './styles/style.css';
 
 function App() {
-
   return (
     <>
       <Routes>
-        <Route path="/" element={<XmlConverter />}/>
+        <Route path="/" element={<XmlConverter />} />
         <Route path="/poaGenerator" element={<POAGenerator />} />
       </Routes>
     </>
