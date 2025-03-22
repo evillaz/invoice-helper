@@ -1,5 +1,5 @@
-import { configureStore } from "@reduxjs/toolkit";
-import invoiceReducer from "./invoiceSlice";
+import { configureStore } from '@reduxjs/toolkit';
+import invoiceReducer from './invoiceSlice';
 
 const store = configureStore({
   reducer: {

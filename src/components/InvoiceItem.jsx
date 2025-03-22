@@ -41,6 +41,7 @@ InvoiceItem.propTypes = {
       'cdc:Value': PropTypes.string, // Opcional si el valor puede ser null o undefined
     }),
   ).isRequired,
+  key: PropTypes.string.isRequired,
 };
 
 export default InvoiceItem;

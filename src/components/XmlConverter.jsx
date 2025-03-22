@@ -16,6 +16,8 @@ const XMLUploader = () => {
 
   const handleFileUpload = (event) => {
     const { files } = event.target;
+    const inputElement = event.target;
+
     Array.from(files).forEach((file) => {
       if (!file) return;
 
@@ -94,7 +96,7 @@ const XMLUploader = () => {
         }
       };
       reader.readAsText(file);
-      event.target.value = '';
+      inputElement.value = '';
     });
   };
 
@@ -118,6 +120,7 @@ const XMLUploader = () => {
       <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
 
       <button
+        type="button"
         className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
         onClick={() => navigate('/poaGenerator')}
         disabled={selectedInvoices.length === 0}
