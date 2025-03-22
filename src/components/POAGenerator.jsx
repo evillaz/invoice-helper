@@ -8,8 +8,6 @@ const POAGenerator = () => {
   const invoices = useSelector((state) => state.invoices.invoices);
   const selectedInvoices = useSelector((state) => state.invoices.selectedInvoices);
 
-  console.log(invoices);
-  console.log(selectedInvoices);
 
   return (
     <div>
