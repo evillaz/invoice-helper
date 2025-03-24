@@ -1,9 +1,10 @@
 import PropTypes from 'prop-types';
 import React, { useRef } from 'react';
 import InvoiceItem from './InvoiceItem';
+import TableHeader from './TableHeader';
 
 const InvoicesTable = ({ invoices }) => {
-  const head = ['Select', 'Factura', 'Modelo', 'Marca', 'Color', 'Numero de Chasis', 'Numero de Motor', 'DUA', 'Año'];
+  const header = ['Select', 'Factura', 'Modelo', 'Marca', 'Color', 'Numero de Chasis', 'Numero de Motor', 'DUA', 'Año'];
   const tableRef = useRef(null);
 
   const copyTableToClipboard = () => {
@@ -38,15 +39,13 @@ const InvoicesTable = ({ invoices }) => {
       </button>
       <table ref={tableRef} className="invoices-table">
         <thead className="invoices-table-header">
-          <tr>
-            {head.map((title) => (
-              <th className={title} key={title}>{title}</th>
-            ))}
-          </tr>
+          <TableHeader headerData={header} />
         </thead>
         <tbody className="invoices-list">
           {invoices.map((invoice) => (
-            <InvoiceItem invoice={invoice} key={invoice[0]['cbc:ID']} />
+            <tr id={`${invoice[0]['cbc:ID']}-row`} key={invoice[0]['cbc:ID']} className="invoice-item">
+              <InvoiceItem invoice={invoice} key={invoice[0]['cbc:ID']} />
+            </tr>
           ))}
         </tbody>
       </table>
