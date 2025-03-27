@@ -6,7 +6,7 @@ import InvoiceItem from './InvoiceItem';
 
 const POAGenerator = () => {
   const navigate = useNavigate();
-  const selectedInvoices = useSelector((state) => state.invoices.selectedInvoices);
+  const selectedInvoices = useSelector((state) => state.xmlInvoices.selectedInvoices);
 
   const prevData = ['Factura', 'Modelo', 'Marca', 'Color', 'Numero de Chasis', 'Numero de Motor', 'DUA', 'Año'];
 
