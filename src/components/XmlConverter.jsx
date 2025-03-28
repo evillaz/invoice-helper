@@ -2,15 +2,16 @@ import React, { useState } from 'react';
 import { XMLParser } from 'fast-xml-parser';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { addInvoices } from '../redux/invoiceSlice';
+import { addXMLInvoices } from '../redux/xmlInvoicesSlice';
 import InvoicesTable from './InvoicesTable';
 import SearchBar from './SearchBar';
+import SaveInvoicesButton from './SaveInvoicesButton';
 
 const XMLUploader = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const invoices = useSelector((state) => state.invoices.invoices);
-  const selectedInvoices = useSelector((state) => state.invoices.selectedInvoices);
+  const invoices = useSelector((state) => state.xmlInvoices.xmlInvoices);
+  const selectedInvoices = useSelector((state) => state.xmlInvoices.selectedInvoices);
   const [error, setError] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -31,7 +32,6 @@ const XMLUploader = () => {
         try {
           const parser = new XMLParser();
           const jsonObj = parser.parse(e.target.result);
-
           const additionalProps = jsonObj?.Invoice?.['ext:UBLExtensions']?.['ext:UBLExtension']?.[0]
             ?.['ext:ExtensionContent']?.['biz:AdditionalInformation']
             ?.['biz:AdditionalProperty'] || [];
@@ -42,7 +42,6 @@ const XMLUploader = () => {
             }
             return acc;
           }, []);
-
           const invoiceID = jsonObj?.Invoice?.['cbc:ID'];
 
           const invoicePattern = /^(FC|FE)\d+-\d+$/;
@@ -51,13 +50,13 @@ const XMLUploader = () => {
 
           const desiredOrder = [9074, 9249, 9071, 9073, 9072, 9394, 9070];
           const attributeMapping = {
-            9074: 'Modelo',
-            9249: 'Marca',
-            9071: 'Color',
-            9073: 'Numero de Chasis',
-            9072: 'Numero de Motor',
-            9394: 'DUA',
-            9070: 'Año',
+            9074: 'modelo',
+            9249: 'marca',
+            9071: 'color',
+            9073: 'numero_de_chasis',
+            9072: 'numero_de_motor',
+            9394: 'dua',
+            9070: 'anio',
           };
 
           const getModelFromDescription = (jsonObj) => {
@@ -87,9 +86,14 @@ const XMLUploader = () => {
             (a, b) => desiredOrder.indexOf(a['cdc:ID']) - desiredOrder.indexOf(b['cdc:ID']),
           );
 
-          const result = validInvoiceID ? [validInvoiceID, ...sortedFiltered] : filtered;
-
-          dispatch(addInvoices([result]));
+          const finalObject = sortedFiltered.reduce((acc, item) => {
+            acc[item.attribute] = item['cdc:Value'];
+            return acc;
+          }, {});
+          const result = validInvoiceID
+            ? { factura: invoiceID, ...finalObject }
+            : finalObject;
+          dispatch(addXMLInvoices([result]));
           setError('');
         } catch (err) {
           setError('Error parsing XML file.');
@@ -101,15 +105,15 @@ const XMLUploader = () => {
   };
 
   const filteredInvoices = invoices.filter((invoice) => {
-    const invoiceIdObj = invoice.find((item) => item['cbc:ID']);
-    const invoiceId = invoiceIdObj ? invoiceIdObj['cbc:ID'] : null;
-
-    const isSelected = selectedInvoices.some(
-      (selectedInvoice) => selectedInvoice[0]['cbc:ID'] === invoiceId,
+    const invoiceId = invoice?.factura;
+    return (
+      selectedInvoices.some((selected) => selected.factura === invoiceId)
+      || Object.values(invoice).some((item) => typeof item === 'string' && item.toLowerCase().includes(searchQuery.toLowerCase()))
     );
-
-    return isSelected || invoice.some((item) => String(item['cdc:Value']).toLowerCase().includes(searchQuery.toLowerCase()));
   });
+
+  console.log(invoices);
+  console.log(selectedInvoices);
 
   return (
     <div className="p-4 border rounded-lg shadow-md w-96 mx-auto">
@@ -127,7 +131,7 @@ const XMLUploader = () => {
       >
         Generate POA
       </button>
-
+      <SaveInvoicesButton />
       {invoices.length > 0 && (
         <InvoicesTable invoices={filteredInvoices} />
       )}
