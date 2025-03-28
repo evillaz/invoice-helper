@@ -43,8 +43,8 @@ const InvoicesTable = ({ invoices }) => {
         </thead>
         <tbody className="invoices-list">
           {invoices.map((invoice) => (
-            <tr id={`${invoice[0]['cbc:ID']}-row`} key={invoice[0]['cbc:ID']} className="invoice-item">
-              <InvoiceItem invoice={invoice} key={invoice[0]['cbc:ID']} />
+            <tr id={`${invoice.factura}-row`} key={invoice.factura} className="invoice-item">
+              <InvoiceItem invoice={invoice} key={`item ${invoice.factura}`} />
             </tr>
           ))}
         </tbody>

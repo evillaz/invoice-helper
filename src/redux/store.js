@@ -1,9 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit';
-import invoiceReducer from './invoiceSlice';
+import xmlInvoiceReducer from './xmlInvoicesSlice';
+import databaseInvoiceReducer from './databaseInvoiceSlice';
 
 const store = configureStore({
   reducer: {
-    invoices: invoiceReducer,
+    xmlInvoices: xmlInvoiceReducer,
+    databaseInvoices: databaseInvoiceReducer,
   },
 });
 
