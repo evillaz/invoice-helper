@@ -4,16 +4,22 @@ import { Routes, Route } from 'react-router-dom';
 import XmlConverter from './components/XmlConverter';
 import POAGenerator from './components/POAGenerator';
 import './styles/style.css';
-import { fetchInvoices } from './redux/databaseInvoiceSlice';
+import { fetchInvoices, clearMessage } from './redux/invoicesSlice';
 
 function App() {
   const dispatch = useDispatch();
+  const { message } = useSelector((state) => state.invoices);
 
   useEffect(() => {
     dispatch(fetchInvoices());
   }, [dispatch]);
-  const invoices = useSelector((state) => state.databaseInvoices.invoices);
-  console.log(invoices);
+
+  useEffect(() => {
+    if (message) {
+      alert(message); // Example: Show an alert
+      dispatch(clearMessage()); // Clear after showing
+    }
+  }, [message, dispatch]);
 
   return (
     <>

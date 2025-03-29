@@ -1,11 +1,10 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { saveInvoicesToDB } from '../redux/databaseInvoiceSlice';
+import { saveInvoicesToDB } from '../redux/invoicesSlice';
 
 const SaveInvoicesButton = () => {
   const dispatch = useDispatch();
-  const { status } = useSelector((state) => state.databaseInvoices);
-  console.log(status);
+  const { status } = useSelector((state) => state.invoices);
 
   const handleSave = () => {
     dispatch(saveInvoicesToDB());

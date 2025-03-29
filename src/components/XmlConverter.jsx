@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { XMLParser } from 'fast-xml-parser';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { addXMLInvoices } from '../redux/xmlInvoicesSlice';
+import { addXMLInvoices } from '../redux/invoicesSlice';
 import InvoicesTable from './InvoicesTable';
 import SearchBar from './SearchBar';
 import SaveInvoicesButton from './SaveInvoicesButton';
@@ -10,8 +10,8 @@ import SaveInvoicesButton from './SaveInvoicesButton';
 const XMLUploader = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const invoices = useSelector((state) => state.xmlInvoices.xmlInvoices);
-  const selectedInvoices = useSelector((state) => state.xmlInvoices.selectedInvoices);
+  const invoices = useSelector((state) => state.invoices.invoices);
+  const selectedInvoices = useSelector((state) => state.invoices.selectedInvoices);
   const [error, setError] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -78,7 +78,7 @@ const XMLUploader = () => {
             filtered.push({
               'cdc:ID': 9074,
               'cdc:Value': backupModel,
-              attribute: 'Modelo',
+              attribute: 'modelo',
             });
           }
 
@@ -111,9 +111,6 @@ const XMLUploader = () => {
       || Object.values(invoice).some((item) => typeof item === 'string' && item.toLowerCase().includes(searchQuery.toLowerCase()))
     );
   });
-
-  console.log(invoices);
-  console.log(selectedInvoices);
 
   return (
     <div className="p-4 border rounded-lg shadow-md w-96 mx-auto">

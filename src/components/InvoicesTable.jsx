@@ -55,12 +55,16 @@ const InvoicesTable = ({ invoices }) => {
 
 InvoicesTable.propTypes = {
   invoices: PropTypes.arrayOf(
-    PropTypes.arrayOf(
-      PropTypes.shape({
-        'cbc:ID': PropTypes.string.isRequired,
-        'cdc:Value': PropTypes.string,
-      }),
-    ),
+    PropTypes.shape({
+      factura: PropTypes.string.isRequired,
+      modelo: PropTypes.string.isRequired,
+      marca: PropTypes.string.isRequired,
+      color: PropTypes.string.isRequired,
+      numero_de_chasis: PropTypes.string.isRequired,
+      numero_de_motor: PropTypes.string.isRequired,
+      dua: PropTypes.string.isRequired,
+      anio: PropTypes.number.isRequired,
+    }),
   ).isRequired,
 };
 

@@ -1,10 +1,20 @@
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
-import { toggleSelectXMLInvoice, removeXMLInvoice } from '../redux/xmlInvoicesSlice';
+import { toggleSelectInvoice, deleteInvoiceFromDB, removeInvoice } from '../redux/invoicesSlice';
 
 const InvoiceItem = ({ invoice, isPOAGenerator }) => {
   const dispatch = useDispatch();
-  const selectedInvoices = useSelector((state) => state.xmlInvoices.selectedInvoices);
+  const selectedInvoices = useSelector((state) => state.invoices.selectedInvoices);
+
+  const handleSelect = (invoiceId) => {
+    dispatch(toggleSelectInvoice(invoiceId));
+  };
+
+  const handleDelete = (invoice) => (
+    invoice.savedToDB === true
+      ? dispatch(deleteInvoiceFromDB(invoice.factura))
+      : dispatch(removeInvoice(invoice.factura))
+  );
 
   return (
     <>
@@ -13,7 +23,7 @@ const InvoiceItem = ({ invoice, isPOAGenerator }) => {
           <input
             type="checkbox"
             checked={selectedInvoices.some((selected) => selected.factura === invoice.factura)}
-            onChange={() => dispatch(toggleSelectXMLInvoice(invoice.factura))}
+            onChange={() => handleSelect(invoice.factura)}
             aria-label={`Seleccionar factura ${invoice.factura}`}
           />
         </td>
@@ -27,7 +37,7 @@ const InvoiceItem = ({ invoice, isPOAGenerator }) => {
         <td className="border px-2 py-1 text-center">
           <button
             type="button"
-            onClick={() => dispatch(removeXMLInvoice(invoice.factura))}
+            onClick={() => handleDelete(invoice)}
             className="ml-4 px-3 py-1 bg-red-500 text-white rounded-lg"
           >
             X
@@ -41,8 +51,14 @@ const InvoiceItem = ({ invoice, isPOAGenerator }) => {
 InvoiceItem.propTypes = {
   invoice: PropTypes.arrayOf(
     PropTypes.shape({
-      'cbc:ID': PropTypes.string.isRequired,
-      'cdc:Value': PropTypes.string,
+      factura: PropTypes.string.isRequired,
+      modelo: PropTypes.string.isRequired,
+      marca: PropTypes.string.isRequired,
+      color: PropTypes.string.isRequired,
+      numero_de_chasis: PropTypes.string.isRequired,
+      numero_de_motor: PropTypes.string.isRequired,
+      dua: PropTypes.string.isRequired,
+      anio: PropTypes.number.isRequired,
     }),
   ).isRequired,
   isPOAGenerator: PropTypes.bool,
