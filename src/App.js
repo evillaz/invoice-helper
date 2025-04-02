@@ -4,14 +4,14 @@ import { Routes, Route } from 'react-router-dom';
 import XmlConverter from './components/XmlConverter';
 import POAGenerator from './components/POAGenerator';
 import './styles/style.css';
-import { fetchInvoices, clearMessage } from './redux/invoicesSlice';
+import { fetchMotorcycles, clearMessage } from './redux/motorcyclesSlice';
 
 function App() {
   const dispatch = useDispatch();
-  const { message } = useSelector((state) => state.invoices);
+  const { message } = useSelector((state) => state.motorcycles);
 
   useEffect(() => {
-    dispatch(fetchInvoices());
+    dispatch(fetchMotorcycles());
   }, [dispatch]);
 
   useEffect(() => {

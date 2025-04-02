@@ -2,16 +2,16 @@ import React, { useState } from 'react';
 import { XMLParser } from 'fast-xml-parser';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { addXMLInvoices } from '../redux/invoicesSlice';
-import InvoicesTable from './InvoicesTable';
+import { addXMLMotorcycles } from '../redux/motorcyclesSlice';
+import MotorcyclesTable from './MotorcycleTable';
 import SearchBar from './SearchBar';
-import SaveInvoicesButton from './SaveInvoicesButton';
+import SaveMotorcyclesButton from './SaveMotorcyclesButton';
 
 const XMLUploader = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const invoices = useSelector((state) => state.invoices.invoices);
-  const selectedInvoices = useSelector((state) => state.invoices.selectedInvoices);
+  const motorcycles = useSelector((state) => state.motorcycles.motorcycles);
+  const selectedMotorcycles = useSelector((state) => state.motorcycles.selectedMotorcycles);
   const [error, setError] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -93,7 +93,7 @@ const XMLUploader = () => {
           const result = validInvoiceID
             ? { factura: invoiceID, ...finalObject }
             : finalObject;
-          dispatch(addXMLInvoices([result]));
+          dispatch(addXMLMotorcycles([result]));
           setError('');
         } catch (err) {
           setError('Error parsing XML file.');
@@ -104,11 +104,11 @@ const XMLUploader = () => {
     });
   };
 
-  const filteredInvoices = invoices.filter((invoice) => {
-    const invoiceId = invoice?.factura;
+  const filteredMotorcycles = motorcycles.filter((motorcycle) => {
+    const invoiceId = motorcycle?.factura;
     return (
-      selectedInvoices.some((selected) => selected.factura === invoiceId)
-      || Object.values(invoice).some((item) => typeof item === 'string' && item.toLowerCase().includes(searchQuery.toLowerCase()))
+      selectedMotorcycles.some((selected) => selected.factura === invoiceId)
+      || Object.values(motorcycle).some((item) => typeof item === 'string' && item.toLowerCase().includes(searchQuery.toLowerCase()))
     );
   });
 
@@ -124,13 +124,13 @@ const XMLUploader = () => {
         type="button"
         className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
         onClick={() => navigate('/poaGenerator')}
-        disabled={selectedInvoices.length === 0}
+        disabled={selectedMotorcycles.length === 0}
       >
         Generate POA
       </button>
-      <SaveInvoicesButton />
-      {invoices.length > 0 && (
-        <InvoicesTable invoices={filteredInvoices} />
+      <SaveMotorcyclesButton />
+      {motorcycles.length > 0 && (
+        <MotorcyclesTable motorcycles={filteredMotorcycles} />
       )}
     </div>
   );
