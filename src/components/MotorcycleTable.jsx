@@ -1,9 +1,9 @@
 import PropTypes from 'prop-types';
 import React, { useRef } from 'react';
-import InvoiceItem from './InvoiceItem';
+import MotorcycleItem from './MotorcycleItem';
 import TableHeader from './TableHeader';
 
-const InvoicesTable = ({ invoices }) => {
+const MotorcyclesTable = ({ motorcycles }) => {
   const header = ['Select', 'Factura', 'Modelo', 'Marca', 'Color', 'Numero de Chasis', 'Numero de Motor', 'DUA', 'Año'];
   const tableRef = useRef(null);
 
@@ -37,14 +37,14 @@ const InvoicesTable = ({ invoices }) => {
       >
         Copy Table
       </button>
-      <table ref={tableRef} className="invoices-table">
-        <thead className="invoices-table-header">
+      <table ref={tableRef} className="motorcycles-table">
+        <thead className="motorcycles-table-header">
           <TableHeader headerData={header} />
         </thead>
-        <tbody className="invoices-list">
-          {invoices.map((invoice) => (
-            <tr id={`${invoice.factura}-row`} key={invoice.factura} className="invoice-item">
-              <InvoiceItem invoice={invoice} key={`item ${invoice.factura}`} />
+        <tbody className="motorcycles-list">
+          {motorcycles.map((motorcycle) => (
+            <tr id={`${motorcycle.factura}-row`} key={motorcycle.factura} className="motorcycle-item">
+              <MotorcycleItem motorcycle={motorcycle} key={`item ${motorcycle.factura}`} />
             </tr>
           ))}
         </tbody>
@@ -53,8 +53,8 @@ const InvoicesTable = ({ invoices }) => {
   );
 };
 
-InvoicesTable.propTypes = {
-  invoices: PropTypes.arrayOf(
+MotorcyclesTable.propTypes = {
+  motorcycles: PropTypes.arrayOf(
     PropTypes.shape({
       factura: PropTypes.string.isRequired,
       modelo: PropTypes.string.isRequired,
@@ -68,4 +68,4 @@ InvoicesTable.propTypes = {
   ).isRequired,
 };
 
-export default InvoicesTable;
+export default MotorcyclesTable;

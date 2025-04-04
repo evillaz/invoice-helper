@@ -1,19 +1,19 @@
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
-import { toggleSelectInvoice, deleteInvoiceFromDB, removeInvoice } from '../redux/invoicesSlice';
+import { toggleSelectMotorcycle, deleteMotorcycleFromDB, removeMotorcycle } from '../redux/motorcyclesSlice';
 
-const InvoiceItem = ({ invoice, isPOAGenerator }) => {
+const MotorcycleItem = ({ motorcycle, isPOAGenerator }) => {
   const dispatch = useDispatch();
-  const selectedInvoices = useSelector((state) => state.invoices.selectedInvoices);
+  const selectedMotorcycles = useSelector((state) => state.motorcycles.selectedMotorcycles);
 
-  const handleSelect = (invoiceId) => {
-    dispatch(toggleSelectInvoice(invoiceId));
+  const handleSelect = (motorcycleId) => {
+    dispatch(toggleSelectMotorcycle(motorcycleId));
   };
 
-  const handleDelete = (invoice) => (
-    invoice.savedToDB === true
-      ? dispatch(deleteInvoiceFromDB(invoice.factura))
-      : dispatch(removeInvoice(invoice.factura))
+  const handleDelete = (motorcycleId) => (
+    motorcycle.savedToDB === true
+      ? dispatch(deleteMotorcycleFromDB(motorcycleId))
+      : dispatch(removeMotorcycle(motorcycleId))
   );
 
   return (
@@ -22,13 +22,15 @@ const InvoiceItem = ({ invoice, isPOAGenerator }) => {
         <td className="border border-gray-300 p-2 text-center">
           <input
             type="checkbox"
-            checked={selectedInvoices.some((selected) => selected.factura === invoice.factura)}
-            onChange={() => handleSelect(invoice.factura)}
-            aria-label={`Seleccionar factura ${invoice.factura}`}
+            checked={selectedMotorcycles.some(
+              (selected) => selected.factura === motorcycle.factura,
+            )}
+            onChange={() => handleSelect(motorcycle.factura)}
+            aria-label={`Seleccionar factura ${motorcycle.factura}`}
           />
         </td>
       )}
-      {Object.entries(invoice).map(([key, value]) => (
+      {Object.entries(motorcycle).map(([key, value]) => (
         <td key={key}>
           {value}
         </td>
@@ -37,7 +39,7 @@ const InvoiceItem = ({ invoice, isPOAGenerator }) => {
         <td className="border px-2 py-1 text-center">
           <button
             type="button"
-            onClick={() => handleDelete(invoice)}
+            onClick={() => handleDelete(motorcycle.factura)}
             className="ml-4 px-3 py-1 bg-red-500 text-white rounded-lg"
           >
             X
@@ -48,8 +50,8 @@ const InvoiceItem = ({ invoice, isPOAGenerator }) => {
   );
 };
 
-InvoiceItem.propTypes = {
-  invoice: PropTypes.arrayOf(
+MotorcycleItem.propTypes = {
+  motorcycle: PropTypes.arrayOf(
     PropTypes.shape({
       factura: PropTypes.string.isRequired,
       modelo: PropTypes.string.isRequired,
@@ -64,8 +66,8 @@ InvoiceItem.propTypes = {
   isPOAGenerator: PropTypes.bool,
 };
 
-InvoiceItem.defaultProps = {
+MotorcycleItem.defaultProps = {
   isPOAGenerator: false,
 };
 
-export default InvoiceItem;
+export default MotorcycleItem;
