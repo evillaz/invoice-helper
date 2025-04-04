@@ -2,24 +2,28 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Routes, Route } from 'react-router-dom';
 import XmlConverter from './components/XmlConverter';
-import POAGenerator from './components/POAGenerator';
 import './styles/style.css';
-import { fetchInvoices } from './redux/databaseInvoiceSlice';
+import { fetchMotorcycles, clearMessage } from './redux/motorcyclesSlice';
 
 function App() {
   const dispatch = useDispatch();
+  const { message } = useSelector((state) => state.motorcycles);
 
   useEffect(() => {
-    dispatch(fetchInvoices());
+    dispatch(fetchMotorcycles());
   }, [dispatch]);
-  const invoices = useSelector((state) => state.databaseInvoices.invoices);
-  console.log(invoices);
+
+  useEffect(() => {
+    if (message) {
+      alert(message); // Example: Show an alert
+      dispatch(clearMessage()); // Clear after showing
+    }
+  }, [message, dispatch]);
 
   return (
     <>
       <Routes>
         <Route path="/" element={<XmlConverter />} />
-        <Route path="/poaGenerator" element={<POAGenerator />} />
       </Routes>
     </>
   );

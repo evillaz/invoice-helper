@@ -1,14 +1,13 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { saveInvoicesToDB } from '../redux/databaseInvoiceSlice';
+import { saveMotorcyclesToDB } from '../redux/motorcyclesSlice';
 
-const SaveInvoicesButton = () => {
+const SaveMotorcyclesButton = () => {
   const dispatch = useDispatch();
-  const { status } = useSelector((state) => state.databaseInvoices);
-  console.log(status);
+  const { status } = useSelector((state) => state.motorcycles);
 
   const handleSave = () => {
-    dispatch(saveInvoicesToDB());
+    dispatch(saveMotorcyclesToDB());
   };
 
   return (
@@ -30,4 +29,4 @@ const SaveInvoicesButton = () => {
   );
 };
 
-export default SaveInvoicesButton;
+export default SaveMotorcyclesButton;
