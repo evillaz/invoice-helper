@@ -1,17 +1,11 @@
 import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { XMLParser } from 'fast-xml-parser';
-import { useDispatch, useSelector } from 'react-redux';
 import { addXMLMotorcycles } from '../redux/motorcyclesSlice';
-import MotorcyclesTable from './MotorcycleTable';
-import SearchBar from './SearchBar';
-import SaveMotorcyclesButton from './SaveMotorcyclesButton';
 
-const XMLUploader = () => {
+const UploadXml = () => {
   const dispatch = useDispatch();
-  const motorcycles = useSelector((state) => state.motorcycles.motorcycles);
-  const selectedMotorcycles = useSelector((state) => state.motorcycles.selectedMotorcycles);
   const [error, setError] = useState('');
-  const [searchQuery, setSearchQuery] = useState('');
 
   const handleFileUpload = (event) => {
     const { files } = event.target;
@@ -101,28 +95,13 @@ const XMLUploader = () => {
       inputElement.value = '';
     });
   };
-
-  const filteredMotorcycles = motorcycles.filter((motorcycle) => {
-    const invoiceId = motorcycle?.factura;
-    return (
-      selectedMotorcycles.some((selected) => selected.factura === invoiceId)
-      || Object.values(motorcycle).some((item) => typeof item === 'string' && item.toLowerCase().includes(searchQuery.toLowerCase()))
-    );
-  });
-
   return (
-    <div className="p-4 border rounded-lg shadow-md w-96 mx-auto">
+    <div className="upload-xml">
       <h2 className="text-xl font-bold mb-2">Upload XML File</h2>
       <input type="file" multiple accept=".xml" onChange={handleFileUpload} className="mb-3" />
-
       {error && <p className="text-red-500">{error}</p>}
-      <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
-      <SaveMotorcyclesButton />
-      {motorcycles.length > 0 && (
-        <MotorcyclesTable motorcycles={filteredMotorcycles} />
-      )}
     </div>
   );
 };
 
-export default XMLUploader;
+export default UploadXml;
