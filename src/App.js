@@ -2,7 +2,6 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Routes, Route } from 'react-router-dom';
 import XmlConverter from './components/XmlConverter';
-import POAGenerator from './components/POAGenerator';
 import './styles/style.css';
 import { fetchMotorcycles, clearMessage } from './redux/motorcyclesSlice';
 
@@ -25,7 +24,6 @@ function App() {
     <>
       <Routes>
         <Route path="/" element={<XmlConverter />} />
-        <Route path="/poaGenerator" element={<POAGenerator />} />
       </Routes>
     </>
   );

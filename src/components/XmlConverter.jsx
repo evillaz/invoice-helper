@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { XMLParser } from 'fast-xml-parser';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
 import { addXMLMotorcycles } from '../redux/motorcyclesSlice';
 import MotorcyclesTable from './MotorcycleTable';
 import SearchBar from './SearchBar';
@@ -9,7 +8,6 @@ import SaveMotorcyclesButton from './SaveMotorcyclesButton';
 
 const XMLUploader = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const motorcycles = useSelector((state) => state.motorcycles.motorcycles);
   const selectedMotorcycles = useSelector((state) => state.motorcycles.selectedMotorcycles);
   const [error, setError] = useState('');
@@ -119,15 +117,6 @@ const XMLUploader = () => {
 
       {error && <p className="text-red-500">{error}</p>}
       <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
-
-      <button
-        type="button"
-        className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
-        onClick={() => navigate('/poaGenerator')}
-        disabled={selectedMotorcycles.length === 0}
-      >
-        Generate POA
-      </button>
       <SaveMotorcyclesButton />
       {motorcycles.length > 0 && (
         <MotorcyclesTable motorcycles={filteredMotorcycles} />
