@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { toggleSelectMotorcycle, deleteMotorcycleFromDB, removeMotorcycle } from '../redux/motorcyclesSlice';
 
-const MotorcycleItem = ({ motorcycle, isPOAGenerator }) => {
+const MotorcycleItem = ({ motorcycle, isUploadXml }) => {
   const dispatch = useDispatch();
   const selectedMotorcycles = useSelector((state) => state.motorcycles.selectedMotorcycles);
 
@@ -16,9 +16,14 @@ const MotorcycleItem = ({ motorcycle, isPOAGenerator }) => {
       : dispatch(removeMotorcycle(motorcycleId))
   );
 
+  const handleCopyDescription = (motorcycle) => {
+    const description = `Modelo: ${motorcycle.modelo} /Marca: ${motorcycle.marca} /Numero de chasis: ${motorcycle.numero_de_chasis} /Numero de motor: ${motorcycle.numero_de_motor} /DUA: ${motorcycle.dua} /Año: ${motorcycle.anio}`;
+    console.log(description);
+  };
+
   return (
     <>
-      {!isPOAGenerator && (
+      {!isUploadXml && (
         <td className="border border-gray-300 p-2 text-center">
           <input
             type="checkbox"
@@ -35,16 +40,27 @@ const MotorcycleItem = ({ motorcycle, isPOAGenerator }) => {
           {value}
         </td>
       ))}
-      {!isPOAGenerator && (
-        <td className="border px-2 py-1 text-center">
-          <button
-            type="button"
-            onClick={() => handleDelete(motorcycle.factura)}
-            className="ml-4 px-3 py-1 bg-red-500 text-white rounded-lg"
-          >
-            X
-          </button>
-        </td>
+      {!isUploadXml && (
+        <>
+          <td className="border px-2 py-1 text-center">
+            <button
+              type="button"
+              onClick={() => handleDelete(motorcycle.factura)}
+              className="ml-4 px-3 py-1 bg-red-500 text-white rounded-lg"
+            >
+              X
+            </button>
+          </td>
+          <td>
+            <button
+              type="button"
+              onClick={() => handleCopyDescription(motorcycle)}
+              className="description-button"
+            >
+              Descripcion Boleta
+            </button>
+          </td>
+        </>
       )}
     </>
   );
@@ -63,11 +79,11 @@ MotorcycleItem.propTypes = {
       anio: PropTypes.number.isRequired,
     }),
   ).isRequired,
-  isPOAGenerator: PropTypes.bool,
+  isUploadXml: PropTypes.bool,
 };
 
 MotorcycleItem.defaultProps = {
-  isPOAGenerator: false,
+  isUploadXml: false,
 };
 
 export default MotorcycleItem;
