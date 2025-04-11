@@ -6,6 +6,7 @@ import { fetchMotorcycles, clearMessage } from './redux/motorcyclesSlice';
 import Layout from './components/Layout';
 import Motorcycles from './routes/Motorcycles';
 import Customers from './routes/Customers';
+import { fetchCustomers } from './redux/customersSlice';
 
 function App() {
   const dispatch = useDispatch();
@@ -13,6 +14,10 @@ function App() {
 
   useEffect(() => {
     dispatch(fetchMotorcycles());
+  }, [dispatch]);
+
+  useEffect(() => {
+    dispatch(fetchCustomers());
   }, [dispatch]);
 
   useEffect(() => {
