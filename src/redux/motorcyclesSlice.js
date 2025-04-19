@@ -125,7 +125,7 @@ const motorcyclesSlice = createSlice({
       })
       .addCase(fetchMotorcycles.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        state.motorcycles = [...state.motorcycles, action.payload];
+        state.motorcycles = action.payload;
       })
       .addCase(fetchMotorcycles.rejected, (state, action) => {
         state.status = 'failed';

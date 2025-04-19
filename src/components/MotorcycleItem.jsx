@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { toggleSelectMotorcycle, deleteMotorcycleFromDB, removeMotorcycle } from '../redux/motorcyclesSlice';
 
-const MotorcycleItem = ({ motorcycle, isUploadXml }) => {
+const MotorcycleItem = ({ motorcycle, isUploadXml, showDetails }) => {
   const dispatch = useDispatch();
   const selectedMotorcycles = useSelector((state) => state.motorcycles.selectedMotorcycles);
 
@@ -19,6 +19,9 @@ const MotorcycleItem = ({ motorcycle, isUploadXml }) => {
   const handleCopyDescription = (motorcycle) => {
     const description = `Modelo: ${motorcycle.modelo} /Marca: ${motorcycle.marca} /Numero de chasis: ${motorcycle.numero_de_chasis} /Numero de motor: ${motorcycle.numero_de_motor} /DUA: ${motorcycle.dua} /Año: ${motorcycle.anio}`;
     console.log(description);
+    navigator.clipboard.writeText(description)
+      .then(() => alert('Descripcion de moto para boleta copiada!'))
+      .catch((err) => console.error('Failed to copy', err));
   };
 
   return (
@@ -35,11 +38,19 @@ const MotorcycleItem = ({ motorcycle, isUploadXml }) => {
           />
         </td>
       )}
-      {Object.entries(motorcycle).map(([key, value]) => (
-        <td key={key}>
-          {value}
-        </td>
-      ))}
+      {!showDetails && (
+        <>
+          <td>{motorcycle.factura}</td>
+          <td>{motorcycle.modelo}</td>
+          <td>{motorcycle.numero_de_chasis}</td>
+        </>
+      )}
+      {showDetails
+        && Object.entries(motorcycle).map(([key, value]) => (
+          <td key={key}>
+            {value}
+          </td>
+        ))}
       {!isUploadXml && (
         <>
           <td className="border px-2 py-1 text-center">
@@ -80,10 +91,12 @@ MotorcycleItem.propTypes = {
     }),
   ).isRequired,
   isUploadXml: PropTypes.bool,
+  showDetails: PropTypes.bool,
 };
 
 MotorcycleItem.defaultProps = {
   isUploadXml: false,
+  showDetails: false,
 };
 
 export default MotorcycleItem;
