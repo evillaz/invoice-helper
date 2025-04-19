@@ -1,11 +1,12 @@
 import PropTypes from 'prop-types';
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import MotorcycleItem from './MotorcycleItem';
 import TableHeader from './TableHeader';
 
 const MotorcyclesTable = ({ motorcycles }) => {
   const header = ['Select', 'Factura', 'Modelo', 'Marca', 'Color', 'Numero de Chasis', 'Numero de Motor', 'DUA', 'Año'];
   const tableRef = useRef(null);
+  const [showDetails, setShowDetails] = useState(false);
 
   const copyTableToClipboard = () => {
     if (!tableRef.current) return;
@@ -28,6 +29,8 @@ const MotorcyclesTable = ({ motorcycles }) => {
       .catch((err) => console.error('Failed to copy table:', err));
   };
 
+  const toggleDetails = () => setShowDetails((prev) => !prev);
+
   return (
     <div>
       <button
@@ -37,14 +40,21 @@ const MotorcyclesTable = ({ motorcycles }) => {
       >
         Copy Table
       </button>
+      <button
+        type="button"
+        onClick={toggleDetails}
+        className="text-blue-500 hover:underline text-sm"
+      >
+        {showDetails ? 'Ocultar' : 'Ver más'}
+      </button>
       <table ref={tableRef} className="motorcycles-table">
         <thead className="motorcycles-table-header">
           <TableHeader headerData={header} />
         </thead>
         <tbody className="motorcycles-list">
           {motorcycles.map((motorcycle) => (
-            <tr id={`${motorcycle.factura}-row`} key={motorcycle.factura} className="motorcycle-item">
-              <MotorcycleItem motorcycle={motorcycle} key={`item ${motorcycle.factura}`} />
+            <tr id={`${motorcycle.factura}-row`} key={`row ${motorcycle.factura}`} className="motorcycle-item">
+              <MotorcycleItem motorcycle={motorcycle} key={`item ${motorcycle.factura}`} showDetails={showDetails} />
             </tr>
           ))}
         </tbody>

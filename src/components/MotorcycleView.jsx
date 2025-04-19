@@ -23,7 +23,7 @@ const MotorcycleView = () => {
       <UploadXml />
       <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
       <SaveMotorcyclesButton />
-      {motorcycles.length > 0 && (
+      {filteredMotorcycles.length > 0 && (
         <MotorcyclesTable motorcycles={filteredMotorcycles} />
       )}
     </div>
