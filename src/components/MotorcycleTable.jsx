@@ -4,7 +4,8 @@ import MotorcycleItem from './MotorcycleItem';
 import TableHeader from './TableHeader';
 
 const MotorcyclesTable = ({ motorcycles }) => {
-  const header = ['Select', 'Factura', 'Modelo', 'Marca', 'Color', 'Numero de Chasis', 'Numero de Motor', 'DUA', 'Año'];
+  const baseHeader = ['Select', 'Factura', 'Modelo', 'Numero de Chasis'];
+  const expandedHeader = ['Select', 'Factura', 'Modelo', 'Marca', 'Color', 'Numero de Chasis', 'Numero de Motor', 'DUA', 'Año'];
   const tableRef = useRef(null);
   const [showDetails, setShowDetails] = useState(false);
 
@@ -49,7 +50,11 @@ const MotorcyclesTable = ({ motorcycles }) => {
       </button>
       <table ref={tableRef} className="motorcycles-table">
         <thead className="motorcycles-table-header">
-          <TableHeader headerData={header} />
+          {showDetails ? (
+            <TableHeader headerData={expandedHeader} />
+          ) : (
+            <TableHeader headerData={baseHeader} />
+          )}
         </thead>
         <tbody className="motorcycles-list">
           {motorcycles.map((motorcycle) => (

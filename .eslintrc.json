@@ -22,7 +22,8 @@
     "no-alert": "off",
     "no-console": "off",
     "jsx-a11y/control-has-associated-label": "off",
-    "react/no-array-index-key": "off"
+    "react/no-array-index-key": "off",
+    "camelcase": "off"
   },
   "overrides": [
     {

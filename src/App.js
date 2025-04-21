@@ -6,7 +6,9 @@ import { fetchMotorcycles, clearMessage } from './redux/motorcyclesSlice';
 import Layout from './components/Layout';
 import Motorcycles from './routes/Motorcycles';
 import Customers from './routes/Customers';
+import Sales from './routes/Sales';
 import { fetchCustomers } from './redux/customersSlice';
+import { fetchSales } from './redux/salesSlice';
 
 function App() {
   const dispatch = useDispatch();
@@ -18,6 +20,10 @@ function App() {
 
   useEffect(() => {
     dispatch(fetchCustomers());
+  }, [dispatch]);
+
+  useEffect(() => {
+    dispatch(fetchSales());
   }, [dispatch]);
 
   useEffect(() => {
@@ -33,6 +39,7 @@ function App() {
         <Route path="/" element={<Layout />}>
           <Route path="/" element={<Motorcycles />} />
           <Route path="/clientes" element={<Customers />} />
+          <Route path="/ventas" element={<Sales />} />
         </Route>
       </Routes>
     </>

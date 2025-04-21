@@ -15,7 +15,7 @@ export const fetchCustomers = createAsyncThunk(
 );
 
 export const saveCustomerToDB = createAsyncThunk(
-  'customers/saveCustomersToDB',
+  'customers/saveCustomerToDB',
   async (customer, { rejectWithValue }) => {
     console.log(customer);
     try {

@@ -1,6 +1,8 @@
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { toggleSelectMotorcycle, deleteMotorcycleFromDB, removeMotorcycle } from '../redux/motorcyclesSlice';
+import MotorycleDetails from './MotorcycleDetails';
+import CopyDescriptionButton from './CopyDescriptionButton';
 
 const MotorcycleItem = ({ motorcycle, isUploadXml, showDetails }) => {
   const dispatch = useDispatch();
@@ -16,14 +18,6 @@ const MotorcycleItem = ({ motorcycle, isUploadXml, showDetails }) => {
       : dispatch(removeMotorcycle(motorcycleId))
   );
 
-  const handleCopyDescription = (motorcycle) => {
-    const description = `Modelo: ${motorcycle.modelo} /Marca: ${motorcycle.marca} /Numero de chasis: ${motorcycle.numero_de_chasis} /Numero de motor: ${motorcycle.numero_de_motor} /DUA: ${motorcycle.dua} /Año: ${motorcycle.anio}`;
-    console.log(description);
-    navigator.clipboard.writeText(description)
-      .then(() => alert('Descripcion de moto para boleta copiada!'))
-      .catch((err) => console.error('Failed to copy', err));
-  };
-
   return (
     <>
       {!isUploadXml && (
@@ -38,19 +32,7 @@ const MotorcycleItem = ({ motorcycle, isUploadXml, showDetails }) => {
           />
         </td>
       )}
-      {!showDetails && (
-        <>
-          <td>{motorcycle.factura}</td>
-          <td>{motorcycle.modelo}</td>
-          <td>{motorcycle.numero_de_chasis}</td>
-        </>
-      )}
-      {showDetails
-        && Object.entries(motorcycle).map(([key, value]) => (
-          <td key={key}>
-            {value}
-          </td>
-        ))}
+      <MotorycleDetails motorcycle={motorcycle} showDetails={showDetails} />
       {!isUploadXml && (
         <>
           <td className="border px-2 py-1 text-center">
@@ -62,15 +44,7 @@ const MotorcycleItem = ({ motorcycle, isUploadXml, showDetails }) => {
               X
             </button>
           </td>
-          <td>
-            <button
-              type="button"
-              onClick={() => handleCopyDescription(motorcycle)}
-              className="description-button"
-            >
-              Descripcion Boleta
-            </button>
-          </td>
+          <CopyDescriptionButton motorcycle={motorcycle} />
         </>
       )}
     </>
