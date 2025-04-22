@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { saveSaleToDB } from '../redux/salesSlice';
 import CopyDescriptionButton from './CopyDescriptionButton';
 import SalesTable from './SalesTable';
+import TableHeader from './TableHeader';
 
 const SalesView = () => {
   const dispatch = useDispatch();
@@ -40,9 +41,13 @@ const SalesView = () => {
     return Math.ceil((amount / 1.18) * factor) / factor;
   };
 
+  const header = ['Factura', 'Modelo', 'Marca', 'Color', 'Numero de Chasis', 'Numero de Motor', 'DUA', 'Año'];
+  const headerExpand = ['DNI', 'NOMBRE', 'DIRECCION'];
+  const baseHeader = [...header, ...headerExpand];
+
   return (
     <table>
-      <thead />
+      <TableHeader headerData={baseHeader} />
       <tbody>
         <SalesTable />
         {motorcycles.map((motorcycle) => (

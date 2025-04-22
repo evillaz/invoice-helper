@@ -1,17 +1,18 @@
 import { useSelector } from 'react-redux';
+import MotorycleDetails from './MotorcycleDetails';
 
 const SalesTable = () => {
   const sales = useSelector((state) => state.sales.sales);
   console.log(sales);
-  const motorcycles = useSelector((state) => state.motorcycles.motorcycles);
+
   return (
     <>
       {sales && (
         sales.map((sale) => (
-          <tr key={sale.factura}>
-            <td>{sale.factura}</td>
+          <tr key={`sale ${sale.id}`}>
+            <MotorycleDetails motorcycle={sale.motorcycle} showDetails />
             <td>
-              {sale.dni}
+              {sale.customer.dni}
             </td>
             <td>
               {sale.total_amount}
