@@ -4,7 +4,9 @@ import { toggleSelectMotorcycle, deleteMotorcycleFromDB, removeMotorcycle } from
 import MotorycleDetails from './MotorcycleDetails';
 import CopyDescriptionButton from './CopyDescriptionButton';
 
-const MotorcycleItem = ({ motorcycle, isUploadXml, showDetails }) => {
+const MotorcycleItem = ({
+  motorcycle, isUploadXml, showDetails,
+}) => {
   const dispatch = useDispatch();
   const selectedMotorcycles = useSelector((state) => state.motorcycles.selectedMotorcycles);
 
