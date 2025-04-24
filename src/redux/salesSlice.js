@@ -37,6 +37,21 @@ export const saveSaleToDB = createAsyncThunk(
   },
 );
 
+export const deleteSaleFromDB = createAsyncThunk(
+  'sales/deleteSalesFromDB',
+  async (saleId, { rejectWithValue }) => {
+    try {
+      const response = await fetch(`http://localhost:3000/api/v1/sales/${saleId}`, {
+        method: 'DELETE',
+      });
+      if (!response.ok) throw new Error('Error deleting sale from DB');
+      return saleId;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  },
+);
+
 const initialState = {
   sales: [],
   status: 'idle',
@@ -77,6 +92,20 @@ const salesSlice = createSlice({
         state.status = 'failed';
         state.error = action.payload;
         state.message = action.payload;
+      })
+      .addCase(deleteSaleFromDB.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(deleteSaleFromDB.fulfilled, (state, action) => {
+        console.log(action.payload);
+        state.status = 'succeeded';
+        state.sales = state.sales.filter(
+          (sale) => sale.id !== action.payload,
+        );
+      })
+      .addCase(deleteSaleFromDB.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.payload;
       });
   },
 });

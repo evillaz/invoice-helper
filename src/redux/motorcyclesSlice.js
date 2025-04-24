@@ -19,6 +19,7 @@ export const fetchMotorcycles = createAsyncThunk(
         dua: motorcycle.dua,
         anio: motorcycle.anio,
         savedToDB: true,
+        sale: motorcycle.sale,
       }));
     } catch (error) {
       return rejectWithValue(error.message);
