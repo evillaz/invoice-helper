@@ -1,10 +1,10 @@
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 
-const DeleteButton = ({ deleteFunc, itemId }) => {
+const DeleteButton = ({ deleteFunc, item }) => {
   const dispatch = useDispatch();
   const handleDelete = () => (
-    dispatch(deleteFunc(itemId.toString()))
+    dispatch(deleteFunc(item))
   );
 
   return (
@@ -21,7 +21,7 @@ const DeleteButton = ({ deleteFunc, itemId }) => {
 };
 
 DeleteButton.propTypes = {
-  itemId: PropTypes.string.isRequired,
+  item: PropTypes.string.isRequired,
   deleteFunc: PropTypes.func.isRequired,
 };
 

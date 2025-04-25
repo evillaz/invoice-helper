@@ -11,6 +11,9 @@ const SalesView = () => {
   const customers = useSelector((state) => state.customers.customers);
   const [salesData, setSalesData] = useState({});
   const [showMotoDetails, setShowMotoDetails] = useState(false);
+  const noSaleMotorcycles = motorcycles.filter((motorcycle) => motorcycle.sale === null
+    || motorcycle.sale === undefined);
+
   const handleCustomerChange = (motorcycle, dni) => {
     const matchedCustomer = customers.find((cust) => cust.dni === dni);
     setSalesData((prev) => ({
@@ -43,7 +46,6 @@ const SalesView = () => {
 
   const baseMotoHeader = ['Factura', 'Modelo', 'Numero de Chasis', 'Numero de Motor'];
   const expandedMotoHeader = ['Factura', 'Modelo', 'Marca', 'Color', 'Numero de Chasis', 'Numero de Motor', 'DUA', 'Año'];
-
   const customerHeader = ['DNI', 'NOMBRE', 'DIRECCION'];
   const baseHeader = [...baseMotoHeader, ...customerHeader];
   const expandedHeader = [...expandedMotoHeader, customerHeader];
@@ -59,8 +61,7 @@ const SalesView = () => {
           )}
         </thead>
         <tbody>
-          <SalesTable />
-          {motorcycles.map((motorcycle) => (
+          {noSaleMotorcycles.map((motorcycle) => (
             <tr key={motorcycle.factura}>
               <td>{motorcycle.factura}</td>
               <td>{motorcycle.modelo}</td>
@@ -82,7 +83,7 @@ const SalesView = () => {
                 <td>
                   <select onChange={
                     (e) => handleCustomerChange(motorcycle.factura, e.target.value)
-}
+                  }
                   >
                     <option value="">Seleccionar cliente</option>
                     {customers.map((customer) => (
@@ -123,6 +124,7 @@ const SalesView = () => {
           ))}
         </tbody>
       </table>
+      <SalesTable />
     </div>
   );
 };

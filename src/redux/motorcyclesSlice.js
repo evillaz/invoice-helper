@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-
+import { deleteSaleFromDB, saveSaleToDB } from './salesSlice';
 // Fetch motorcycles from DB
 export const fetchMotorcycles = createAsyncThunk(
   'motorcycles/fetchMotorcycles',
@@ -164,6 +164,32 @@ const motorcyclesSlice = createSlice({
       .addCase(deleteMotorcycleFromDB.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.payload;
+      })
+      .addCase(deleteSaleFromDB.fulfilled, (state, action) => {
+        const deletedSaleMotorcycle = action.payload.motorcycle.factura;
+        state.motorcycles = state.motorcycles.map(
+          (moto) => (moto.factura === deletedSaleMotorcycle
+            ? { ...moto, sale: null }
+            : moto),
+        );
+        state.selectedMotorcycles = state.selectedMotorcycles.map(
+          (moto) => (moto.factura === deletedSaleMotorcycle
+            ? { ...moto, sale: null }
+            : moto),
+        );
+      })
+      .addCase(saveSaleToDB.fulfilled, (state, action) => {
+        const savedSaleMotorcycle = action.payload.motorcycle.factura;
+        state.motorcycles = state.motorcycles.map(
+          (moto) => (moto.factura === savedSaleMotorcycle
+            ? { ...moto, sale: action.payload }
+            : moto),
+        );
+        state.selectedMotorcycles = state.selectedMotorcycles.map(
+          (moto) => (moto.factura === savedSaleMotorcycle
+            ? { ...moto, sale: action.payload }
+            : moto),
+        );
       });
   },
 });
