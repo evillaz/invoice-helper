@@ -34,6 +34,9 @@ const UploadXml = () => {
             }
             return acc;
           }, []);
+
+          const issueDate = jsonObj?.Invoice?.['cbc:IssueDate'];
+          const payableAmount = jsonObj?.Invoice?.['cac:LegalMonetaryTotal']?.['cbc:PayableAmount'];
           const invoiceID = jsonObj?.Invoice?.['cbc:ID'];
 
           const invoicePattern = /^(FC|FE)\d+-\d+$/;
@@ -82,9 +85,14 @@ const UploadXml = () => {
             acc[item.attribute] = item['cdc:Value'];
             return acc;
           }, {});
+          finalObject.issueDate = issueDate;
+          finalObject.payableAmount = payableAmount;
+          console.log(finalObject);
+
           const result = validInvoiceID
             ? { factura: invoiceID, ...finalObject }
             : finalObject;
+
           dispatch(addXMLMotorcycles([result]));
           setError('');
         } catch (err) {

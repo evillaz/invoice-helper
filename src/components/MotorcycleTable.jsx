@@ -4,7 +4,7 @@ import MotorcycleItem from './MotorcycleItem';
 import TableHeader from './TableHeader';
 
 const MotorcyclesTable = ({ motorcycles }) => {
-  const baseHeader = ['Select', 'Factura', 'Modelo', 'Numero de Chasis'];
+  const baseHeader = ['Select', 'Factura', 'Modelo', 'Numero de Chasis', 'Numero de Motor'];
   const expandedHeader = ['Select', 'Factura', 'Modelo', 'Marca', 'Color', 'Numero de Chasis', 'Numero de Motor', 'DUA', 'Año'];
   const tableRef = useRef(null);
   const [showDetails, setShowDetails] = useState(false);
@@ -79,6 +79,8 @@ MotorcyclesTable.propTypes = {
       numero_de_motor: PropTypes.string.isRequired,
       dua: PropTypes.string.isRequired,
       anio: PropTypes.number.isRequired,
+      fecha_emision: PropTypes.string,
+      importe: PropTypes.number,
     }),
   ).isRequired,
 };
