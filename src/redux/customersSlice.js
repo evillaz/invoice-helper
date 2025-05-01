@@ -17,7 +17,6 @@ export const fetchCustomers = createAsyncThunk(
 export const saveCustomerToDB = createAsyncThunk(
   'customers/saveCustomerToDB',
   async (customer, { rejectWithValue }) => {
-    console.log(customer);
     try {
       const response = await fetch('http://localhost:3000/api/v1/customers', {
         method: 'POST',

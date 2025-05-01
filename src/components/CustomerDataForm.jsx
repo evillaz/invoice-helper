@@ -7,17 +7,16 @@ const CustomerDataForm = ({
 }) => (
   <>
     <div>
-      <label htmlFor="nombre">
-        Nombre:
+      <label htmlFor="dni">
+        DNI:
         <input
           type="text"
-          id="nombre"
-          value={nombre}
-          onChange={(e) => onChangeNombre(e.target.value)}
+          id="dni"
+          value={dni}
+          onChange={(e) => onChangeDni(e.target.value)}
         />
       </label>
     </div>
-
     <div>
       <label htmlFor="primerApellido">
         Primer Apellido:
@@ -40,19 +39,17 @@ const CustomerDataForm = ({
         />
       </label>
     </div>
-
     <div>
-      <label htmlFor="dni">
-        DNI:
+      <label htmlFor="nombre">
+        Nombre:
         <input
           type="text"
-          id="dni"
-          value={dni}
-          onChange={(e) => onChangeDni(e.target.value)}
+          id="nombre"
+          value={nombre}
+          onChange={(e) => onChangeNombre(e.target.value)}
         />
       </label>
     </div>
-
     <div>
       <label htmlFor="direccion">
         Dirección:

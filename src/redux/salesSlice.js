@@ -54,15 +54,16 @@ export const deleteSaleFromDB = createAsyncThunk(
 export const updateBoleta = createAsyncThunk(
   'sales/updateBoleta',
   async (sale, { rejectWithValue }) => {
-    console.log(sale);
+    const { saleId, boleta } = sale;
+
     try {
-      const response = await fetch(`http://localhost:3000/api/v1/sales/${sale.id}/update_boleta`, {
+      const response = await fetch(`http://localhost:3000/api/v1/sales/${saleId}/update_boleta`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          boleta: sale.boleta,
+          boleta,
         }),
       });
       if (!response.ok) throw new Error('Error updating sale');
@@ -149,21 +150,22 @@ const salesSlice = createSlice({
       .addCase(deleteSaleFromDB.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.payload;
-      });
-    /* .addCase(updateBoleta.pending, (state) => {
+      })
+      .addCase(updateBoleta.pending, (state) => {
         state.status = 'loading';
       })
       .addCase(updateBoleta.fulfilled, (state, action) => {
         state.status = 'succeeded';
+        const { id, boleta } = action.payload;
         state.sales = state.sales.map(
-          (sale) => (sale.id === action.payload
-            ? {...sale, boleta: }
-        ));
+          (sale) => (sale.id === id
+            ? { ...sale, boleta } : sale),
+        );
       })
       .addCase(updateBoleta.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.payload;
-    }) */
+      });
   },
 });
 

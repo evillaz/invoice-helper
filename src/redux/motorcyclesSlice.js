@@ -18,6 +18,8 @@ export const fetchMotorcycles = createAsyncThunk(
         numero_de_motor: motorcycle.numero_de_motor,
         dua: motorcycle.dua,
         anio: motorcycle.anio,
+        fecha_emision: motorcycle.fecha_emision,
+        importe: motorcycle.importe,
         savedToDB: true,
         sale: motorcycle.sale,
       }));
