@@ -7,9 +7,27 @@ import DeleteButton from './DeleteButton';
 import SaleDetails from './SaleDetails';
 
 const SaleItem = ({ sale }) => {
+  console.log(sale);
   const dispatch = useDispatch();
   const [boleta, setBoleta] = useState('');
   const [editBoleta, setEditBoleta] = useState(false);
+  const statusClasses = {
+    prospect: {
+      style: { color: '#ca8a04' },
+    },
+    expired: {
+      style: { color: '#dc2626' },
+    },
+    processed: {
+      style: { color: '#2563eb' },
+    },
+    titulo_registered: {
+      style: { color: '#9333ea' },
+    },
+    placa_registered: {
+      style: { color: '#16a34a' },
+    },
+  };
 
   const handleChangeBoleta = (boletaNumber) => {
     setBoleta(`EB01-${boletaNumber}`);
@@ -25,6 +43,13 @@ const SaleItem = ({ sale }) => {
 
   return (
     <>
+      <td>
+        <span
+          style={statusClasses[sale.status].style}
+        >
+          {sale.status}
+        </span>
+      </td>
       <SaleDetails sale={sale} />
       {(sale.boleta && !editBoleta) ? (
         <>
@@ -104,6 +129,7 @@ SaleItem.propTypes = {
       provincia: PropTypes.string,
       distrito: PropTypes.string,
     }).isRequired,
+    status: PropTypes.string.isRequired,
   }).isRequired,
 };
 

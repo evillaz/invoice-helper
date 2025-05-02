@@ -1,5 +1,48 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
+const SALE_STATUSES = {
+  PROSPECT: 'prospect',
+  PROCESSED: 'processed',
+  TITULO_REGISTERED: 'titulo_registered',
+  PLACA_REGISTERED: 'placa_registered',
+};
+
+const determineSaleStatus = (sale) => {
+  if (!sale.boleta) {
+    return SALE_STATUSES.PROSPECT;
+  }
+
+  if (sale.boleta && !sale.titulo) {
+    return SALE_STATUSES.PROCESSED;
+  }
+
+  if (sale.titulo && !sale.placa) {
+    return SALE_STATUSES.TITULO_REGISTERED;
+  }
+
+  if (sale.placa) {
+    return SALE_STATUSES.PLACA_REGISTERED;
+  }
+
+  return SALE_STATUSES.PROCESSED;
+};
+
+const transformSalesData = (data) => data.map((d) => {
+  const createdAt = new Date(d.created_at);
+  const day = String(createdAt.getDate()).padStart(2, '0');
+  const month = String(createdAt.getMonth() + 1).padStart(2, '0');
+  const year = createdAt.getFullYear();
+  const fecha_venta = {
+    day,
+    month,
+    year,
+  };
+  return {
+    ...d,
+    fecha_venta,
+  };
+});
+
 export const fetchSales = createAsyncThunk(
   'sales/fetchSales',
   async (_, { rejectWithValue }) => {
@@ -7,7 +50,8 @@ export const fetchSales = createAsyncThunk(
       const response = await fetch('http://localhost:3000/api/v1/sales');
       if (!response.ok) throw new Error('Error fetching sales from DB');
       const data = await response.json();
-      return data;
+      const salesData = transformSalesData(data);
+      return salesData;
     } catch (error) {
       return rejectWithValue(error.message);
     }
@@ -75,21 +119,6 @@ export const updateBoleta = createAsyncThunk(
   },
 );
 
-/* export const updateBoleta = createAsyncThunk(
-  'sales/updateBoleta',
-  async (saleId, { rejectWithValue }) => {
-    try{
-      const response = await fetch(`http://localhost:3000/api/v1/sales/${saleId}`,{
-        method: 'PATCH',
-      });
-      if (!response.ok) throw new Error('Error updating sale');
-      return saleId;
-    } catch (error) {
-      return rejectWithValue(error.message);
-    }
-  },
-); */
-
 const initialState = {
   sales: [],
   status: 'idle',
@@ -119,7 +148,10 @@ const salesSlice = createSlice({
       })
       .addCase(fetchSales.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        state.sales = action.payload;
+        state.sales = action.payload.map((sale) => ({
+          ...sale,
+          status: determineSaleStatus(sale),
+        }));
       })
       .addCase(fetchSales.rejected, (state, action) => {
         state.status = 'failed';
@@ -131,7 +163,11 @@ const salesSlice = createSlice({
       .addCase(saveSaleToDB.fulfilled, (state, action) => {
         state.status = 'succeeded';
         state.message = action.payload.message;
-        state.sales = [...state.sales, action.payload];
+        const saleWithStatus = {
+          ...action.payload,
+          status: determineSaleStatus(action.payload),
+        };
+        state.sales = [...state.sales, saleWithStatus];
       })
       .addCase(saveSaleToDB.rejected, (state, action) => {
         state.status = 'failed';
@@ -159,7 +195,7 @@ const salesSlice = createSlice({
         const { id, boleta } = action.payload;
         state.sales = state.sales.map(
           (sale) => (sale.id === id
-            ? { ...sale, boleta } : sale),
+            ? { ...sale, boleta, status: determineSaleStatus(sale) } : sale),
         );
       })
       .addCase(updateBoleta.rejected, (state, action) => {

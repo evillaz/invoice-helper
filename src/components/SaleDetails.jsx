@@ -27,7 +27,11 @@ const SaleDetails = ({ sale }) => (
           {getIgvValue(sale.total_amount)}
         </td>
         <td>
-          {sale.created_at}
+          {sale.fecha_venta.day}
+          -
+          {sale.fecha_venta.month}
+          -
+          {sale.fecha_venta.year}
         </td>
       </>
     )}
@@ -64,6 +68,11 @@ SaleDetails.propTypes = {
       provincia: PropTypes.string,
       distrito: PropTypes.string,
     }).isRequired,
+    fecha_venta: PropTypes.shape({
+      day: PropTypes.string,
+      month: PropTypes.string,
+      year: PropTypes.number,
+    }),
   }).isRequired,
 };
 

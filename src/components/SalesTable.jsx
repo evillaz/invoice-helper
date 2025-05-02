@@ -8,7 +8,7 @@ const SalesTable = () => {
   // const [editBoleta, setEditBoleta] = useState(false);
   // const toggleEditBoleta = () => setEditBoleta((prev) => !prev);
 
-  const baseMotoHeader = ['Factura', 'Modelo', 'Numero de Chasis', 'Numero de Motor'];
+  const baseMotoHeader = ['Estado', 'Factura', 'Modelo', 'Numero de Chasis', 'Numero de Motor'];
   // const expandedMotoHeader =
   // ['Factura', 'Modelo', 'Marca', 'Color', 'Numero de Chasis', 'Numero de Motor', 'DUA', 'Año'];
   const customerHeader = ['DNI', 'NOMBRE', 'DIRECCION'];
