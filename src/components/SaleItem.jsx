@@ -54,9 +54,9 @@ const SaleItem = ({ sale }) => {
       {(sale.boleta && !editBoleta) ? (
         <>
           <td>
-            {sale.boleta}
-          </td>
-          <td>
+            <span>
+              {sale.boleta}
+            </span>
             <button
               type="button"
               onClick={() => handleEditBoleta()}

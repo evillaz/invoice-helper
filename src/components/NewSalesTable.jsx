@@ -1,11 +1,13 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { useState } from 'react';
-import PropTypes from 'prop-types';
 import getIgvValue from '../utils/calculations/getIgvValue';
 import TableHeader from './TableHeader';
 import { saveSaleToDB } from '../redux/salesSlice';
+import ShowDetailsButton from './ShowDetailsButton';
 
-const NewSalesTable = ({ motorcycles, showDetails }) => {
+const NewSalesTable = () => {
+  const motorcycles = useSelector((state) => state.motorcycles.selectedMotorcycles);
+  const [showMotoDetails, setShowMotoDetails] = useState(false);
   const dispatch = useDispatch();
   const baseMotoHeader = ['Factura', 'Modelo', 'Numero de Chasis', 'Numero de Motor'];
   const expandedMotoHeader = ['Factura', 'Modelo', 'Marca', 'Color', 'Numero de Chasis', 'Numero de Motor', 'DUA', 'Año'];
@@ -41,98 +43,83 @@ const NewSalesTable = ({ motorcycles, showDetails }) => {
   };
 
   return (
-    <table id="new-sales">
-      <thead className="motorcycles-table-header">
-        {showDetails ? (
-          <TableHeader headerData={expandedHeader} />
-        ) : (
-          <TableHeader headerData={baseHeader} />
-        )}
-      </thead>
-      <tbody id="new-sales-body">
-        {motorcycles.map((motorcycle) => (
-          <tr key={`VENTA-${motorcycle.factura}`}>
-            <td>{motorcycle.factura}</td>
-            <td>{motorcycle.modelo}</td>
-            <td>{motorcycle.numero_de_chasis}</td>
-            <td>{motorcycle.numero_de_motor}</td>
-            {salesData[motorcycle.factura]?.customer ? (
-              <>
+    <>
+      <ShowDetailsButton showDetails={showMotoDetails} setShowDetails={setShowMotoDetails} />
+      <table id="new-sales">
+        <thead className="motorcycles-table-header">
+          {showMotoDetails ? (
+            <TableHeader headerData={expandedHeader} />
+          ) : (
+            <TableHeader headerData={baseHeader} />
+          )}
+        </thead>
+        <tbody id="new-sales-body">
+          {motorcycles.map((motorcycle) => (
+            <tr key={`VENTA-${motorcycle.factura}`}>
+              <td>{motorcycle.factura}</td>
+              <td>{motorcycle.modelo}</td>
+              <td>{motorcycle.numero_de_chasis}</td>
+              <td>{motorcycle.numero_de_motor}</td>
+              {salesData[motorcycle.factura]?.customer ? (
+                <>
+                  <td>
+                    {salesData[motorcycle.factura]?.customer.dni}
+                  </td>
+                  <td>
+                    {salesData[motorcycle.factura]?.customer.nombre}
+                    {' '}
+                    {salesData[motorcycle.factura]?.customer.primerApellido}
+                  </td>
+                </>
+              ) : (
                 <td>
-                  {salesData[motorcycle.factura]?.customer.dni}
+                  <select onChange={
+                  (e) => handleCustomerChange(motorcycle.factura, e.target.value)
+                }
+                  >
+                    <option value="">Seleccionar cliente</option>
+                    {customers.map((customer) => (
+                      <option key={customer.id} value={customer.dni}>
+                        {customer.nombre}
+                        {' '}
+                        {customer.primerApellido}
+                        {' '}
+                        {customer.segundoApellido}
+                      </option>
+                    ))}
+                  </select>
                 </td>
-                <td>
-                  {salesData[motorcycle.factura]?.customer.nombre}
-                  {' '}
-                  {salesData[motorcycle.factura]?.customer.primerApellido}
-                </td>
-              </>
-            ) : (
-              <td>
-                <select onChange={
-                (e) => handleCustomerChange(motorcycle.factura, e.target.value)
-              }
-                >
-                  <option value="">Seleccionar cliente</option>
-                  {customers.map((customer) => (
-                    <option key={customer.id} value={customer.dni}>
-                      {customer.nombre}
-                      {' '}
-                      {customer.primerApellido}
-                      {' '}
-                      {customer.segundoApellido}
-                    </option>
-                  ))}
-                </select>
-              </td>
-            )}
+              )}
 
-            {salesData[motorcycle.factura]?.total_amount ? (
-              <>
+              {salesData[motorcycle.factura]?.total_amount ? (
+                <>
+                  <td>
+                    {salesData[motorcycle.factura]?.total_amount}
+                  </td>
+                  <td>
+                    {getIgvValue(salesData[motorcycle.factura]?.total_amount)}
+                  </td>
+                </>
+              ) : (
                 <td>
-                  {salesData[motorcycle.factura]?.total_amount}
+                  <input
+                    type="number"
+                    placeholder="Monto"
+                    onBlur={(e) => handleAmountChange(motorcycle.factura, e.target.value)}
+                  />
                 </td>
-                <td>
-                  {getIgvValue(salesData[motorcycle.factura]?.total_amount)}
-                </td>
-              </>
-            ) : (
+              )}
               <td>
-                <input
-                  type="number"
-                  placeholder="Monto"
-                  onBlur={(e) => handleAmountChange(motorcycle.factura, e.target.value)}
-                />
+                <button type="button" onClick={() => handleCreateSale(motorcycle.factura)}>
+                  Crear Venta
+                </button>
               </td>
-            )}
-            <td>
-              <button type="button" onClick={() => handleCreateSale(motorcycle.factura)}>
-                Crear Venta
-              </button>
-            </td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </>
   );
-};
-
-NewSalesTable.propTypes = {
-  motorcycles: PropTypes.arrayOf(
-    PropTypes.shape({
-      factura: PropTypes.string.isRequired,
-      modelo: PropTypes.string.isRequired,
-      marca: PropTypes.string.isRequired,
-      color: PropTypes.string.isRequired,
-      numero_de_chasis: PropTypes.string.isRequired,
-      numero_de_motor: PropTypes.string.isRequired,
-      dua: PropTypes.string.isRequired,
-      anio: PropTypes.number.isRequired,
-      fecha_emision: PropTypes.string,
-      importe: PropTypes.number,
-    }),
-  ).isRequired,
-  showDetails: PropTypes.bool.isRequired,
 };
 
 export default NewSalesTable;

@@ -1,16 +1,11 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 
-const links = [
-  { path: '/', text: 'MOTOS' },
-  { path: '/clientes', text: 'CLIENTES' },
-  { path: '/ventas', text: 'VENTAS' },
-];
-
-const NavBar = () => (
+const NavBar = ({ links }) => (
   <nav className="navBar">
     <ul className="navBar-wrap">
-      {links.map((link) => (
+      {Object.values(links).map((link) => (
         <React.Fragment key={link.text}>
           <li
             className="navBar-item"
@@ -24,5 +19,14 @@ const NavBar = () => (
     </ul>
   </nav>
 );
+
+NavBar.propTypes = {
+  links: PropTypes.arrayOf(
+    PropTypes.shape({
+      path: PropTypes.string.isRequired,
+      text: PropTypes.string.isRequired,
+    }),
+  ).isRequired,
+};
 
 export default NavBar;

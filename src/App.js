@@ -9,10 +9,17 @@ import Customers from './routes/Customers';
 import Sales from './routes/Sales';
 import { fetchCustomers } from './redux/customersSlice';
 import { fetchSales } from './redux/salesSlice';
+import NewSalesTable from './components/NewSalesTable';
+import SalesTable from './components/SalesTable';
 
 function App() {
   const dispatch = useDispatch();
   const { message } = useSelector((state) => state.motorcycles);
+  const navBarLinks = {
+    motorcycles: { path: '/', text: 'MOTOS' },
+    customers: { path: '/clientes', text: 'CLIENTES' },
+    sales: { path: '/ventas', text: 'VENTAS' },
+  };
 
   useEffect(() => {
     dispatch(fetchMotorcycles());
@@ -36,10 +43,13 @@ function App() {
   return (
     <>
       <Routes>
-        <Route path="/" element={<Layout />}>
-          <Route path="/" element={<Motorcycles />} />
+        <Route path="/" element={<Layout links={navBarLinks} />}>
+          <Route index element={<Motorcycles />} />
           <Route path="/clientes" element={<Customers />} />
-          <Route path="/ventas" element={<Sales />} />
+          <Route path="/ventas" element={<Sales />}>
+            <Route index element={<SalesTable />} />
+            <Route path="/ventas/registrar-venta" element={<NewSalesTable />} />
+          </Route>
         </Route>
       </Routes>
     </>
