@@ -1,9 +1,10 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { useState } from 'react';
-import getIgvValue from '../utils/calculations/getIgvValue';
 import TableHeader from './TableHeader';
 import { saveSaleToDB } from '../redux/salesSlice';
 import ShowDetailsButton from './ShowDetailsButton';
+import MotorycleDetails from './MotorcycleDetails';
+import SaleDetails from './SaleDetails';
 
 const NewSalesTable = () => {
   const motorcycles = useSelector((state) => state.motorcycles.selectedMotorcycles);
@@ -56,64 +57,44 @@ const NewSalesTable = () => {
         <tbody id="new-sales-body">
           {motorcycles.map((motorcycle) => (
             <tr key={`VENTA-${motorcycle.factura}`}>
-              <td>{motorcycle.factura}</td>
-              <td>{motorcycle.modelo}</td>
-              <td>{motorcycle.numero_de_chasis}</td>
-              <td>{motorcycle.numero_de_motor}</td>
-              {salesData[motorcycle.factura]?.customer ? (
+              <MotorycleDetails motorcycle={motorcycle} />
+              {salesData[motorcycle.factura] ? (
                 <>
-                  <td>
-                    {salesData[motorcycle.factura]?.customer.dni}
-                  </td>
-                  <td>
-                    {salesData[motorcycle.factura]?.customer.nombre}
-                    {' '}
-                    {salesData[motorcycle.factura]?.customer.primerApellido}
-                  </td>
+                  <SaleDetails sale={salesData[motorcycle.factura]} />
                 </>
               ) : (
-                <td>
-                  <select onChange={
+                <>
+                  <td>
+                    <select onChange={
                   (e) => handleCustomerChange(motorcycle.factura, e.target.value)
                 }
-                  >
-                    <option value="">Seleccionar cliente</option>
-                    {customers.map((customer) => (
-                      <option key={customer.id} value={customer.dni}>
-                        {customer.nombre}
-                        {' '}
-                        {customer.primerApellido}
-                        {' '}
-                        {customer.segundoApellido}
-                      </option>
-                    ))}
-                  </select>
-                </td>
-              )}
-
-              {salesData[motorcycle.factura]?.total_amount ? (
-                <>
-                  <td>
-                    {salesData[motorcycle.factura]?.total_amount}
+                    >
+                      <option value="">Seleccionar cliente</option>
+                      {customers.map((customer) => (
+                        <option key={customer.dni} value={customer.dni}>
+                          {customer.nombre}
+                          {' '}
+                          {customer.primerApellido}
+                          {' '}
+                          {customer.segundoApellido}
+                        </option>
+                      ))}
+                    </select>
                   </td>
                   <td>
-                    {getIgvValue(salesData[motorcycle.factura]?.total_amount)}
+                    <input
+                      type="number"
+                      placeholder="Monto"
+                      onBlur={(e) => handleAmountChange(motorcycle.factura, e.target.value)}
+                    />
+                  </td>
+                  <td>
+                    <button type="button" onClick={() => handleCreateSale(motorcycle.factura)}>
+                      Crear Venta
+                    </button>
                   </td>
                 </>
-              ) : (
-                <td>
-                  <input
-                    type="number"
-                    placeholder="Monto"
-                    onBlur={(e) => handleAmountChange(motorcycle.factura, e.target.value)}
-                  />
-                </td>
               )}
-              <td>
-                <button type="button" onClick={() => handleCreateSale(motorcycle.factura)}>
-                  Crear Venta
-                </button>
-              </td>
             </tr>
           ))}
         </tbody>

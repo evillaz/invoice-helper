@@ -5,9 +5,11 @@ const formatDate = (dateStr) => {
   const month = String(date.getMonth() + 1).padStart(2, '0'); // getMonth() returns 0-11, so we add 1
   const year = date.getFullYear();
 
-  const formattedDate = `${day} ${month} ${year}`;
-
-  return formattedDate;
+  return {
+    day,
+    month,
+    year,
+  };
 };
 
 export default formatDate;

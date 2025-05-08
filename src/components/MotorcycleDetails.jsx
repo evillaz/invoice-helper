@@ -4,7 +4,6 @@ import highlightText from '../utils/text/highlightText';
 
 const MotorycleDetails = ({ motorcycle, showDetails }) => {
   const { searchQuery } = useSearchQuery();
-
   return (
     <>
       {showDetails ? (
@@ -15,10 +14,15 @@ const MotorycleDetails = ({ motorcycle, showDetails }) => {
           ))
       ) : (
         <>
-          <td>{highlightText(motorcycle.factura, searchQuery)}</td>
-          <td>{highlightText(motorcycle.modelo, searchQuery)}</td>
-          <td>{highlightText(motorcycle.numero_de_chasis, searchQuery)}</td>
-          <td>{highlightText(motorcycle.numero_de_motor, searchQuery)}</td>
+          {motorcycle
+          && (
+          <>
+            <td>{highlightText(motorcycle.factura, searchQuery)}</td>
+            <td>{highlightText(motorcycle.modelo, searchQuery)}</td>
+            <td>{highlightText(motorcycle.numero_de_chasis, searchQuery)}</td>
+            <td>{highlightText(motorcycle.numero_de_motor, searchQuery)}</td>
+          </>
+          )}
         </>
       )}
     </>

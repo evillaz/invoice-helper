@@ -11,6 +11,7 @@ import { fetchCustomers } from './redux/customersSlice';
 import { fetchSales } from './redux/salesSlice';
 import NewSalesTable from './components/NewSalesTable';
 import SalesTable from './components/SalesTable';
+import CartaPoderSUNARP from './components/CartaPoderSUNARP';
 
 function App() {
   const dispatch = useDispatch();
@@ -48,6 +49,7 @@ function App() {
           <Route path="/clientes" element={<Customers />} />
           <Route path="/ventas" element={<Sales />}>
             <Route index element={<SalesTable />} />
+            <Route path="/ventas/CartaPoderSUNARP/:id" element={<CartaPoderSUNARP />} />
             <Route path="/ventas/registrar-venta" element={<NewSalesTable />} />
           </Route>
         </Route>

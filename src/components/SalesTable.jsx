@@ -14,6 +14,7 @@ const SalesTable = () => {
   const customerHeader = ['DNI', 'NOMBRE', 'DIRECCION'];
   const baseHeader = [...baseMotoHeader, ...customerHeader, 'MONTO', 'IGV', 'FECHA EMISION', 'BOLETA'];
   // const expandedHeader = [...expandedMotoHeader, customerHeader];
+  console.log(sales);
 
   return (
     <>

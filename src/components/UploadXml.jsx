@@ -87,7 +87,6 @@ const UploadXml = () => {
           }, {});
           finalObject.issueDate = issueDate;
           finalObject.payableAmount = payableAmount;
-          console.log(finalObject);
 
           const result = validInvoiceID
             ? { factura: invoiceID, ...finalObject }

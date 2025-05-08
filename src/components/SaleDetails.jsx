@@ -7,32 +7,38 @@ const SaleDetails = ({ sale }) => (
     {sale && (
       <>
         <MotorycleDetails motorcycle={sale.motorcycle} />
-        <td>
-          {sale.customer.dni}
-        </td>
-        <td>
-          {sale.customer.nombre}
-          {' '}
-          {sale.customer.primerApellido}
-          {' '}
-          {sale.customer.segundoApellido}
-        </td>
-        <td>
-          {sale.customer.direccion}
-        </td>
+        {sale.customer && (
+          <>
+            <td>
+              {sale.customer.dni}
+            </td>
+            <td>
+              {sale.customer.nombre}
+              {' '}
+              {sale.customer.primerApellido}
+              {' '}
+              {sale.customer.segundoApellido}
+            </td>
+            <td>
+              {sale.customer.direccion}
+            </td>
+          </>
+        )}
         <td>
           {sale.total_amount}
         </td>
         <td>
           {getIgvValue(sale.total_amount)}
         </td>
+        {sale.sale_date && (
         <td>
-          {sale.fecha_venta.day}
+          {sale.sale_date.day}
           -
-          {sale.fecha_venta.month}
+          {sale.sale_date.month}
           -
-          {sale.fecha_venta.year}
+          {sale.sale_date.year}
         </td>
+        )}
       </>
     )}
   </>
@@ -68,7 +74,7 @@ SaleDetails.propTypes = {
       provincia: PropTypes.string,
       distrito: PropTypes.string,
     }).isRequired,
-    fecha_venta: PropTypes.shape({
+    sale_date: PropTypes.shape({
       day: PropTypes.string,
       month: PropTypes.string,
       year: PropTypes.number,

@@ -1,0 +1,58 @@
+.a4-page {
+  width: 210mm;
+  height: 100%; /* 👈 pon height fijo en lugar de min-height */
+  padding: 20mm 20mm 0;
+  background: white;
+  box-shadow: 0 0 5px rgba(0,0,0,0.1);
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 14pt;
+  line-height: 1.5;
+  margin: 0;
+  box-sizing: border-box;
+  overflow: hidden; /* 👈 Evita desbordes que crean páginas extra */
+}
+
+.document {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.document p {
+  margin: 0;
+}
+
+.document__header h2 {
+  text-align: center;
+  text-decoration: underline;
+}
+
+.document__body {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+}
+
+.document__details {
+  display: flex;
+  flex-direction: column;
+  font-size: 12pt;
+  gap: 0.5em;
+}
+
+.document__footer {
+  display: flex;
+  justify-content: space-between;
+  text-align: center;
+  margin-top: 5rem;
+}
+
+.document__signer {
+  display: flex;
+  flex-direction: column;
+}
+
+.detail {
+  display: flex;
+  flex-direction: column;
+}

@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import formatDate from '../utils/format/formatDate';
 
 const SALE_STATUSES = {
   PROSPECT: 'prospect',
@@ -27,21 +28,15 @@ const determineSaleStatus = (sale) => {
   return SALE_STATUSES.PROCESSED;
 };
 
-const transformSalesData = (data) => data.map((d) => {
-  const createdAt = new Date(d.created_at);
-  const day = String(createdAt.getDate()).padStart(2, '0');
-  const month = String(createdAt.getMonth() + 1).padStart(2, '0');
-  const year = createdAt.getFullYear();
-  const fecha_venta = {
-    day,
-    month,
-    year,
-  };
-  return {
-    ...d,
-    fecha_venta,
-  };
-});
+const transformSaleDate = (sale) => {
+  const dateSource = sale.electronic_receipt?.issue_date || sale.created_at;
+  return formatDate(new Date(dateSource));
+};
+
+const getSalesDate = (data) => data.map((d) => ({
+  ...d,
+  sale_date: transformSaleDate(d),
+}));
 
 export const fetchSales = createAsyncThunk(
   'sales/fetchSales',
@@ -50,7 +45,7 @@ export const fetchSales = createAsyncThunk(
       const response = await fetch('http://localhost:3000/api/v1/sales');
       if (!response.ok) throw new Error('Error fetching sales from DB');
       const data = await response.json();
-      const salesData = transformSalesData(data);
+      const salesData = getSalesDate(data);
       return salesData;
     } catch (error) {
       return rejectWithValue(error.message);
@@ -119,6 +114,33 @@ export const updateBoleta = createAsyncThunk(
   },
 );
 
+export const updateElectronicReceipt = createAsyncThunk(
+  'sales/updateElectronicReceipt',
+  async (sale, { rejectWithValue }) => {
+    const { saleId, electronic_receipt } = sale;
+    try {
+      const response = await fetch(`http://localhost:3000/api/v1/sales/${saleId}/update_receipt`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          electronic_receipt,
+        }),
+      });
+      if (!response.ok) throw new Error('Error updating sale');
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  },
+);
+
+export const selectSaleById = (state, saleId) => state.sales.sales?.find(
+  (sale) => sale.id === Number(saleId),
+);
+
 const initialState = {
   sales: [],
   status: 'idle',
@@ -165,6 +187,7 @@ const salesSlice = createSlice({
         state.message = action.payload.message;
         const saleWithStatus = {
           ...action.payload,
+          sale_date: transformSaleDate(action.payload),
           status: determineSaleStatus(action.payload),
         };
         state.sales = [...state.sales, saleWithStatus];
@@ -199,6 +222,25 @@ const salesSlice = createSlice({
         );
       })
       .addCase(updateBoleta.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.payload;
+      })
+      .addCase(updateElectronicReceipt.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(updateElectronicReceipt.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        const { id } = action.payload.sale;
+        const electronic_receipt = {
+          receipt_number: action.payload.receipt_number,
+          issue_date: action.payload.issue_date,
+        };
+        state.sales = state.sales.map(
+          (sale) => (sale.id === id
+            ? { ...sale, electronic_receipt, status: determineSaleStatus(sale) } : sale),
+        );
+      })
+      .addCase(updateElectronicReceipt.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.payload;
       });
