@@ -57,18 +57,20 @@ const SalesTable = () => {
           <SearchBar />
           <table>
             <thead>
-              <th onClick={() => handleSort('status')}>Estado</th>
-              <th onClick={() => handleSort('motorcycle.factura')}>Factura</th>
-              <th onClick={() => handleSort('motorcycle.modelo')}>Modelo</th>
-              <th onClick={() => handleSort('motorcycle.numero_de_chasis')}>Numero de Chasis</th>
-              <th onClick={() => handleSort('motorcycle.numero_de_motor')}>Numero de Motor</th>
-              <th onClick={() => handleSort('customer.dni')}>DNI</th>
-              <th onClick={() => handleSort('customer.nombre')}>NOMBRE</th>
-              <th onClick={() => handleSort('customer.direccion')}>DIRECCION</th>
-              <th onClick={() => handleSort('total_amount')}>MONTO</th>
-              <th>IGV</th>
-              <th>FECHA EMISION</th>
-              <th onClick={() => handleSort('payments')}>PAGOS</th>
+              <tr>
+                <th onClick={() => handleSort('status')}>Estado</th>
+                <th onClick={() => handleSort('motorcycle.factura')}>Factura</th>
+                <th onClick={() => handleSort('motorcycle.modelo')}>Modelo</th>
+                <th onClick={() => handleSort('motorcycle.numero_de_chasis')}>Numero de Chasis</th>
+                <th onClick={() => handleSort('motorcycle.numero_de_motor')}>Numero de Motor</th>
+                <th onClick={() => handleSort('customer.dni')}>DNI</th>
+                <th onClick={() => handleSort('customer.nombre')}>NOMBRE</th>
+                <th onClick={() => handleSort('customer.direccion')}>DIRECCION</th>
+                <th onClick={() => handleSort('total_amount')}>MONTO</th>
+                <th>IGV</th>
+                <th>FECHA EMISION</th>
+                <th onClick={() => handleSort('payments')}>PAGOS</th>
+              </tr>
             </thead>
             <tbody>
               {sortedSales.map((sale) => (

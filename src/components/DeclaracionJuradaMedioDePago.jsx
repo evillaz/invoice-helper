@@ -48,7 +48,7 @@ const DeclaracionJuradaMedioDePago = ({ sale }, ref) => {
             , la suma de
             <strong>
               {' '}
-              {`${writtenNumber(sale.total_amount, { lang: 'es' })} SOLES con 00/100`}
+              {`${(writtenNumber(sale.total_amount, { lang: 'es' })).toUpperCase()} SOLES con 00/100`}
               {' '}
             </strong>
             (S/
