@@ -9,19 +9,19 @@ const SALE_STATUSES = {
 };
 
 const determineSaleStatus = (sale) => {
-  if (!sale.boleta) {
+  if (!sale.electronic_receipt) {
     return SALE_STATUSES.PROSPECT;
   }
 
-  if (sale.boleta && !sale.titulo) {
+  if (sale.electronic_receipt && !sale.title) {
     return SALE_STATUSES.PROCESSED;
   }
 
-  if (sale.titulo && !sale.placa) {
+  if (sale.title && !sale.plate) {
     return SALE_STATUSES.TITULO_REGISTERED;
   }
 
-  if (sale.placa) {
+  if (sale.plate) {
     return SALE_STATUSES.PLACA_REGISTERED;
   }
 
@@ -137,6 +137,29 @@ export const updateElectronicReceipt = createAsyncThunk(
   },
 );
 
+export const addPayment = createAsyncThunk(
+  'sales/addPayment',
+  async (paymentStructure, { rejectWithValue }) => {
+    const { saleId, payment } = paymentStructure;
+    try {
+      const response = await fetch(`http://localhost:3000/api/v1/sales/${saleId}/add_payment`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          payment,
+        }),
+      });
+      if (!response.ok) throw new Error('Error updating sale');
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  },
+);
+
 export const selectSaleById = (state, saleId) => state.sales.sales?.find(
   (sale) => sale.id === Number(saleId),
 );
@@ -241,6 +264,31 @@ const salesSlice = createSlice({
         );
       })
       .addCase(updateElectronicReceipt.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.payload;
+      })
+      .addCase(addPayment.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(addPayment.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        const { id } = action.payload.sale;
+        const { amount, issue_date, transaction_number } = action.payload;
+        const payment = {
+          amount,
+          issue_date,
+          transaction_number,
+        };
+        state.sales = state.sales.map(
+          (sale) => (sale.id === id
+            ? {
+              ...sale,
+              payments: [...(sale.payments || []), payment],
+              status: determineSaleStatus(sale),
+            } : sale),
+        );
+      })
+      .addCase(addPayment.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.payload;
       });

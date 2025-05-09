@@ -1,36 +1,84 @@
 import { useSelector } from 'react-redux';
-import TableHeader from './TableHeader';
-// import { useState } from 'react';
+import { useState } from 'react';
 import SaleItem from './SaleItem';
+import SearchBar from './SearchBar';
+import { SearchContext } from '../context/SearchContext';
 
 const SalesTable = () => {
   const sales = useSelector((state) => state.sales.sales);
-  // const [editBoleta, setEditBoleta] = useState(false);
-  // const toggleEditBoleta = () => setEditBoleta((prev) => !prev);
+  const [searchQuery, setSearchQuery] = useState('');
 
-  const baseMotoHeader = ['Estado', 'Factura', 'Modelo', 'Numero de Chasis', 'Numero de Motor'];
-  // const expandedMotoHeader =
-  // ['Factura', 'Modelo', 'Marca', 'Color', 'Numero de Chasis', 'Numero de Motor', 'DUA', 'Año'];
-  const customerHeader = ['DNI', 'NOMBRE', 'DIRECCION'];
-  const baseHeader = [...baseMotoHeader, ...customerHeader, 'MONTO', 'IGV', 'FECHA EMISION', 'BOLETA'];
-  // const expandedHeader = [...expandedMotoHeader, customerHeader];
-  console.log(sales);
+  const filteredSales = sales.filter((sale) => {
+    const checkMatch = (obj) => Object.values(obj).some((item) => {
+      if (typeof item === 'string') {
+        return item.toLowerCase().includes(searchQuery.toLocaleLowerCase());
+      } if (typeof item === 'object' && item !== null) {
+        return checkMatch(item); // Recursively check nested objects
+      }
+      return false;
+    });
+    return checkMatch(sale);
+  });
+
+  const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' });
+
+  // Handle column click
+  function getNestedValue(obj, path) {
+    return path.split('.').reduce((o, p) => o?.[p], obj);
+  }
+
+  const handleSort = (key) => {
+    setSortConfig((prev) => ({
+      key,
+      direction: prev.key === key && prev.direction === 'asc' ? 'desc' : 'asc',
+    }));
+  };
+
+  // Sort logic
+  const sortedSales = [...filteredSales].sort((a, b) => {
+    if (!sortConfig.key) return 0;
+
+    let aValue = getNestedValue(a, sortConfig.key);
+    let bValue = getNestedValue(b, sortConfig.key);
+
+    // Convert to string and lowercase for consistent comparison
+    aValue = aValue?.toString().toLowerCase() || '';
+    bValue = bValue?.toString().toLowerCase() || '';
+
+    if (aValue < bValue) return sortConfig.direction === 'asc' ? -1 : 1;
+    if (aValue > bValue) return sortConfig.direction === 'asc' ? 1 : -1;
+    return 0;
+  });
 
   return (
     <>
       {sales && (
-        <table>
-          <thead>
-            <TableHeader headerData={baseHeader} />
-          </thead>
-          <tbody>
-            {sales.map((sale) => (
-              <tr key={`sale ${sale.id}`} id={`sale ${sale.id}`}>
-                <SaleItem sale={sale} />
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <SearchContext.Provider value={{ searchQuery, setSearchQuery }}>
+          <SearchBar />
+          <table>
+            <thead>
+              <th onClick={() => handleSort('status')}>Estado</th>
+              <th onClick={() => handleSort('motorcycle.factura')}>Factura</th>
+              <th onClick={() => handleSort('motorcycle.modelo')}>Modelo</th>
+              <th onClick={() => handleSort('motorcycle.numero_de_chasis')}>Numero de Chasis</th>
+              <th onClick={() => handleSort('motorcycle.numero_de_motor')}>Numero de Motor</th>
+              <th onClick={() => handleSort('customer.dni')}>DNI</th>
+              <th onClick={() => handleSort('customer.nombre')}>NOMBRE</th>
+              <th onClick={() => handleSort('customer.direccion')}>DIRECCION</th>
+              <th onClick={() => handleSort('total_amount')}>MONTO</th>
+              <th>IGV</th>
+              <th>FECHA EMISION</th>
+              <th onClick={() => handleSort('payments')}>PAGOS</th>
+            </thead>
+            <tbody>
+              {sortedSales.map((sale) => (
+                <tr key={`sale ${sale.id}`} id={`sale ${sale.id}`}>
+                  <SaleItem sale={sale} />
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </SearchContext.Provider>
       )}
     </>
   );

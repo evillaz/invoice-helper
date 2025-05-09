@@ -1,4 +1,5 @@
 .a4-page {
+  gap: 1em;
   width: 210mm;
   height: 100%; /* 👈 pon height fijo en lugar de min-height */
   padding: 20mm 20mm 0;
@@ -55,4 +56,13 @@
 .detail {
   display: flex;
   flex-direction: column;
+}
+
+.document__body h3 {
+  align-self: center;
+}
+
+.carta__poder {
+  margin-top: 6em;
+  justify-content: flex-end;
 }

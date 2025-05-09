@@ -1,31 +1,23 @@
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
-import { useRef, useState } from 'react';
-import html2pdf from 'html2pdf.js';
-import { deleteSaleFromDB, updateElectronicReceipt } from '../redux/salesSlice';
+import { addPayment, deleteSaleFromDB } from '../redux/salesSlice';
 import CopyDescriptionButton from './CopyDescriptionButton';
 import DeleteButton from './DeleteButton';
 import SaleDetails from './SaleDetails';
-import CartaPoderSUNARP from './CartaPoderSUNARP';
+import SaleElectronicReceiptInput from './SaleElectronicReceiptInput';
+import SaleAddPaymentForm from './SaleAddPaymentForm';
+import SaleCartaPoderSunarp from './SaleCartaPoderSunarp';
+import SaleCartaPoderAPP from './SaleCartaPoderAPP';
+import SaleDeclaracionMedioPago from './SaleDeclaracionMedioPago';
 
 const SaleItem = ({ sale }) => {
   const dispatch = useDispatch();
-  const [receiptNumber, setReceiptNumber] = useState('');
-  const [issueDate, setIssueDate] = useState(new Date());
-  const [editReceipt, setEditReceipt] = useState(false);
-  const [showPreview, setShowPreview] = useState(false);
-  const cartaRef = useRef();
-  const handleDownloadPDF = () => {
-    const element = cartaRef.current;
-    const opt = {
-      margin: 0,
-      filename: `CartaPoderSUNARP-${sale.id}.pdf`,
-      image: { type: 'jpeg', quality: 0.98 },
-      html2canvas: { scale: 2, useCORS: true },
-      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-      pagebreak: { mode: ['avoid'] }, // 👈 Evita romper la página
+  const createPayment = (paymentData) => {
+    const paymentStructure = {
+      saleId: sale.id,
+      payment: paymentData,
     };
-    html2pdf().set(opt).from(element).save();
+    dispatch(addPayment(paymentStructure));
   };
   const statusClasses = {
     prospect: {
@@ -45,26 +37,6 @@ const SaleItem = ({ sale }) => {
     },
   };
 
-  const handleChangeReceipt = (receipt) => {
-    setReceiptNumber(`EB01-${receipt}`);
-  };
-
-  const handleChangeIssueDate = (issueDate) => {
-    setIssueDate(issueDate);
-  };
-
-  const handleEditReceipt = () => {
-    setEditReceipt(!editReceipt);
-  };
-
-  const handleSaveReceipt = (saleId) => {
-    const electronic_receipt = {
-      receipt_number: receiptNumber,
-      issue_date: issueDate,
-    };
-    dispatch(updateElectronicReceipt({ saleId, electronic_receipt }));
-  };
-
   return (
     <>
       <td>
@@ -75,123 +47,11 @@ const SaleItem = ({ sale }) => {
         </span>
       </td>
       <SaleDetails sale={sale} />
-      {(sale.electronic_receipt && !editReceipt) ? (
-        <>
-          <td>
-            <span>
-              {sale.electronic_receipt.receipt_number}
-            </span>
-            <button
-              type="button"
-              onClick={() => handleEditReceipt()}
-            >
-              Editar BOLETA
-            </button>
-          </td>
-          <td>
-            <button type="button" onClick={handleDownloadPDF}>
-              Descargar Carta SUNARP (PDF)
-            </button>
-            <button type="button" onClick={() => setShowPreview(true)}>
-              Ver Prevista
-            </button>
-            <div
-              style={{
-                display: 'none',
-              }}
-            >
-              <CartaPoderSUNARP ref={cartaRef} sale={sale} />
-            </div>
-            {showPreview && (
-              <div style={{
-                position: 'fixed',
-                top: 0,
-                left: 0,
-                right: 0,
-                bottom: 0,
-                backgroundColor: 'rgba(0,0,0,0.5)',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                zIndex: 1000,
-              }}
-              >
-                <div style={{
-                  background: '#fff',
-                  padding: '2rem',
-                  maxWidth: '800px',
-                  maxHeight: '90vh',
-                  overflowY: 'auto',
-                  borderRadius: '8px',
-                  position: 'relative',
-                }}
-                >
-                  <button
-                    type="button"
-                    onClick={() => setShowPreview(false)}
-                    style={{
-                      position: 'absolute',
-                      top: '10px',
-                      right: '10px',
-                      background: 'red',
-                      color: '#fff',
-                      border: 'none',
-                      borderRadius: '50%',
-                      width: '30px',
-                      height: '30px',
-                      cursor: 'pointer',
-                    }}
-                  >
-                    ✕
-                  </button>
-                  {/* Aquí renderizamos la carta dentro del modal */}
-                  <CartaPoderSUNARP ref={cartaRef} sale={sale} />
-                </div>
-              </div>
-            )}
-          </td>
-        </>
-      ) : (
-        <>
-          <td
-            style={{ display: 'flex' }}
-          >
-            <label
-              htmlFor={`receiptId${sale.id}`}
-              style={{ display: 'flex' }}
-            >
-              EB01-
-              <input
-                id={`receiptId${sale.id}`}
-                type="text"
-                onBlur={(e) => handleChangeReceipt(e.target.value)}
-                style={{ marginLeft: '4px' }}
-              />
-            </label>
-            {/* <SaleGenericInput type="date" handleFunction={handleChangeIssueDate} /> */}
-            <label
-              htmlFor={`receiptIssueDate${sale.id}`}
-              style={{ display: 'flex' }}
-            >
-              EB01-
-              <input
-                id={`receiptIssueDate${sale.id}`}
-                type="date"
-                onBlur={(e) => handleChangeIssueDate(e.target.value)}
-                style={{ marginLeft: '4px' }}
-              />
-            </label>
-          </td>
-          <td>
-            <button
-              type="button"
-              onClick={() => handleSaveReceipt(sale.id)}
-            >
-              AGREGAR BOLETA
-            </button>
-          </td>
-        </>
-      )}
+      <SaleElectronicReceiptInput sale={sale} />
+      <SaleCartaPoderSunarp sale={sale} />
+      <SaleCartaPoderAPP sale={sale} />
+      <SaleDeclaracionMedioPago sale={sale} />
+      <SaleAddPaymentForm onSubmit={createPayment} />
       <CopyDescriptionButton motorcycle={sale.motorcycle} />
       <DeleteButton deleteFunc={deleteSaleFromDB} item={sale} />
     </>

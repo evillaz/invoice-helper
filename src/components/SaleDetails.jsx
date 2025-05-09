@@ -39,6 +39,34 @@ const SaleDetails = ({ sale }) => (
           {sale.sale_date.year}
         </td>
         )}
+        {sale.payments.length > 0 ? (
+          sale.payments.map((payment) => (
+            <td key={`transaccion${payment.transaction_number}`}>
+              <p
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                }}
+              >
+                <span>
+                  {payment.amount}
+                </span>
+                <span>
+                  {payment.transaction_number}
+                </span>
+                <span>
+                  {payment.issue_date}
+                </span>
+              </p>
+            </td>
+          ))
+        ) : (
+          <>
+            <td>
+              REGISTRAR PAGOS
+            </td>
+          </>
+        )}
       </>
     )}
   </>
@@ -79,6 +107,13 @@ SaleDetails.propTypes = {
       month: PropTypes.string,
       year: PropTypes.number,
     }),
+    payments: PropTypes.arrayOf(
+      PropTypes.shape({
+        amount: PropTypes.number,
+        issue_date: PropTypes.string,
+        transaction_number: PropTypes.string,
+      }),
+    ),
   }).isRequired,
 };
 
