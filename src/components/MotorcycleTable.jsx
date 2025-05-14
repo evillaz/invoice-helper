@@ -4,11 +4,10 @@ import MotorcycleItem from './MotorcycleItem';
 import TableHeader from './TableHeader';
 
 const MotorcyclesTable = ({ motorcycles }) => {
-  const baseHeader = ['Select', 'Factura', 'Modelo', 'Numero de Chasis', 'Numero de Motor'];
-  const expandedHeader = ['Select', 'Factura', 'Modelo', 'Marca', 'Color', 'Numero de Chasis', 'Numero de Motor', 'DUA', 'Año'];
+  const baseHeader = ['Select', 'Factura', 'Modelo', 'Numero de Chasis', 'Numero de Motor', 'Color', 'DUA'];
+  const expandedHeader = ['Select', 'Factura', 'Modelo', 'Marca', 'Color', 'Numero de Chasis', 'Numero de Motor', 'DUA', 'Año', 'Fecha Emision', 'Importe'];
   const tableRef = useRef(null);
   const [showDetails, setShowDetails] = useState(false);
-
   const copyTableToClipboard = () => {
     if (!tableRef.current) return;
 

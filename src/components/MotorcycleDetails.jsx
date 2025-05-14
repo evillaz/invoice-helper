@@ -1,29 +1,57 @@
 import PropTypes from 'prop-types';
+import { useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { useSearchQuery } from '../context/SearchContext';
 import highlightText from '../utils/text/highlightText';
+import { updateAttribute } from '../redux/motorcyclesSlice';
 
-const MotorycleDetails = ({ motorcycle, showDetails }) => {
+const MotorycleDetails = ({ motorcycle/* , showDetails */ }) => {
   const { searchQuery } = useSearchQuery();
+  const [color, setColor] = useState('');
+  const dispatch = useDispatch();
+  const handleColorChange = (colorInput) => {
+    setColor(colorInput.toUpperCase());
+  };
+  const handleSaveColor = (motorcycleId, colorValue) => {
+    const sentAttribute = {
+      attribute: 'color',
+      motorcycleId,
+      colorValue,
+    };
+    dispatch(updateAttribute(sentAttribute));
+  };
+  console.log(color);
   return (
     <>
-      {showDetails ? (
-        Object.entries(motorcycle)
-          .filter((entry) => typeof entry[1] === 'string' || typeof entry[1] === 'number')
-          .map(([key, value]) => (
-            <td key={key}>{highlightText(value.toString(), searchQuery)}</td>
-          ))
-      ) : (
-        <>
-          {motorcycle
-          && (
-          <>
-            <td>{highlightText(motorcycle.factura, searchQuery)}</td>
-            <td>{highlightText(motorcycle.modelo, searchQuery)}</td>
-            <td>{highlightText(motorcycle.numero_de_chasis, searchQuery)}</td>
-            <td>{highlightText(motorcycle.numero_de_motor, searchQuery)}</td>
-          </>
-          )}
-        </>
+      {motorcycle
+      && (
+      <>
+        <td>{highlightText(motorcycle.factura, searchQuery)}</td>
+        <td>{highlightText(motorcycle.modelo, searchQuery)}</td>
+        <td>{highlightText(motorcycle.numero_de_chasis, searchQuery)}</td>
+        <td>{highlightText(motorcycle.numero_de_motor, searchQuery)}</td>
+        {(motorcycle.color !== '') ? (
+          <td>{motorcycle.color}</td>
+        ) : (
+          <td
+            style={{ display: 'flex' }}
+          >
+            <label
+              htmlFor={`motorcycleColor${motorcycle.factura}`}
+              style={{ display: 'flex' }}
+            >
+              <input
+                id={`motorcycleColor${motorcycle.factura}`}
+                type="text"
+                onChange={(e) => handleColorChange(e.target.value)}
+                onBlur={() => handleSaveColor(motorcycle.id, color)}
+                style={{ marginLeft: '4px' }}
+              />
+            </label>
+          </td>
+        )}
+        <td>{highlightText(motorcycle.dua, searchQuery)}</td>
+      </>
       )}
     </>
   );

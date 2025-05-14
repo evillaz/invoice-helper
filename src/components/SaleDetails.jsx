@@ -1,10 +1,22 @@
 import PropTypes from 'prop-types';
+import { useDispatch } from 'react-redux';
 import MotorycleDetails from './MotorcycleDetails';
 import getIgvValue from '../utils/calculations/getIgvValue';
+import { deletePayment } from '../redux/salesSlice';
 
-const SaleDetails = ({ sale }) => (
-  <>
-    {sale && (
+const SaleDetails = ({ sale }) => {
+  const dispatch = useDispatch();
+  const handleDelete = (saleId, paymentId) => {
+    const paymentStructure = {
+      saleId,
+      paymentId,
+    };
+    return dispatch(deletePayment(paymentStructure));
+  };
+
+  return (
+    <>
+      {sale && (
       <>
         <MotorycleDetails motorcycle={sale.motorcycle} />
         {sale.customer && (
@@ -22,6 +34,15 @@ const SaleDetails = ({ sale }) => (
             <td>
               {sale.customer.direccion}
             </td>
+            <td>
+              {sale.customer.departamento}
+            </td>
+            <td>
+              {sale.customer.provincia}
+            </td>
+            <td>
+              {sale.customer.distrito}
+            </td>
           </>
         )}
         <td>
@@ -30,35 +51,37 @@ const SaleDetails = ({ sale }) => (
         <td>
           {getIgvValue(sale.total_amount)}
         </td>
-        {sale.sale_date && (
-        <td>
-          {sale.sale_date.day}
-          -
-          {sale.sale_date.month}
-          -
-          {sale.sale_date.year}
-        </td>
-        )}
-        {sale.payments.length > 0 ? (
+        {sale.payments?.length > 0 ? (
           sale.payments.map((payment) => (
-            <td key={`transaccion${payment.transaction_number}`}>
-              <p
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                }}
-              >
-                <span>
-                  {payment.amount}
-                </span>
-                <span>
-                  {payment.transaction_number}
-                </span>
-                <span>
-                  {payment.issue_date}
-                </span>
-              </p>
-            </td>
+            <>
+              <td key={`transaccion${payment.transaction_number}`}>
+                <p
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                  }}
+                >
+                  <span>
+                    {payment.amount}
+                  </span>
+                  <span>
+                    {payment.transaction_number}
+                  </span>
+                  <span>
+                    {payment.issue_date}
+                  </span>
+                </p>
+              </td>
+              <td className="border px-2 py-1 text-center">
+                <button
+                  type="button"
+                  onClick={() => handleDelete(sale.id, payment.id)}
+                  className="ml-4 px-3 py-1 bg-red-500 text-white rounded-lg"
+                >
+                  X
+                </button>
+              </td>
+            </>
           ))
         ) : (
           <>
@@ -68,9 +91,10 @@ const SaleDetails = ({ sale }) => (
           </>
         )}
       </>
-    )}
-  </>
-);
+      )}
+    </>
+  );
+};
 
 SaleDetails.propTypes = {
   sale: PropTypes.shape({

@@ -24,6 +24,7 @@
     "jsx-a11y/control-has-associated-label": "off",
     "react/no-array-index-key": "off",
     "camelcase": "off",
+    "new-cap": "off",
     "import/no-extraneous-dependencies": [
       "error", {
         "devDependencies": false,

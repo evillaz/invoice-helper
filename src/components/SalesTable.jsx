@@ -3,6 +3,7 @@ import { useState } from 'react';
 import SaleItem from './SaleItem';
 import SearchBar from './SearchBar';
 import { SearchContext } from '../context/SearchContext';
+import GetVouchersPdf from './GetVouchersPdf';
 
 const SalesTable = () => {
   const sales = useSelector((state) => state.sales.sales);
@@ -52,6 +53,7 @@ const SalesTable = () => {
 
   return (
     <>
+      <GetVouchersPdf />
       {sales && (
         <SearchContext.Provider value={{ searchQuery, setSearchQuery }}>
           <SearchBar />
@@ -63,12 +65,16 @@ const SalesTable = () => {
                 <th onClick={() => handleSort('motorcycle.modelo')}>Modelo</th>
                 <th onClick={() => handleSort('motorcycle.numero_de_chasis')}>Numero de Chasis</th>
                 <th onClick={() => handleSort('motorcycle.numero_de_motor')}>Numero de Motor</th>
+                <th>COLOR</th>
+                <th>D.U.A</th>
                 <th onClick={() => handleSort('customer.dni')}>DNI</th>
                 <th onClick={() => handleSort('customer.nombre')}>NOMBRE</th>
                 <th onClick={() => handleSort('customer.direccion')}>DIRECCION</th>
+                <th onClick={() => handleSort('customer.direccion')}>DEPARTAMENTO</th>
+                <th onClick={() => handleSort('customer.direccion')}>PROVINCIA</th>
+                <th onClick={() => handleSort('customer.direccion')}>DISTRITO</th>
                 <th onClick={() => handleSort('total_amount')}>MONTO</th>
                 <th>IGV</th>
-                <th>FECHA EMISION</th>
                 <th onClick={() => handleSort('payments')}>PAGOS</th>
               </tr>
             </thead>

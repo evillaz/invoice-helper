@@ -8,7 +8,9 @@ import SaleElectronicReceiptInput from './SaleElectronicReceiptInput';
 import SaleAddPaymentForm from './SaleAddPaymentForm';
 import SaleCartaPoderSunarp from './SaleCartaPoderSunarp';
 import SaleCartaPoderAPP from './SaleCartaPoderAPP';
-import SaleDeclaracionMedioPago from './SaleDeclaracionMedioPago';
+import SaleAllDocumentsPDF from './SaleAllDocumentPDF';
+import SaleDocumentDownloader from './SaleDocumentDownloader';
+import DeclaracionJuradaMedioDePago from './DeclaracionJuradaMedioDePago';
 
 const SaleItem = ({ sale }) => {
   const dispatch = useDispatch();
@@ -48,9 +50,10 @@ const SaleItem = ({ sale }) => {
       </td>
       <SaleDetails sale={sale} />
       <SaleElectronicReceiptInput sale={sale} />
+      <SaleDocumentDownloader sale={sale} DocumentComponent={DeclaracionJuradaMedioDePago} filePrefix="DeclaracionJuradaMedioDePago" />
       <SaleCartaPoderSunarp sale={sale} />
       <SaleCartaPoderAPP sale={sale} />
-      <SaleDeclaracionMedioPago sale={sale} />
+      <SaleAllDocumentsPDF sale={sale} />
       <SaleAddPaymentForm onSubmit={createPayment} />
       <CopyDescriptionButton motorcycle={sale.motorcycle} />
       <DeleteButton deleteFunc={deleteSaleFromDB} item={sale} />

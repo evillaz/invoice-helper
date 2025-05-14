@@ -85,8 +85,8 @@ const UploadXml = () => {
             acc[item.attribute] = item['cdc:Value'];
             return acc;
           }, {});
-          finalObject.issueDate = issueDate;
-          finalObject.payableAmount = payableAmount;
+          finalObject.fecha_emision = issueDate;
+          finalObject.importe = payableAmount;
 
           const result = validInvoiceID
             ? { factura: invoiceID, ...finalObject }

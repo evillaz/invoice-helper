@@ -52,18 +52,6 @@ const SaleElectronicReceiptInput = ({ sale }) => {
             style={{ display: 'flex' }}
           >
             <label
-              htmlFor={`receiptId${sale.id}`}
-              style={{ display: 'flex' }}
-            >
-              EB01-
-              <input
-                id={`receiptId${sale.id}`}
-                type="text"
-                onBlur={(e) => handleChangeReceipt(e.target.value)}
-                style={{ marginLeft: '4px' }}
-              />
-            </label>
-            <label
               htmlFor={`receiptIssueDate${sale.id}`}
               style={{ display: 'flex' }}
             >

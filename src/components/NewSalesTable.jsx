@@ -61,6 +61,18 @@ const NewSalesTable = () => {
               {salesData[motorcycle.factura] ? (
                 <>
                   <SaleDetails sale={salesData[motorcycle.factura]} />
+                  <td>
+                    <input
+                      type="number"
+                      placeholder="Monto"
+                      onBlur={(e) => handleAmountChange(motorcycle.factura, e.target.value)}
+                    />
+                  </td>
+                  <td>
+                    <button type="button" onClick={() => handleCreateSale(motorcycle.factura)}>
+                      Crear Venta
+                    </button>
+                  </td>
                 </>
               ) : (
                 <>

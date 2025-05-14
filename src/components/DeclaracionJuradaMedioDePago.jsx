@@ -2,188 +2,81 @@ import PropTypes from 'prop-types';
 import writtenNumber from 'written-number';
 import '../styles/a4.css';
 import React from 'react';
+import SaleDocument from './SaleDocument';
 
 const DeclaracionJuradaMedioDePago = ({ sale }, ref) => {
-  const formatNumber = (number) => Number(number).toFixed(2);
+  const {
+    customer, total_amount, sale_date, electronic_receipt,
+  } = sale;
 
   return (
-    <>
-      {sale && (
-      <article
-        ref={ref}
-        className="document a4-page"
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'space-between',
-        }}
-      >
-        <header
-          className="document__header"
-        >
-          <h2 style={{ textAlign: 'center', textDecoration: 'underline' }}>
-            DECLARACIÓN JURADA DE MEDIO DE PAGO
-          </h2>
-        </header>
-        <section
-          className="document__body"
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-          }}
-        >
-          <p>
-            Yo, Macario Quiñones Silva, identificado con DNI 19402795,
-            representante y propietario legal de “MOTOS QUIÑONES” con RUC 10194079523,
-            con domicilio fiscal en Jr. Simón Bolívar N°289 Tayabamba – Pataz – La Libertad,
-            mediante el presente documento declaro bajo juramento haber recibido de parte
-            del señor/a;
-            <strong>
-              {' '}
-              {`${sale.customer.nombre} ${sale.customer.primerApellido} ${sale.customer.segundoApellido}`}
-              {' '}
-            </strong>
-            con DNI:
-            <strong>{sale.customer.dni}</strong>
-            , la suma de
-            <strong>
-              {' '}
-              {`${(writtenNumber(sale.total_amount, { lang: 'es' })).toUpperCase()} SOLES con 00/100`}
-              {' '}
-            </strong>
-            (S/
-            {formatNumber(sale.total_amount)}
-            ), la misma que justifica la venta de una MOTOCICLETA:
-          </p>
-
-          <section
-            className="document__details"
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              fontSize: '12pt',
-            }}
-          >
-            <p
-              className="detail"
-            >
-              <span>
-                <strong>MODELO</strong>
-              </span>
-              <span>
-                {sale.motorcycle.modelo}
-              </span>
-            </p>
-            <p
-              className="detail"
-            >
-              <span>
-                <strong>MARCA</strong>
-              </span>
-              <span>
-                {sale.motorcycle.marca}
-              </span>
-            </p>
-            <p
-              className="detail"
-            >
-              <span>
-                <strong>COLOR</strong>
-              </span>
-              <span>
-                {sale.motorcycle.color}
-              </span>
-            </p>
-            <p
-              className="detail"
-            >
-              <span>
-                <strong>NUMERO DE CHASIS</strong>
-              </span>
-              <span>
-                {sale.motorcycle.numero_de_chasis}
-              </span>
-            </p>
-            <p
-              className="detail"
-            >
-              <span>
-                <strong>NUMERO DE MOTOR</strong>
-              </span>
-              <span>
-                {sale.motorcycle.numero_de_motor}
-              </span>
-            </p>
-          </section>
-          <p>
-            En la fecha
+    <SaleDocument
+      sale={sale}
+      ref={ref}
+      title="DECLARACIÓN JURADA DE MEDIO DE PAGO"
+      showPayments
+      introText={(
+        <>
+          Yo, Macario Quiñones Silva, identificado con DNI 19402795,
+          representante y propietario legal de “MOTOS QUIÑONES” con RUC 10194079523,
+          con domicilio fiscal en Jr. Simón Bolívar N°289 Tayabamba – Pataz – La Libertad,
+          mediante el presente documento declaro bajo juramento haber recibido de parte
+          del señor/a;
+          <strong>
             {' '}
-            {`${sale.sale_date.day}/${sale.sale_date.month}/${sale.sale_date.year}`}
-            , con boleta
+            {customer.nombre}
             {' '}
-            {sale.electronic_receipt.receipt_number}
-            . El dinero ya mencionado fue cancelado en su totalidad
-            , mediante depósito a mi cuenta del Banco de la Nación con el siguiente Voucher
-            y se anexa al formato de inmatriculación electrónico.
-          </p>
-
-          {sale.payments.map((payment) => (
-            <p key={payment.transaction_number}>
-              -Deposito N°
-              {' '}
-              {payment.transaction_number}
-              {' '}
-              S/
-              {' '}
-              {formatNumber(payment.amount)}
-            </p>
-          ))}
-
-          <p>
-            Para mayor validez de lo expuesto
-            , ambas partes firmamos la presente ante notario público.
-          </p>
-        </section>
-
-        <footer
-          className="document__footer"
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            textAlign: 'center',
-          }}
-        >
-          <div
-            className="document__signer"
-            style={{ display: 'flex' }}
-          >
-            ___________________________
-            <br />
-            {`${sale.customer.nombre} ${sale.customer.primerApellido} ${sale.customer.segundoApellido}`}
-            <br />
-            DNI
+            {customer.primerApellido}
             {' '}
-            {sale.customer.dni}
-            <br />
-            COMPRADOR
-          </div>
-
-          <div
-            className="document__signer"
-            style={{ display: 'flex' }}
-          >
-            ___________________________
-            <br />
-            MACARIO QUIÑONES SILVA
-            <br />
-            DNI 19402795
-            <br />
-            VENDEDOR
-          </div>
-        </footer>
-      </article>
+            {customer.segundoApellido}
+            {' '}
+          </strong>
+          con
+          <strong>
+            {' '}
+            DNI:
+            {' '}
+            {customer.dni}
+          </strong>
+          , la suma de
+          <strong>
+            {' '}
+            {(writtenNumber(total_amount, { lang: 'es' })).toUpperCase()}
+            {' '}
+            SOLES
+            {' '}
+          </strong>
+          con
+          <strong>
+            {' '}
+            00/100
+            {' '}
+          </strong>
+          (S/
+          {Number(total_amount).toFixed(2)}
+          ), la misma que justifica la venta de una MOTOCICLETA:
+        </>
       )}
-    </>
+      closingText={(
+        <>
+          En la fecha
+          <strong>
+            {' '}
+            {sale_date.day}
+            /
+            {sale_date.month}
+            /
+            {sale_date.year}
+          </strong>
+          , con boleta
+          <strong>
+            {' '}
+            {electronic_receipt.receipt_number}
+          </strong>
+          . El dinero fue cancelado en su totalidad y se anexa al formato de inmatriculación.
+        </>
+      )}
+    />
   );
 };
 
@@ -227,5 +120,6 @@ DeclaracionJuradaMedioDePago.propTypes = {
     ),
   }).isRequired,
 };
+
 // 👇 Exportamos usando forwardRef para que funcione con html2pdf
 export default React.forwardRef(DeclaracionJuradaMedioDePago);

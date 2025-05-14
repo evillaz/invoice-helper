@@ -160,6 +160,23 @@ export const addPayment = createAsyncThunk(
   },
 );
 
+export const deletePayment = createAsyncThunk(
+  'sales/deletePayment',
+  async (paymentStructure, { rejectWithValue }) => {
+    console.log(paymentStructure);
+    const { saleId, paymentId } = paymentStructure;
+    try {
+      const response = await fetch(`http://localhost:3000/api/v1/sales/${saleId}/remove_payment/${paymentId}`, {
+        method: 'DELETE',
+      });
+      if (!response.ok) throw new Error('Error deleting sale from DB');
+      return paymentStructure;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  },
+);
+
 export const selectSaleById = (state, saleId) => state.sales.sales?.find(
   (sale) => sale.id === Number(saleId),
 );
@@ -260,7 +277,12 @@ const salesSlice = createSlice({
         };
         state.sales = state.sales.map(
           (sale) => (sale.id === id
-            ? { ...sale, electronic_receipt, status: determineSaleStatus(sale) } : sale),
+            ? {
+              ...sale,
+              electronic_receipt,
+              sale_date: transformSaleDate(sale),
+              status: determineSaleStatus(sale),
+            } : sale),
         );
       })
       .addCase(updateElectronicReceipt.rejected, (state, action) => {
@@ -289,6 +311,17 @@ const salesSlice = createSlice({
         );
       })
       .addCase(addPayment.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.payload;
+      })
+      .addCase(deletePayment.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(deletePayment.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        console.log(action.payload);
+      })
+      .addCase(deletePayment.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.payload;
       });
