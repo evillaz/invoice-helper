@@ -1,135 +1,32 @@
 import PropTypes from 'prop-types';
 import '../styles/a4.css';
 import React from 'react';
+import SaleDocument from './SaleDocument';
 
 const CartaPoderAPP = ({ sale }, ref) => (
-  <>
-    {sale && (
-    <article
-      ref={ref}
-      className="document a4-page"
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'space-between',
-      }}
-    >
-      <header
-        className="document__header"
-      >
-        <h2 style={{ textAlign: 'center', textDecoration: 'underline' }}>
-          CARTA PODER
-        </h2>
-        <p>
-          Yo:
-          {` ${sale.customer.primerApellido} ${sale.customer.segundoApellido}
-          ${sale.customer.nombre} con DNI: ${sale.customer.dni}`}
-        </p>
-      </header>
-      <section
-        className="document__body"
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-        }}
-      >
-        <h3>AUTORIZO</h3>
-        <p>
-          A la Srta. Gianella Maricarmen Quiñones López, identificado con D.N.I 70930228,
-          domiciliado en Jr. Simón Bolivar N° 287 Tayabamba – Pataz; para que en mi
-          representación realice los trámites y recojo ante la
-          <strong>ASOCIACIÓN AUTOMOTRIZ DEL PERÚ (AAP)</strong>
-          de mi placa de rodaje de la motocicleta lineal:
-        </p>
-
-        <section
-          className="document__details"
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            fontSize: '12pt',
-          }}
-        >
-          <p
-            className="detail"
-          >
-            <span>
-              <strong>MODELO</strong>
-            </span>
-            <span>
-              {sale.motorcycle.modelo}
-            </span>
-          </p>
-          <p
-            className="detail"
-          >
-            <span>
-              <strong>MARCA</strong>
-            </span>
-            <span>
-              {sale.motorcycle.marca}
-            </span>
-          </p>
-          <p
-            className="detail"
-          >
-            <span>
-              <strong>COLOR</strong>
-            </span>
-            <span>
-              {sale.motorcycle.color}
-            </span>
-          </p>
-          <p
-            className="detail"
-          >
-            <span>
-              <strong>NUMERO DE CHASIS</strong>
-            </span>
-            <span>
-              {sale.motorcycle.numero_de_chasis}
-            </span>
-          </p>
-          <p
-            className="detail"
-          >
-            <span>
-              <strong>NUMERO DE MOTOR</strong>
-            </span>
-            <span>
-              {sale.motorcycle.numero_de_motor}
-            </span>
-          </p>
-        </section>
-        <p>
-          Para mayor conformidad paso a firmar ante Notario Público esta Carta Poder que
-          le da las facultades necesarias a mi representante antes ya mencionado.
-        </p>
-      </section>
-      <footer
-        className="document__footer carta__poder"
-        style={{
-          display: 'flex',
-          textAlign: 'center',
-        }}
-      >
-        <div
-          className="document__signer"
-          style={{ display: 'flex' }}
-        >
-          ___________________________
-          <br />
-          {`${sale.customer.nombre} ${sale.customer.primerApellido} ${sale.customer.segundoApellido}`}
-          <br />
-          DNI
+  <SaleDocument
+    sale={sale}
+    ref={ref}
+    title="CARTA PODER"
+    bodyText={(
+      <p>
+        A la
+        <strong>
           {' '}
-          {sale.customer.dni}
-          <br />
-        </div>
-      </footer>
-    </article>
+          Srta. Gianella Maricarmen Quiñones López
+        </strong>
+        , identificado con D.N.I
+        <strong>
+          {' '}
+          70930228
+        </strong>
+        , domiciliado en Jr. Simón Bolivar N° 287 Tayabamba – Pataz; para que en mi
+        representación realice los trámites y recojo ante la
+        <strong> ASOCIACIÓN AUTOMOTRIZ DEL PERÚ (AAP)</strong>
+        de mi placa de rodaje de la motocicleta lineal:
+      </p>
     )}
-  </>
+  />
 );
 
 CartaPoderAPP.propTypes = {
@@ -172,5 +69,5 @@ CartaPoderAPP.propTypes = {
     ),
   }).isRequired,
 };
-// 👇 Exportamos usando forwardRef para que funcione con html2pdf
+
 export default React.forwardRef(CartaPoderAPP);

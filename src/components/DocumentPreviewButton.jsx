@@ -1,42 +1,18 @@
 import PropTypes from 'prop-types';
-import { useRef, useState } from 'react';
-import html2pdf from 'html2pdf.js';
-import CartaPoderAPP from './CartaPoderAPP';
+import { useState } from 'react';
 
-const SaleCartaPoderAPP = ({ sale }) => {
-  const cartaRef = useRef();
+const DocumentPreviewButton = ({ sale, DocumentComponent }) => {
   const [showPreview, setShowPreview] = useState(false);
 
-  const handleDownloadPDF = () => {
-    const element = cartaRef.current;
-    const opt = {
-      margin: 0,
-      filename: `CartaPoderAPP-${sale.id}.pdf`,
-      image: { type: 'jpeg', quality: 0.98 },
-      html2canvas: { scale: 2, useCORS: true },
-      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-      pagebreak: { mode: ['avoid'] }, // 👈 Evita romper la página
-    };
-    html2pdf().set(opt).from(element).save();
-  };
   return (
     <>
-      <td>
-        <button type="button" onClick={handleDownloadPDF}>
-          Descargar Carta Poder APP (PDF)
-        </button>
-        <button type="button" onClick={() => setShowPreview(true)}>
-          Ver Prevista
-        </button>
+      <button type="button" onClick={() => setShowPreview(true)}>
+        Prevista
+      </button>
+      {showPreview && (
         <div
+          className="document__preview__modal"
           style={{
-            display: 'none',
-          }}
-        >
-          <CartaPoderAPP ref={cartaRef} sale={sale} />
-        </div>
-        {showPreview && (
-          <div style={{
             position: 'fixed',
             top: 0,
             left: 0,
@@ -48,8 +24,10 @@ const SaleCartaPoderAPP = ({ sale }) => {
             alignItems: 'center',
             zIndex: 1000,
           }}
-          >
-            <div style={{
+        >
+          <div
+            className="document__preview__frame"
+            style={{
               background: '#fff',
               padding: '2rem',
               maxWidth: '800px',
@@ -58,36 +36,35 @@ const SaleCartaPoderAPP = ({ sale }) => {
               borderRadius: '8px',
               position: 'relative',
             }}
+          >
+            <button
+              className="document_preview_close_button"
+              type="button"
+              onClick={() => setShowPreview(false)}
+              style={{
+                position: 'absolute',
+                top: '10px',
+                right: '10px',
+                background: 'red',
+                color: '#fff',
+                border: 'none',
+                borderRadius: '50%',
+                width: '30px',
+                height: '30px',
+                cursor: 'pointer',
+              }}
             >
-              <button
-                type="button"
-                onClick={() => setShowPreview(false)}
-                style={{
-                  position: 'absolute',
-                  top: '10px',
-                  right: '10px',
-                  background: 'red',
-                  color: '#fff',
-                  border: 'none',
-                  borderRadius: '50%',
-                  width: '30px',
-                  height: '30px',
-                  cursor: 'pointer',
-                }}
-              >
-                ✕
-              </button>
-              {/* Aquí renderizamos la carta dentro del modal */}
-              <CartaPoderAPP ref={cartaRef} sale={sale} />
-            </div>
+              ✕
+            </button>
+            <DocumentComponent sale={sale} />
           </div>
-        )}
-      </td>
+        </div>
+      )}
     </>
   );
 };
 
-SaleCartaPoderAPP.propTypes = {
+DocumentPreviewButton.propTypes = {
   sale: PropTypes.shape({
     id: PropTypes.number.isRequired,
     total_amount: PropTypes.string.isRequired,
@@ -123,6 +100,7 @@ SaleCartaPoderAPP.propTypes = {
     }),
     status: PropTypes.string.isRequired,
   }).isRequired,
+  DocumentComponent: PropTypes.elementType.isRequired,
 };
 
-export default SaleCartaPoderAPP;
+export default DocumentPreviewButton;

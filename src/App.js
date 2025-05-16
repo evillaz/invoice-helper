@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Routes, Route } from 'react-router-dom';
 import './styles/style.css';
+import './styles/documentPreview.css';
 import { fetchMotorcycles, clearMessage } from './redux/motorcyclesSlice';
 import Layout from './components/Layout';
 import Motorcycles from './routes/Motorcycles';

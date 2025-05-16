@@ -6,11 +6,11 @@ import DeleteButton from './DeleteButton';
 import SaleDetails from './SaleDetails';
 import SaleElectronicReceiptInput from './SaleElectronicReceiptInput';
 import SaleAddPaymentForm from './SaleAddPaymentForm';
-import SaleCartaPoderSunarp from './SaleCartaPoderSunarp';
-import SaleCartaPoderAPP from './SaleCartaPoderAPP';
 import SaleAllDocumentsPDF from './SaleAllDocumentPDF';
 import SaleDocumentDownloader from './SaleDocumentDownloader';
 import DeclaracionJuradaMedioDePago from './DeclaracionJuradaMedioDePago';
+import CartaPoderAPP from './CartaPoderAPP';
+import CartaPoderSUNARP from './CartaPoderSUNARP';
 
 const SaleItem = ({ sale }) => {
   const dispatch = useDispatch();
@@ -51,8 +51,8 @@ const SaleItem = ({ sale }) => {
       <SaleDetails sale={sale} />
       <SaleElectronicReceiptInput sale={sale} />
       <SaleDocumentDownloader sale={sale} DocumentComponent={DeclaracionJuradaMedioDePago} filePrefix="DeclaracionJuradaMedioDePago" />
-      <SaleCartaPoderSunarp sale={sale} />
-      <SaleCartaPoderAPP sale={sale} />
+      <SaleDocumentDownloader sale={sale} DocumentComponent={CartaPoderSUNARP} filePrefix="DeclaracionJuradaMedioDePago" />
+      <SaleDocumentDownloader sale={sale} DocumentComponent={CartaPoderAPP} filePrefix="DeclaracionJuradaMedioDePago" />
       <SaleAllDocumentsPDF sale={sale} />
       <SaleAddPaymentForm onSubmit={createPayment} />
       <CopyDescriptionButton motorcycle={sale.motorcycle} />

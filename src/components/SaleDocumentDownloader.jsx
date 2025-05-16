@@ -3,6 +3,7 @@ import { useRef, useState } from 'react';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import nameSpaced from '../utils/format/nameSpaced';
+import DocumentPreviewButton from './DocumentPreviewButton';
 
 const SaleDocumentDownloader = ({ sale, DocumentComponent, filePrefix }) => {
   const [renderDoc, setRenderDoc] = useState(false);
@@ -38,7 +39,7 @@ const SaleDocumentDownloader = ({ sale, DocumentComponent, filePrefix }) => {
         {' '}
         (PDF)
       </button>
-
+      <DocumentPreviewButton sale={sale} DocumentComponent={DocumentComponent} />
       {renderDoc && (
         <div style={{ position: 'absolute', top: '-9999px', left: '-9999px' }}>
           <DocumentComponent sale={sale} ref={docRef} />

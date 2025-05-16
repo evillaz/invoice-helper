@@ -3,7 +3,7 @@ import '../styles/a4.css';
 import React from 'react';
 
 const SaleDocument = React.forwardRef(({
-  sale, title, introText, closingText, showPayments,
+  sale, title, bodyText, closingText, showPayments,
 }, ref) => {
   const formatNumber = (number) => Number(number).toFixed(2);
 
@@ -12,10 +12,34 @@ const SaleDocument = React.forwardRef(({
       <article ref={ref} className="document a4-page" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
         <header className="document__header">
           <h2 style={{ textAlign: 'center', textDecoration: 'underline' }}>{title}</h2>
-          {introText && <p>{introText}</p>}
-        </header>
+          {title.includes('CARTA') && (
+            <p>
+              Yo:
 
+              <strong>
+                {` ${sale.customer.nombre} ${sale.customer.primerApellido} ${sale.customer.segundoApellido}`}
+                {' '}
+              </strong>
+              con DNI:
+              {' '}
+              <strong>
+                {`${sale.customer.dni}`}
+              </strong>
+            </p>
+          )}
+        </header>
         <section className="document__body" style={{ display: 'flex', flexDirection: 'column' }}>
+          <section>
+            {title.includes('CARTA') && (
+              <h3 style={{
+                justifySelf: 'center',
+              }}
+              >
+                AUTORIZO
+              </h3>
+            )}
+            {bodyText}
+          </section>
           <section className="document__details" style={{ display: 'flex', flexDirection: 'column', fontSize: '12pt' }}>
             <p className="detail">
               <strong>MODELO:</strong>
@@ -82,8 +106,9 @@ const SaleDocument = React.forwardRef(({
           className="document__footer"
           style={{
             display: 'flex',
-            justifyContent: title.includes('DECLARACION') ? 'flex-end' : 'space-between',
+            justifyContent: title.includes('CARTA') ? 'flex-end' : 'space-between',
             textAlign: 'center',
+            fontWeight: 'bold',
           }}
         >
           <div className="document__signer" style={{ display: 'flex' }}>
@@ -91,7 +116,7 @@ const SaleDocument = React.forwardRef(({
             <br />
             {`${sale.customer.nombre} ${sale.customer.primerApellido} ${sale.customer.segundoApellido}`}
             <br />
-            DNI
+            DNI:
             {' '}
             {sale.customer.dni}
             <br />
@@ -104,7 +129,7 @@ const SaleDocument = React.forwardRef(({
               <br />
               MACARIO QUIÑONES SILVA
               <br />
-              DNI 19402795
+              DNI: 19402795
               <br />
               VENDEDOR
             </div>
@@ -157,7 +182,7 @@ SaleDocument.propTypes = {
     ),
   }).isRequired,
   title: PropTypes.string.isRequired,
-  introText: PropTypes.string.isRequired,
+  bodyText: PropTypes.string.isRequired,
   closingText: PropTypes.string.isRequired,
   showPayments: PropTypes.bool,
 };

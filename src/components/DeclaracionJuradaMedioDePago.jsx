@@ -15,7 +15,7 @@ const DeclaracionJuradaMedioDePago = ({ sale }, ref) => {
       ref={ref}
       title="DECLARACIÓN JURADA DE MEDIO DE PAGO"
       showPayments
-      introText={(
+      bodyText={(
         <>
           Yo, Macario Quiñones Silva, identificado con DNI 19402795,
           representante y propietario legal de “MOTOS QUIÑONES” con RUC 10194079523,

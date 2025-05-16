@@ -38,8 +38,9 @@ const MotorycleDetails = ({ motorcycle/* , showDetails */ }) => {
           >
             <label
               htmlFor={`motorcycleColor${motorcycle.factura}`}
-              style={{ display: 'flex' }}
+              style={{ display: 'none' }}
             >
+              COLOR
               <input
                 id={`motorcycleColor${motorcycle.factura}`}
                 type="text"
@@ -70,11 +71,11 @@ MotorycleDetails.propTypes = {
       anio: PropTypes.string.isRequired,
     }),
   ).isRequired,
-  showDetails: PropTypes.bool,
+  /* showDetails: PropTypes.bool, */
 };
 
-MotorycleDetails.defaultProps = {
+/* MotorycleDetails.defaultProps = {
   showDetails: false,
-};
+}; */
 
 export default MotorycleDetails;
