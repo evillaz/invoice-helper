@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import { useRef, useState } from 'react';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
-import nameSpaced from '../utils/format/nameSpaced';
+import nameSpaced from '../../utils/format/nameSpaced';
 import DocumentPreviewButton from './DocumentPreviewButton';
 
 const SaleDocumentDownloader = ({ sale, DocumentComponent, filePrefix }) => {

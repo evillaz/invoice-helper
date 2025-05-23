@@ -1,4 +1,4 @@
-import MotorcycleView from '../components/MotorcycleView';
+import MotorcycleView from '../components/motorcycles/MotorcycleView';
 
 const Motorcycles = () => (
   <MotorcycleView />

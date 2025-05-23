@@ -1,9 +1,9 @@
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { useSearchQuery } from '../context/SearchContext';
-import highlightText from '../utils/text/highlightText';
-import { updateAttribute } from '../redux/motorcyclesSlice';
+import { useSearchQuery } from '../../context/SearchContext';
+import highlightText from '../../utils/text/highlightText';
+import { updateAttribute } from '../../redux/motorcyclesSlice';
 
 const MotorycleDetails = ({ motorcycle/* , showDetails */ }) => {
   const { searchQuery } = useSearchQuery();
@@ -20,7 +20,6 @@ const MotorycleDetails = ({ motorcycle/* , showDetails */ }) => {
     };
     dispatch(updateAttribute(sentAttribute));
   };
-  console.log(color);
   return (
     <>
       {motorcycle

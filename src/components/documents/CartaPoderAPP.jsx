@@ -1,9 +1,9 @@
 import PropTypes from 'prop-types';
-import '../styles/a4.css';
+import '../../styles/a4.css';
 import React from 'react';
 import SaleDocument from './SaleDocument';
 
-const CartaPoderSUNARP = ({ sale }, ref) => (
+const CartaPoderAPP = ({ sale }, ref) => (
   <SaleDocument
     sale={sale}
     ref={ref}
@@ -21,16 +21,15 @@ const CartaPoderSUNARP = ({ sale }, ref) => (
           70930228
         </strong>
         , domiciliado en Jr. Simón Bolivar N° 287 Tayabamba – Pataz; para que en mi
-        representación realice los trámites correspondientes para la adquisición de mi
-        tarjeta de propiedad y recojo de la misma ante
-        <strong> REGISTROS PÚBLICOS (SUNARP) </strong>
-        de mi motocicleta lineal:
+        representación realice los trámites y recojo ante la
+        <strong> ASOCIACIÓN AUTOMOTRIZ DEL PERÚ (AAP)</strong>
+        de mi placa de rodaje de la motocicleta lineal:
       </p>
     )}
   />
 );
 
-CartaPoderSUNARP.propTypes = {
+CartaPoderAPP.propTypes = {
   sale: PropTypes.shape({
     total_amount: PropTypes.number.isRequired,
     boleta: PropTypes.string,
@@ -70,5 +69,5 @@ CartaPoderSUNARP.propTypes = {
     ),
   }).isRequired,
 };
-// 👇 Exportamos usando forwardRef para que funcione con html2pdf
-export default React.forwardRef(CartaPoderSUNARP);
+
+export default React.forwardRef(CartaPoderAPP);

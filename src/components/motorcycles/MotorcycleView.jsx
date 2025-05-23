@@ -1,16 +1,25 @@
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import MotorcyclesTable from './MotorcycleTable';
-import SearchBar from './SearchBar';
+import SearchBar from '../common/SearchBar';
 import SaveMotorcyclesButton from './SaveMotorcyclesButton';
-import UploadXml from './UploadXml';
-import { SearchContext } from '../context/SearchContext';
+import UploadXml from '../common/UploadXml';
+import { SearchContext } from '../../context/SearchContext';
+import Modal from '../common/Modal';
 
 const MotorcycleView = () => {
   const motorcycles = useSelector((state) => state.motorcycles.motorcycles);
   const selectedMotorcycles = useSelector((state) => state.motorcycles.selectedMotorcycles);
   const [searchQuery, setSearchQuery] = useState('');
-
+  const [showXmlUploader, setShowXmlUploader] = useState(false);
+  console.log(motorcycles);
+  
+  const handleShowXmluploader = () => {
+    setShowXmlUploader(true);
+  };
+  const handleCloseXmluploader = () => {
+    setShowXmlUploader(false);
+  };
   const noSaleMotorcycles = motorcycles.filter((motorcycle) => motorcycle.sale === null
     || motorcycle.sale === undefined);
 
@@ -26,7 +35,14 @@ const MotorcycleView = () => {
   return (
     <SearchContext.Provider value={{ searchQuery, setSearchQuery }}>
       <div className="p-4 border rounded-lg shadow-md w-96 mx-auto">
-        <UploadXml />
+        {showXmlUploader
+          ? (
+            <Modal RenderComponent={UploadXml} closeModal={handleCloseXmluploader} />
+          ) : (
+            <button type="button" onClick={handleShowXmluploader}>
+              Agregar factura/s xml
+            </button>
+          )}
         <SearchBar />
         <SaveMotorcyclesButton />
         {filteredMotorcycles.length > 0 && (

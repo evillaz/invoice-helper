@@ -8,10 +8,7 @@ export const fetchMotorcycles = createAsyncThunk(
       const response = await fetch('http://localhost:3000/api/v1/motorcycles');
       if (!response.ok) throw new Error('Error fetching motorcycles from DB');
       const data = await response.json();
-      return data.map((motorcycle) => ({
-        ...motorcycle,
-        savedToDB: true,
-      }));
+      return data;
     } catch (error) {
       return rejectWithValue(error.message);
     }
@@ -21,12 +18,9 @@ export const fetchMotorcycles = createAsyncThunk(
 // Save new motorcycles to DB
 export const saveMotorcyclesToDB = createAsyncThunk(
   'motorcycles/saveMotorcyclesToDB',
-  async (_, { getState, rejectWithValue }) => {
+  async (newMotorcycles, { rejectWithValue }) => {
     try {
-      const { motorcycles } = getState().motorcycles;
-      const newMotorcycles = motorcycles.filter((moto) => !moto.savedToDB);
       if (newMotorcycles.length === 0) return { message: 'No new motorcycles to save', savedMotorcycles: [] };
-
       const responses = await Promise.all(
         newMotorcycles.map(async (motorcycle) => {
           const response = await fetch('http://localhost:3000/api/v1/motorcycles', {
@@ -148,11 +142,7 @@ const motorcyclesSlice = createSlice({
       })
       .addCase(saveMotorcyclesToDB.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        state.motorcycles = state.motorcycles.map(
-          (moto) => (action.payload.savedMotorcycles.some((saved) => saved.factura === moto.factura)
-            ? { ...moto, savedToDB: true }
-            : moto),
-        );
+        state.motorcycles = [...state.motorcycles, ...action.payload.savedMotorcycles];
         state.message = action.payload.message;
       })
       .addCase(saveMotorcyclesToDB.rejected, (state, action) => {

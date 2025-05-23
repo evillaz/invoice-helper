@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { XMLParser } from 'fast-xml-parser';
-import { addXMLMotorcycles } from '../redux/motorcyclesSlice';
+import MotorcyclesTable from '../motorcycles/MotorcycleTable';
+import SaveMotorcyclesButton from '../motorcycles/SaveMotorcyclesButton';
 
 const UploadXml = () => {
-  const dispatch = useDispatch();
   const [error, setError] = useState('');
-
+  const [xmlMotorcycles, setXmlMotorcycles] = useState([]);
+  const motorcycles = useSelector((state) => state.motorcycles.motorcycles);
   const handleFileUpload = (event) => {
     const { files } = event.target;
     const inputElement = event.target;
@@ -92,7 +93,7 @@ const UploadXml = () => {
             ? { factura: invoiceID, ...finalObject }
             : finalObject;
 
-          dispatch(addXMLMotorcycles([result]));
+          setXmlMotorcycles((prev) => [...prev, result]);
           setError('');
         } catch (err) {
           setError('Error parsing XML file.');
@@ -102,11 +103,24 @@ const UploadXml = () => {
       inputElement.value = '';
     });
   };
+  const newMotorcycles = xmlMotorcycles.filter(
+    (newMotorcycle) => !motorcycles.some(
+      (existingMotorcycle) => existingMotorcycle.factura === newMotorcycle.factura,
+    ),
+  );
+
   return (
     <div className="upload-xml">
       <h2 className="text-xl font-bold mb-2">Upload XML File</h2>
       <input type="file" multiple accept=".xml" onChange={handleFileUpload} className="mb-3" />
       {error && <p className="text-red-500">{error}</p>}
+      {newMotorcycles.length > 0
+        ? (
+          <MotorcyclesTable motorcycles={newMotorcycles} />
+        ) : (
+          <p>No hay motos nuevas o son duplicadas</p>
+        )}
+      <SaveMotorcyclesButton newMotorcycles={newMotorcycles} />
     </div>
   );
 };

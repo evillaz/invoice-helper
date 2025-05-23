@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 import { useState } from 'react';
-import { updateElectronicReceipt } from '../redux/salesSlice';
+import { updateElectronicReceipt } from '../../redux/salesSlice';
 import SaleGenericInput from './SaleGenericInput';
 
 const SaleElectronicReceiptInput = ({ sale }) => {

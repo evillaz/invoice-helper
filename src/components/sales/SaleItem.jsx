@@ -1,16 +1,16 @@
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
-import { addPayment, deleteSaleFromDB } from '../redux/salesSlice';
-import CopyDescriptionButton from './CopyDescriptionButton';
-import DeleteButton from './DeleteButton';
+import { addPayment, deleteSaleFromDB } from '../../redux/salesSlice';
+import CopyDescriptionButton from '../common/CopyDescriptionButton';
+import DeleteButton from '../common/DeleteButton';
 import SaleDetails from './SaleDetails';
 import SaleElectronicReceiptInput from './SaleElectronicReceiptInput';
 import SaleAddPaymentForm from './SaleAddPaymentForm';
-import SaleAllDocumentsPDF from './SaleAllDocumentPDF';
-import SaleDocumentDownloader from './SaleDocumentDownloader';
-import DeclaracionJuradaMedioDePago from './DeclaracionJuradaMedioDePago';
-import CartaPoderAPP from './CartaPoderAPP';
-import CartaPoderSUNARP from './CartaPoderSUNARP';
+import DownloadAllDocumentsPDF from '../documents/DownloadAllDocumentsPDF';
+import SaleDocumentDownloader from '../documents/DocumentDownloader';
+import DeclaracionJuradaMedioDePago from '../documents/DeclaracionJuradaMedioDePago';
+import CartaPoderAPP from '../documents/CartaPoderAPP';
+import CartaPoderSUNARP from '../documents/CartaPoderSUNARP';
 
 const SaleItem = ({ sale }) => {
   const dispatch = useDispatch();
@@ -53,7 +53,7 @@ const SaleItem = ({ sale }) => {
       <SaleDocumentDownloader sale={sale} DocumentComponent={DeclaracionJuradaMedioDePago} filePrefix="DeclaracionJuradaMedioDePago" />
       <SaleDocumentDownloader sale={sale} DocumentComponent={CartaPoderSUNARP} filePrefix="DeclaracionJuradaMedioDePago" />
       <SaleDocumentDownloader sale={sale} DocumentComponent={CartaPoderAPP} filePrefix="DeclaracionJuradaMedioDePago" />
-      <SaleAllDocumentsPDF sale={sale} />
+      <DownloadAllDocumentsPDF sale={sale} />
       <SaleAddPaymentForm onSubmit={createPayment} />
       <CopyDescriptionButton motorcycle={sale.motorcycle} />
       <DeleteButton deleteFunc={deleteSaleFromDB} item={sale} />

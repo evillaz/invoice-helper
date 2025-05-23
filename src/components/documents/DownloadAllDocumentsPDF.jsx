@@ -6,7 +6,7 @@ import DeclaracionJuradaMedioDePago from './DeclaracionJuradaMedioDePago';
 import CartaPoderSUNARP from './CartaPoderSUNARP';
 import CartaPoderAPP from './CartaPoderAPP';
 
-const SaleAllDocumentsPDF = ({ sale }) => {
+const DownloadAllDocumentsPDF = ({ sale }) => {
   const [renderDocs, setRenderDocs] = useState(false);
 
   // Creamos las refs
@@ -63,7 +63,7 @@ const SaleAllDocumentsPDF = ({ sale }) => {
   );
 };
 
-SaleAllDocumentsPDF.propTypes = {
+DownloadAllDocumentsPDF.propTypes = {
   sale: PropTypes.shape({
     id: PropTypes.number.isRequired,
     total_amount: PropTypes.string.isRequired,
@@ -101,4 +101,4 @@ SaleAllDocumentsPDF.propTypes = {
   }).isRequired,
 };
 
-export default SaleAllDocumentsPDF;
+export default DownloadAllDocumentsPDF;

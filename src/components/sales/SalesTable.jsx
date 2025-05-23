@@ -1,9 +1,11 @@
 import { useSelector } from 'react-redux';
 import { useState } from 'react';
 import SaleItem from './SaleItem';
-import SearchBar from './SearchBar';
-import { SearchContext } from '../context/SearchContext';
-import GetVouchersPdf from './GetVouchersPdf';
+import SearchBar from '../common/SearchBar';
+import { SearchContext } from '../../context/SearchContext';
+import GetVouchersPdf from '../common/GetVouchersPdf';
+import DocumentPreviewButton from '../documents/DocumentPreviewButton';
+import Boleta from '../documents/Boleta';
 
 const SalesTable = () => {
   const sales = useSelector((state) => state.sales.sales);
@@ -53,6 +55,7 @@ const SalesTable = () => {
 
   return (
     <>
+      <DocumentPreviewButton DocumentComponent={Boleta} />
       <GetVouchersPdf />
       {sales && (
         <SearchContext.Provider value={{ searchQuery, setSearchQuery }}>

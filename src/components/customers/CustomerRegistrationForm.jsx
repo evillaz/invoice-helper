@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import UbigeoForm from './UbigeoForm';
 import CustomerDataForm from './CustomerDataForm';
-import { saveCustomerToDB } from '../redux/customersSlice';
+import { saveCustomerToDB } from '../../redux/customersSlice';
 
 const CustomerRegistrationForm = () => {
   const dispatch = useDispatch();

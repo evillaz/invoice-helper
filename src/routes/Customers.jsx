@@ -1,4 +1,4 @@
-import CustomerView from '../components/CustomerView';
+import CustomerView from '../components/customers/CustomerView';
 
 const Customers = () => (
   <CustomerView />

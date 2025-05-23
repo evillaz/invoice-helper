@@ -1,64 +1,23 @@
 import PropTypes from 'prop-types';
 import { useState } from 'react';
+import Modal from '../common/Modal';
 
 const DocumentPreviewButton = ({ sale, DocumentComponent }) => {
   const [showPreview, setShowPreview] = useState(false);
+  const handleShowPreview = () => {
+    setShowPreview(true);
+  };
+  const handleClosePreview = () => {
+    setShowPreview(false);
+  };
 
   return (
     <>
-      <button type="button" onClick={() => setShowPreview(true)}>
+      <button type="button" onClick={handleShowPreview}>
         Prevista
       </button>
       {showPreview && (
-        <div
-          className="document__preview__modal"
-          style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            backgroundColor: 'rgba(0,0,0,0.5)',
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            zIndex: 1000,
-          }}
-        >
-          <div
-            className="document__preview__frame"
-            style={{
-              background: '#fff',
-              padding: '2rem',
-              maxWidth: '800px',
-              maxHeight: '90vh',
-              overflowY: 'auto',
-              borderRadius: '8px',
-              position: 'relative',
-            }}
-          >
-            <button
-              className="document_preview_close_button"
-              type="button"
-              onClick={() => setShowPreview(false)}
-              style={{
-                position: 'absolute',
-                top: '10px',
-                right: '10px',
-                background: 'red',
-                color: '#fff',
-                border: 'none',
-                borderRadius: '50%',
-                width: '30px',
-                height: '30px',
-                cursor: 'pointer',
-              }}
-            >
-              ✕
-            </button>
-            <DocumentComponent sale={sale} />
-          </div>
-        </div>
+        <Modal sale={sale} RenderComponent={DocumentComponent} closeModal={handleClosePreview} />
       )}
     </>
   );

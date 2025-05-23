@@ -1,8 +1,8 @@
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
-import MotorycleDetails from './MotorcycleDetails';
-import getIgvValue from '../utils/calculations/getIgvValue';
-import { deletePayment } from '../redux/salesSlice';
+import MotorycleDetails from '../motorcycles/MotorcycleDetails';
+import getIgvValue from '../../utils/calculations/getIgvValue';
+import { deletePayment } from '../../redux/salesSlice';
 
 const SaleDetails = ({ sale }) => {
   const dispatch = useDispatch();

@@ -1,9 +1,9 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { useState } from 'react';
-import TableHeader from './TableHeader';
-import { saveSaleToDB } from '../redux/salesSlice';
-import ShowDetailsButton from './ShowDetailsButton';
-import MotorycleDetails from './MotorcycleDetails';
+import TableHeader from '../common/TableHeader';
+import { saveSaleToDB } from '../../redux/salesSlice';
+import ShowDetailsButton from '../common/ShowDetailsButton';
+import MotorycleDetails from '../motorcycles/MotorcycleDetails';
 import SaleDetails from './SaleDetails';
 
 const NewSalesTable = () => {

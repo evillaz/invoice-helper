@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import '../styles/a4.css';
+import '../../styles/a4.css';
 import React from 'react';
 
 const SaleDocument = React.forwardRef(({

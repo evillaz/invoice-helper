@@ -1,5 +1,5 @@
 import React from 'react';
-import { useSearchQuery } from '../context/SearchContext';
+import { useSearchQuery } from '../../context/SearchContext';
 
 const SearchBar = () => {
   const { searchQuery, setSearchQuery } = useSearchQuery();

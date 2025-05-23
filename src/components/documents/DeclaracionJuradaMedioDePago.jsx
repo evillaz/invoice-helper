@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import writtenNumber from 'written-number';
-import '../styles/a4.css';
+import '../../styles/a4.css';
 import React from 'react';
 import SaleDocument from './SaleDocument';
 
