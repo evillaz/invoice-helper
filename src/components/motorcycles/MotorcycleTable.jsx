@@ -8,7 +8,6 @@ const MotorcyclesTable = ({ motorcycles }) => {
   const expandedHeader = ['Select', 'Factura', 'Modelo', 'Marca', 'Color', 'Numero de Chasis', 'Numero de Motor', 'DUA', 'Año', 'Fecha Emision', 'Importe'];
   const tableRef = useRef(null);
   const [showDetails, setShowDetails] = useState(false);
-
   const toggleDetails = () => setShowDetails((prev) => !prev);
 
   return (
