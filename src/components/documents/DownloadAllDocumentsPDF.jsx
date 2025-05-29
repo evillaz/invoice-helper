@@ -5,8 +5,10 @@ import html2canvas from 'html2canvas';
 import DeclaracionJuradaMedioDePago from './DeclaracionJuradaMedioDePago';
 import CartaPoderSUNARP from './CartaPoderSUNARP';
 import CartaPoderAPP from './CartaPoderAPP';
+import { useSale } from '../../context/SaleContext';
 
-const DownloadAllDocumentsPDF = ({ sale }) => {
+const DownloadAllDocumentsPDF = () => {
+  const { sale } = useSale();
   const [renderDocs, setRenderDocs] = useState(false);
 
   // Creamos las refs

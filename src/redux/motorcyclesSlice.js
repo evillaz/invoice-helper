@@ -8,7 +8,10 @@ export const fetchMotorcycles = createAsyncThunk(
       const response = await fetch('http://localhost:3000/api/v1/motorcycles');
       if (!response.ok) throw new Error('Error fetching motorcycles from DB');
       const data = await response.json();
-      return data;
+      return data.map((d) => ({
+        ...d,
+        issueDate: d.fecha_emision,
+      }));
     } catch (error) {
       return rejectWithValue(error.message);
     }

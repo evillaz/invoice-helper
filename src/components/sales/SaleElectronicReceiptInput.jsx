@@ -3,8 +3,11 @@ import { useDispatch } from 'react-redux';
 import { useState } from 'react';
 import { updateElectronicReceipt } from '../../redux/salesSlice';
 import SaleGenericInput from './SaleGenericInput';
+import { useSale } from '../../context/SaleContext';
 
-const SaleElectronicReceiptInput = ({ sale }) => {
+const SaleElectronicReceiptInput = () => {
+  const { sale } = useSale();
+  console.log(sale);
   const dispatch = useDispatch();
   const [receiptNumber, setReceiptNumber] = useState('');
   const [issueDate, setIssueDate] = useState(new Date());

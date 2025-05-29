@@ -46,7 +46,10 @@ export const fetchSales = createAsyncThunk(
       if (!response.ok) throw new Error('Error fetching sales from DB');
       const data = await response.json();
       const salesData = getSalesDate(data);
-      return salesData;
+      return salesData.map((sale) => ({
+        ...sale,
+        issueDate: sale.electronic_receipt.issue_date,
+      }));
     } catch (error) {
       return rejectWithValue(error.message);
     }

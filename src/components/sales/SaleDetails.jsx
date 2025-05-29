@@ -3,8 +3,10 @@ import { useDispatch } from 'react-redux';
 import MotorycleDetails from '../motorcycles/MotorcycleDetails';
 import getIgvValue from '../../utils/calculations/getIgvValue';
 import { deletePayment } from '../../redux/salesSlice';
+import { useSale } from '../../context/SaleContext';
 
-const SaleDetails = ({ sale }) => {
+const SaleDetails = () => {
+  const { sale } = useSale();
   const dispatch = useDispatch();
   const handleDelete = (saleId, paymentId) => {
     const paymentStructure = {
@@ -18,7 +20,7 @@ const SaleDetails = ({ sale }) => {
     <>
       {sale && (
       <>
-        <MotorycleDetails motorcycle={sale.motorcycle} />
+        <MotorycleDetails key={`motoSaleDetails${sale.motorcycle.factura}`} motorcycle={sale.motorcycle} />
         {sale.customer && (
           <>
             <td>
@@ -71,8 +73,6 @@ const SaleDetails = ({ sale }) => {
                     {payment.issue_date}
                   </span>
                 </p>
-              </td>
-              <td className="border px-2 py-1 text-center">
                 <button
                   type="button"
                   onClick={() => handleDelete(sale.id, payment.id)}
@@ -90,6 +90,9 @@ const SaleDetails = ({ sale }) => {
             </td>
           </>
         )}
+        <td>
+          {sale.issueDate}
+        </td>
       </>
       )}
     </>
@@ -104,6 +107,7 @@ SaleDetails.propTypes = {
     titulo: PropTypes.string,
     placa: PropTypes.string,
     created_at: PropTypes.string.isRequired,
+    issueDate: PropTypes.string,
     motorcycle: PropTypes.shape({
       factura: PropTypes.string,
       modelo: PropTypes.string,

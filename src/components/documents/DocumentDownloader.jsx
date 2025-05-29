@@ -4,8 +4,10 @@ import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import nameSpaced from '../../utils/format/nameSpaced';
 import DocumentPreviewButton from './DocumentPreviewButton';
+import { useSale } from '../../context/SaleContext';
 
-const SaleDocumentDownloader = ({ sale, DocumentComponent, filePrefix }) => {
+const DocumentDownloader = ({ DocumentComponent, filePrefix }) => {
+  const { sale } = useSale();
   const [renderDoc, setRenderDoc] = useState(false);
   const docRef = useRef(null);
   const handleDownloadPDF = () => {
@@ -49,44 +51,9 @@ const SaleDocumentDownloader = ({ sale, DocumentComponent, filePrefix }) => {
   );
 };
 
-SaleDocumentDownloader.propTypes = {
-  sale: PropTypes.shape({
-    id: PropTypes.number.isRequired,
-    total_amount: PropTypes.string.isRequired,
-    boleta: PropTypes.string,
-    titulo: PropTypes.string,
-    placa: PropTypes.string,
-    created_at: PropTypes.string.isRequired,
-    motorcycle: PropTypes.shape({
-      factura: PropTypes.string,
-      modelo: PropTypes.string,
-      marca: PropTypes.string,
-      color: PropTypes.string,
-      numero_de_chasis: PropTypes.string,
-      numero_de_motor: PropTypes.string,
-      dua: PropTypes.string,
-      anio: PropTypes.number,
-      fecha_emision: PropTypes.string,
-      importe: PropTypes.number,
-    }).isRequired,
-    customer: PropTypes.shape({
-      nombre: PropTypes.string,
-      primerApellido: PropTypes.string,
-      segundoApellido: PropTypes.string,
-      dni: PropTypes.string,
-      direccion: PropTypes.string,
-      departamento: PropTypes.string,
-      provincia: PropTypes.string,
-      distrito: PropTypes.string,
-    }).isRequired,
-    electronic_receipt: PropTypes.shape({
-      receipt_number: PropTypes.string,
-      issue_date: PropTypes.string,
-    }),
-    status: PropTypes.string.isRequired,
-  }).isRequired,
+DocumentDownloader.propTypes = {
   DocumentComponent: PropTypes.elementType.isRequired,
   filePrefix: PropTypes.string.isRequired,
 };
 
-export default SaleDocumentDownloader;
+export default DocumentDownloader;

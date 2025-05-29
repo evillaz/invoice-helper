@@ -9,7 +9,6 @@ const MotorcycleItem = ({
 }) => {
   const dispatch = useDispatch();
   const selectedMotorcycles = useSelector((state) => state.motorcycles.selectedMotorcycles);
-  console.log(motorcycle);
   const handleSelect = (motorcycleId) => {
     dispatch(toggleSelectMotorcycle(motorcycleId));
   };

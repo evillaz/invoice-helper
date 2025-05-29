@@ -51,6 +51,7 @@ const MotorycleDetails = ({ motorcycle/* , showDetails */ }) => {
           </td>
         )}
         <td>{highlightText(motorcycle.dua, searchQuery)}</td>
+        <td>{motorcycle.issueDate}</td>
       </>
       )}
     </>

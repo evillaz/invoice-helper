@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { useSelector } from 'react-redux';
 import MotorcyclesTable from './MotorcycleTable';
 import SearchBar from '../common/SearchBar';
@@ -7,6 +7,7 @@ import UploadXml from '../common/UploadXml';
 import { SearchContext } from '../../context/SearchContext';
 import Modal from '../common/Modal';
 import MotorcycleForm from './MotorcycleForm';
+import FilterByDate from '../utils/FilterByDate';
 
 const MotorcycleView = () => {
   const motorcycles = useSelector((state) => state.motorcycles.motorcycles);
@@ -14,6 +15,22 @@ const MotorcycleView = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [showXmlUploader, setShowXmlUploader] = useState(false);
   const [showMotoRegistration, setShowMotoRegistration] = useState(false);
+  const [startMonth, setStartMonth] = useState('');
+  const [endMonth, setEndMonth] = useState('');
+  const [startYear, setStartYear] = useState('2025');
+  const [endYear, setEndYear] = useState('2025');
+  const [filteredByDateData, setFilteredByDateData] = useState([]);
+
+  const handleFilterByDate = useCallback((newData) => {
+    // Evitar actualizar si los datos no han cambiado
+    const isSameLength = filteredByDateData.length === newData.length;
+    const isSameContent = isSameLength
+      && filteredByDateData.every((item, index) => item.factura === newData[index].factura);
+
+    if (!isSameContent) {
+      setFilteredByDateData(newData);
+    }
+  }, [filteredByDateData]);
 
   const handleShowXmluploader = () => {
     setShowXmlUploader(true);
@@ -41,32 +58,46 @@ const MotorcycleView = () => {
   });
 
   return (
-    <SearchContext.Provider value={{ searchQuery, setSearchQuery }}>
-      <div className="p-4 border rounded-lg shadow-md w-96 mx-auto">
-        {showXmlUploader
-          ? (
-            <Modal RenderComponent={UploadXml} closeModal={handleCloseXmluploader} />
-          ) : (
-            <button type="button" onClick={handleShowXmluploader}>
-              Agregar factura/s xml
-            </button>
-          )}
-        {showMotoRegistration
-          ? (
-            <Modal RenderComponent={MotorcycleForm} closeModal={handleCloseMotoRegistration} />
-          ) : (
-            <button type="button" onClick={handleShowMotoRegistration}>
-              Agregar moto/s
-            </button>
-          )}
+    <>
+      <FilterByDate
+        startMonth={startMonth}
+        endMonth={endMonth}
+        startYear={startYear}
+        endYear={endYear}
+        onChangeStartMonth={setStartMonth}
+        onChangeEndMonth={setEndMonth}
+        onChangeStartYear={setStartYear}
+        onChangeEndYear={setEndYear}
+        data={filteredMotorcycles}
+        onFilter={handleFilterByDate}
+      />
+      <SearchContext.Provider value={{ searchQuery, setSearchQuery }}>
+        <div className="p-4 border rounded-lg shadow-md w-96 mx-auto">
+          {showXmlUploader
+            ? (
+              <Modal RenderComponent={UploadXml} closeModal={handleCloseXmluploader} />
+            ) : (
+              <button type="button" onClick={handleShowXmluploader}>
+                Agregar factura/s xml
+              </button>
+            )}
+          {showMotoRegistration
+            ? (
+              <Modal RenderComponent={MotorcycleForm} closeModal={handleCloseMotoRegistration} />
+            ) : (
+              <button type="button" onClick={handleShowMotoRegistration}>
+                Agregar moto/s
+              </button>
+            )}
 
-        <SearchBar />
-        <SaveMotorcyclesButton />
-        {filteredMotorcycles.length > 0 && (
-          <MotorcyclesTable motorcycles={filteredMotorcycles} />
-        )}
-      </div>
-    </SearchContext.Provider>
+          <SearchBar />
+          <SaveMotorcyclesButton />
+          {filteredByDateData.length > 0 && (
+          <MotorcyclesTable motorcycles={filteredByDateData} />
+          )}
+        </div>
+      </SearchContext.Provider>
+    </>
   );
 };
 

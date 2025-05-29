@@ -11,7 +11,6 @@ const MotorcycleForm = () => {
   const [modelo, setModelo] = useState('');
   const [numChasis, setNumChasis] = useState('');
   const [numMotor, setNumMotor] = useState('');
-  const [newMotorcycles, setNewMotorcycles] = useState();
 
   const handleSubmit = (e) => {
     e.preventDefault();

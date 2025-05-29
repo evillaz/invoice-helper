@@ -7,10 +7,11 @@ import SaleDetails from './SaleDetails';
 import SaleElectronicReceiptInput from './SaleElectronicReceiptInput';
 import SaleAddPaymentForm from './SaleAddPaymentForm';
 import DownloadAllDocumentsPDF from '../documents/DownloadAllDocumentsPDF';
-import SaleDocumentDownloader from '../documents/DocumentDownloader';
 import DeclaracionJuradaMedioDePago from '../documents/DeclaracionJuradaMedioDePago';
 import CartaPoderAPP from '../documents/CartaPoderAPP';
 import CartaPoderSUNARP from '../documents/CartaPoderSUNARP';
+import { SaleContext } from '../../context/SaleContext';
+import DocumentDownloader from '../documents/DocumentDownloader';
 
 const SaleItem = ({ sale }) => {
   const dispatch = useDispatch();
@@ -48,15 +49,17 @@ const SaleItem = ({ sale }) => {
           {sale.status}
         </span>
       </td>
-      <SaleDetails sale={sale} />
-      <SaleElectronicReceiptInput sale={sale} />
-      <SaleDocumentDownloader sale={sale} DocumentComponent={DeclaracionJuradaMedioDePago} filePrefix="DeclaracionJuradaMedioDePago" />
-      <SaleDocumentDownloader sale={sale} DocumentComponent={CartaPoderSUNARP} filePrefix="DeclaracionJuradaMedioDePago" />
-      <SaleDocumentDownloader sale={sale} DocumentComponent={CartaPoderAPP} filePrefix="DeclaracionJuradaMedioDePago" />
-      <DownloadAllDocumentsPDF sale={sale} />
-      <SaleAddPaymentForm onSubmit={createPayment} />
-      <CopyDescriptionButton motorcycle={sale.motorcycle} />
-      <DeleteButton deleteFunc={deleteSaleFromDB} item={sale} />
+      <SaleContext.Provider value={{ sale }}>
+        <SaleDetails />
+        <SaleElectronicReceiptInput />
+        <DocumentDownloader DocumentComponent={DeclaracionJuradaMedioDePago} filePrefix="DeclaracionJuradaMedioDePago" />
+        <DocumentDownloader DocumentComponent={CartaPoderSUNARP} filePrefix="DeclaracionJuradaMedioDePago" />
+        <DocumentDownloader DocumentComponent={CartaPoderAPP} filePrefix="DeclaracionJuradaMedioDePago" />
+        <DownloadAllDocumentsPDF />
+        <SaleAddPaymentForm onSubmit={createPayment} />
+        <CopyDescriptionButton motorcycle={sale.motorcycle} />
+        <DeleteButton deleteFunc={deleteSaleFromDB} item={sale} />
+      </SaleContext.Provider>
     </>
   );
 };
