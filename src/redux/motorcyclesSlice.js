@@ -40,6 +40,23 @@ export const saveMotorcyclesToDB = createAsyncThunk(
   },
 );
 
+export const saveMotorcycleToDB = createAsyncThunk(
+  'motorcycles/saveMotorcycleToDB',
+  async (newMotorcycle, { rejectWithValue }) => {
+    try {
+      const response = await fetch('http://localhost:3000/api/v1/motorcycles', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newMotorcycle),
+      });
+      if (!response.ok) throw new Error('Error saving a motorcycle');
+      return response.json();
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  },
+);
+
 // Delete motorcycles from DB
 export const deleteMotorcycleFromDB = createAsyncThunk(
   'motorcycles/deleteMotorcycleFromDB',
@@ -146,6 +163,20 @@ const motorcyclesSlice = createSlice({
         state.message = action.payload.message;
       })
       .addCase(saveMotorcyclesToDB.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.payload;
+        state.message = action.payload;
+      })
+      .addCase(saveMotorcycleToDB.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(saveMotorcycleToDB.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        console.log(action.payload);
+        /* state.motorcycles = [...state.motorcycles, ...action.payload.savedMotorcycles];
+        state.message = action.payload.message; */
+      })
+      .addCase(saveMotorcycleToDB.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.payload;
         state.message = action.payload;

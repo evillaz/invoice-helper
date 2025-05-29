@@ -1,24 +1,40 @@
 {
-  "env": {
-    "browser": true,
-    "es6": true,
-    "jest": true
-  },
-  "parser": "@babel/eslint-parser",
+  "extends": [
+    "react-app",
+    "plugin:@typescript-eslint/recommended"
+  ],
+  "plugins": ["@typescript-eslint"],
+  "parser": "@typescript-eslint/parser",
   "parserOptions": {
+    "ecmaVersion": 2020,
+    "sourceType": "module",
+    "project": "./tsconfig.json",
     "ecmaFeatures": {
       "jsx": true
-    },
-    "ecmaVersion": 2018,
-    "sourceType": "module"
+    }
   },
-  "extends": ["airbnb", "plugin:react/recommended", "plugin:react-hooks/recommended"],
-  "plugins": ["react"],
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "extensions": [".js", ".jsx", ".ts", ".tsx"]
+      }
+    }
+  },
   "rules": {
-    "react/jsx-filename-extension": ["warn", { "extensions": [".js", ".jsx"] }],
-    "react/react-in-jsx-scope": "off",
-    "import/no-unresolved": "off",
-    "no-shadow": "off",
+    "import/extensions": [
+      "error",
+      "ignorePackages",
+      {
+        "js": "never",
+        "jsx": "never",
+        "ts": "never",
+        "tsx": "never"
+      }
+    ],
+    "react/jsx-filename-extension": ["warn", { "extensions": [".js", ".jsx", ".tsx"] }],
+    "react/react-in-jsx-scope": "off",  // React 17+ no necesita importar React en cada archivo
+    "import/no-unresolved": "off",  // Puede causar falsos positivos con TS
+    "no-shadow": "off",  // Puedes activar "@typescript-eslint/no-shadow" para control más preciso
     "no-alert": "off",
     "no-console": "off",
     "jsx-a11y/control-has-associated-label": "off",
@@ -26,24 +42,31 @@
     "camelcase": "off",
     "new-cap": "off",
     "import/no-extraneous-dependencies": [
-      "error", {
+      "error",
+      {
         "devDependencies": false,
-        "optionalDependencies": false, 
-        "peerDependencies": false, 
+        "optionalDependencies": false,
+        "peerDependencies": false,
         "packageDir": "./"
       }
-    ]
+    ],
+    // Reglas TS específicas (opcional):
+    "@typescript-eslint/no-shadow": ["error"],       // Reemplaza no-shadow nativo
+    "@typescript-eslint/explicit-function-return-type": ["warn", { "allowExpressions": true }]
   },
   "overrides": [
     {
-       // feel free to replace with your preferred file pattern - eg. 'src/**/*Slice.js' or 'redux/**/*Slice.js'
       "files": ["src/**/*Slice.js"],
-      // avoid state param assignment
-      "rules": { "no-param-reassign": ["error", { "props": false }] }
+      "rules": {
+        "no-param-reassign": ["error", { "props": false }]
+      }
+    },
+    {
+      "files": ["*.js", "*.jsx"],
+      "rules": {
+        "@typescript-eslint/explicit-function-return-type": "off"
+      }
     }
   ],
-  "ignorePatterns": [
-    "dist/",
-    "build/"
-  ]
+  "ignorePatterns": ["dist/", "build/"]
 }

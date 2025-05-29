@@ -55,11 +55,11 @@ const UploadXml = () => {
             9070: 'anio',
           };
 
-          const getModelFromDescription = (jsonObj) => {
+          const getModelFromDescription = () => {
             const description = jsonObj?.Invoice?.['cac:InvoiceLine']?.['cac:Item']?.['cbc:Description'];
             return description;
           };
-          const backupModel = getModelFromDescription(jsonObj);
+          const backupModel = getModelFromDescription();
 
           const filtered = uniqueAdditionalProps
             .filter((item) => Object.keys(attributeMapping).includes(String(item['cdc:ID'])))

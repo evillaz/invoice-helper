@@ -49,7 +49,7 @@ const SalesTable = () => {
     bValue = bValue?.toString().toLowerCase() || '';
 
     if (aValue < bValue) return sortConfig.direction === 'asc' ? -1 : 1;
-    if (aValue > bValue) return sortConfig.direction === 'asc' ? 1 : -1;
+    if (aValue > bValue) return sortConfig.direction === 'desc' ? 1 : -1;
     return 0;
   });
 
@@ -79,6 +79,7 @@ const SalesTable = () => {
                 <th onClick={() => handleSort('total_amount')}>MONTO</th>
                 <th>IGV</th>
                 <th onClick={() => handleSort('payments')}>PAGOS</th>
+                <th onClick={() => handleSort('electronic_receipt.receipt_number')}>BOLETA</th>
               </tr>
             </thead>
             <tbody>

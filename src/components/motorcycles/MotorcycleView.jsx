@@ -7,6 +7,7 @@ import UploadXml from '../common/UploadXml';
 import { SearchContext } from '../../context/SearchContext';
 import Modal from '../common/Modal';
 import MotorcycleForm from './MotorcycleForm';
+import FilterByDate from '../common/FilterByDate';
 
 const MotorcycleView = () => {
   const motorcycles = useSelector((state) => state.motorcycles.motorcycles);
@@ -14,6 +15,10 @@ const MotorcycleView = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [showXmlUploader, setShowXmlUploader] = useState(false);
   const [showMotoRegistration, setShowMotoRegistration] = useState(false);
+  const [startMonth, setStartMonth] = useState('');
+  const [endMonth, setEndMonth] = useState('');
+  const [startYear, setStartYear] = useState('');
+  const [endYear, setEndYear] = useState('');
 
   const handleShowXmluploader = () => {
     setShowXmlUploader(true);
@@ -40,33 +45,59 @@ const MotorcycleView = () => {
     return matchesSelected || matchesSearch;
   });
 
-  return (
-    <SearchContext.Provider value={{ searchQuery, setSearchQuery }}>
-      <div className="p-4 border rounded-lg shadow-md w-96 mx-auto">
-        {showXmlUploader
-          ? (
-            <Modal RenderComponent={UploadXml} closeModal={handleCloseXmluploader} />
-          ) : (
-            <button type="button" onClick={handleShowXmluploader}>
-              Agregar factura/s xml
-            </button>
-          )}
-        {showMotoRegistration
-          ? (
-            <Modal RenderComponent={MotorcycleForm} closeModal={handleCloseMotoRegistration} />
-          ) : (
-            <button type="button" onClick={handleShowMotoRegistration}>
-              Agregar moto/s
-            </button>
-          )}
+  const filteredMotorcyclesByDate = filteredMotorcycles.filter((motorcycle) => {
+    if (!startYear || !startMonth || !endMonth || !endYear) return true;
 
-        <SearchBar />
-        <SaveMotorcyclesButton />
-        {filteredMotorcycles.length > 0 && (
-          <MotorcyclesTable motorcycles={filteredMotorcycles} />
-        )}
-      </div>
-    </SearchContext.Provider>
+    const issueDate = new Date(motorcycle.issueDate);
+    const startDate = new Date(`${startYear}-${startMonth}-01`);
+    const endDate = new Date(`${endYear}-${endMonth}-01`);
+
+    // Ajustar al último día del mes final
+    endDate.setMonth(endDate.getMonth() + 1);
+    endDate.setDate(0);
+
+    return issueDate >= startDate && issueDate <= endDate;
+  });
+
+  return (
+    <>
+      <FilterByDate
+        startMonth={startMonth}
+        endMonth={endMonth}
+        startYear={startYear}
+        endYear={endYear}
+        onChangeStartMonth={setStartMonth}
+        onChangeEndMonth={setEndMonth}
+        onChangeStartYear={setStartYear}
+        onChangeEndYear={setEndYear}
+      />
+      <SearchContext.Provider value={{ searchQuery, setSearchQuery }}>
+        <div className="p-4 border rounded-lg shadow-md w-96 mx-auto">
+          {showXmlUploader
+            ? (
+              <Modal RenderComponent={UploadXml} closeModal={handleCloseXmluploader} />
+            ) : (
+              <button type="button" onClick={handleShowXmluploader}>
+                Agregar factura/s xml
+              </button>
+            )}
+          {showMotoRegistration
+            ? (
+              <Modal RenderComponent={MotorcycleForm} closeModal={handleCloseMotoRegistration} />
+            ) : (
+              <button type="button" onClick={handleShowMotoRegistration}>
+                Agregar moto/s
+              </button>
+            )}
+
+          <SearchBar />
+          <SaveMotorcyclesButton />
+          {filteredMotorcyclesByDate.length > 0 && (
+          <MotorcyclesTable motorcycles={filteredMotorcyclesByDate} />
+          )}
+        </div>
+      </SearchContext.Provider>
+    </>
   );
 };
 

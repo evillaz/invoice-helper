@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { saveMotorcycleToDB } from '../../redux/motorcyclesSlice';
 
 const MotorcycleForm = () => {
   const [anio, setAnio] = useState(0);
@@ -11,7 +13,7 @@ const MotorcycleForm = () => {
   const [modelo, setModelo] = useState('');
   const [numChasis, setNumChasis] = useState('');
   const [numMotor, setNumMotor] = useState('');
-  const [newMotorcycles, setNewMotorcycles] = useState();
+  const dispatch = useDispatch();
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -28,7 +30,7 @@ const MotorcycleForm = () => {
       numero_de_chasis: numChasis,
       numero_de_motor: numMotor,
     };
-    console.log(formData);
+    dispatch(saveMotorcycleToDB(formData));
   };
 
   return (

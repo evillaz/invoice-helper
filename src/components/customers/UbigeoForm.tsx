@@ -1,22 +1,44 @@
-import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 
-const UbigeoForm = ({
-  selectedDepartamento, onChangeDepartamento, selectedProvincia,
-  onChangeProvincia, selectedDistrito, onChangeDistrito,
+interface Provincia {
+  provincia: string;
+  distritos: string[];
+}
+
+interface DepartamentoData {
+  departamento: string;
+  provincias: Provincia[];
+}
+
+interface UbigeoFormProps {
+  selectedDepartamento: string;
+  onChangeDepartamento: (value: string) => void;
+  selectedProvincia: string;
+  onChangeProvincia: (value: string) => void;
+  selectedDistrito: string;
+  onChangeDistrito: (value: string) => void;
+}
+
+const UbigeoForm: React.FC<UbigeoFormProps> = ({
+  selectedDepartamento,
+  onChangeDepartamento,
+  selectedProvincia,
+  onChangeProvincia,
+  selectedDistrito,
+  onChangeDistrito,
 }) => {
-  const [departamentos, setDepartamentos] = useState([]);
-  const [provincias, setProvincias] = useState([]);
-  const [distritos, setDistritos] = useState([]);
-  const [ubigeoData, setUbigeoData] = useState([]);
+  const [departamentos, setDepartamentos] = useState<string[]>([]);
+  const [provincias, setProvincias] = useState<Provincia[]>([]);
+  const [distritos, setDistritos] = useState<string[]>([]);
+  const [ubigeoData, setUbigeoData] = useState<DepartamentoData[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('/ubigeo_peru.json'); // Assuming the file is in the public folder
-        const data = await response.json();
+        const response = await fetch('/ubigeo_peru.json'); // Archivo JSON en carpeta public
+        const data: DepartamentoData[] = await response.json();
         setUbigeoData(data);
-        setDepartamentos(data.map((d) => d.departamento)); // Set departments
+        setDepartamentos(data.map((d) => d.departamento));
       } catch (error) {
         console.error('Error fetching data: ', error);
       }
@@ -31,7 +53,7 @@ const UbigeoForm = ({
       ? ubigeoData.find((d) => d.departamento === selectedDepartamento)?.provincias || []
       : [];
     setProvincias(provincias);
-    setDistritos([]); // Reset districts when department or province changes
+    setDistritos([]); // Resetea distritos cuando cambia departamento o provincia
   }, [selectedDepartamento, departamentos, ubigeoData]);
 
   useEffect(() => {
@@ -98,15 +120,6 @@ const UbigeoForm = ({
       </div>
     </>
   );
-};
-
-UbigeoForm.propTypes = {
-  selectedDepartamento: PropTypes.string.isRequired,
-  onChangeDepartamento: PropTypes.func.isRequired,
-  selectedProvincia: PropTypes.string.isRequired,
-  onChangeProvincia: PropTypes.func.isRequired,
-  selectedDistrito: PropTypes.string.isRequired,
-  onChangeDistrito: PropTypes.func.isRequired,
 };
 
 export default UbigeoForm;
