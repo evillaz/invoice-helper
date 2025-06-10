@@ -1,27 +1,19 @@
 import PropTypes from 'prop-types';
-import { useDispatch } from 'react-redux';
-import { addPayment, deleteSaleFromDB } from '../../redux/salesSlice';
+import { deleteSaleFromDB } from '../../redux/salesSlice';
 import CopyDescriptionButton from '../common/CopyDescriptionButton';
 import DeleteButton from '../common/DeleteButton';
 import SaleDetails from './SaleDetails';
 import SaleElectronicReceiptInput from './SaleElectronicReceiptInput';
-import SaleAddPaymentForm from './SaleAddPaymentForm';
 import DownloadAllDocumentsPDF from '../documents/DownloadAllDocumentsPDF';
 import DeclaracionJuradaMedioDePago from '../documents/DeclaracionJuradaMedioDePago';
 import CartaPoderAPP from '../documents/CartaPoderAPP';
 import CartaPoderSUNARP from '../documents/CartaPoderSUNARP';
 import { SaleContext } from '../../context/SaleContext';
 import DocumentDownloader from '../documents/DocumentDownloader';
+import ModalForm from '../common/ModalForm';
+import PaymentForm from './PaymentForm';
 
 const SaleItem = ({ sale }) => {
-  const dispatch = useDispatch();
-  const createPayment = (paymentData) => {
-    const paymentStructure = {
-      saleId: sale.id,
-      payment: paymentData,
-    };
-    dispatch(addPayment(paymentStructure));
-  };
   const statusClasses = {
     prospect: {
       style: { color: '#ca8a04' },
@@ -56,7 +48,7 @@ const SaleItem = ({ sale }) => {
         <DocumentDownloader DocumentComponent={CartaPoderSUNARP} filePrefix="DeclaracionJuradaMedioDePago" />
         <DocumentDownloader DocumentComponent={CartaPoderAPP} filePrefix="DeclaracionJuradaMedioDePago" />
         <DownloadAllDocumentsPDF />
-        <SaleAddPaymentForm onSubmit={createPayment} />
+        <ModalForm RenderComponent={PaymentForm} buttonLabel="Add payment" />
         <CopyDescriptionButton motorcycle={sale.motorcycle} />
         <DeleteButton deleteFunc={deleteSaleFromDB} item={sale} />
       </SaleContext.Provider>

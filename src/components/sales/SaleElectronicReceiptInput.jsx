@@ -7,7 +7,6 @@ import { useSale } from '../../context/SaleContext';
 
 const SaleElectronicReceiptInput = () => {
   const { sale } = useSale();
-  console.log(sale);
   const dispatch = useDispatch();
   const [receiptNumber, setReceiptNumber] = useState('');
   const [issueDate, setIssueDate] = useState(new Date());

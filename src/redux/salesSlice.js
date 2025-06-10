@@ -166,7 +166,6 @@ export const addPayment = createAsyncThunk(
 export const deletePayment = createAsyncThunk(
   'sales/deletePayment',
   async (paymentStructure, { rejectWithValue }) => {
-    console.log(paymentStructure);
     const { saleId, paymentId } = paymentStructure;
     try {
       const response = await fetch(`http://localhost:3000/api/v1/sales/${saleId}/remove_payment/${paymentId}`, {
@@ -174,6 +173,45 @@ export const deletePayment = createAsyncThunk(
       });
       if (!response.ok) throw new Error('Error deleting sale from DB');
       return paymentStructure;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  },
+);
+
+export const addTitle = createAsyncThunk(
+  'sales/addTitle',
+  async (titleStructure, { rejectWithValue }) => {
+    const { saleId, title } = titleStructure;
+    try {
+      const response = await fetch(`http://localhost:3000/api/v1/sales/${saleId}/add_title`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          title,
+        }),
+      });
+      if (!response.ok) throw new Error('Error updating sale');
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  },
+);
+
+export const deleteTitle = createAsyncThunk(
+  'sales/deletePayment',
+  async (titleStructure, { rejectWithValue }) => {
+    const { saleId, titleId } = titleStructure;
+    try {
+      const response = await fetch(`http://localhost:3000/api/v1/sales/${saleId}/remove_payment/${titleId}`, {
+        method: 'DELETE',
+      });
+      if (!response.ok) throw new Error('Error deleting sale from DB');
+      return titleStructure;
     } catch (error) {
       return rejectWithValue(error.message);
     }
