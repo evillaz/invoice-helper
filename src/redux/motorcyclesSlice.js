@@ -8,20 +8,9 @@ export const fetchMotorcycles = createAsyncThunk(
       const response = await fetch('http://localhost:3000/api/v1/motorcycles');
       if (!response.ok) throw new Error('Error fetching motorcycles from DB');
       const data = await response.json();
-
-      return data.map((motorcycle) => ({
-        factura: motorcycle.factura,
-        modelo: motorcycle.modelo,
-        marca: motorcycle.marca,
-        color: motorcycle.color,
-        numero_de_chasis: motorcycle.numero_de_chasis,
-        numero_de_motor: motorcycle.numero_de_motor,
-        dua: motorcycle.dua,
-        anio: motorcycle.anio,
-        fecha_emision: motorcycle.fecha_emision,
-        importe: motorcycle.importe,
-        savedToDB: true,
-        sale: motorcycle.sale,
+      return data.map((d) => ({
+        ...d,
+        issueDate: d.fecha_emision,
       }));
     } catch (error) {
       return rejectWithValue(error.message);
@@ -32,13 +21,9 @@ export const fetchMotorcycles = createAsyncThunk(
 // Save new motorcycles to DB
 export const saveMotorcyclesToDB = createAsyncThunk(
   'motorcycles/saveMotorcyclesToDB',
-  async (_, { getState, rejectWithValue }) => {
+  async (newMotorcycles, { rejectWithValue }) => {
     try {
-      const { motorcycles } = getState().motorcycles;
-      const newMotorcycles = motorcycles.filter((moto) => !moto.savedToDB);
-
       if (newMotorcycles.length === 0) return { message: 'No new motorcycles to save', savedMotorcycles: [] };
-
       const responses = await Promise.all(
         newMotorcycles.map(async (motorcycle) => {
           const response = await fetch('http://localhost:3000/api/v1/motorcycles', {
@@ -68,6 +53,27 @@ export const deleteMotorcycleFromDB = createAsyncThunk(
       });
       if (!response.ok) throw new Error('Error deleting motorcycle from DB');
       return motorcycleId;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  },
+);
+
+export const updateAttribute = createAsyncThunk(
+  'motorcycles/updateAttribute',
+  async (sentAttribute, { rejectWithValue }) => {
+    try {
+      const response = await fetch(`http://localhost:3000/api/v1/motorcycles/${sentAttribute.motorcycleId}/update_attribute`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          attribute: sentAttribute.attribute,
+          value: sentAttribute.colorValue,
+        }),
+      });
+      if (!response.ok) throw new Error('Failed to save sales');
+      const data = await response.json();
+      return data;
     } catch (error) {
       return rejectWithValue(error.message);
     }
@@ -139,11 +145,7 @@ const motorcyclesSlice = createSlice({
       })
       .addCase(saveMotorcyclesToDB.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        state.motorcycles = state.motorcycles.map(
-          (moto) => (action.payload.savedMotorcycles.some((saved) => saved.factura === moto.factura)
-            ? { ...moto, savedToDB: true }
-            : moto),
-        );
+        state.motorcycles = [...state.motorcycles, ...action.payload.savedMotorcycles];
         state.message = action.payload.message;
       })
       .addCase(saveMotorcyclesToDB.rejected, (state, action) => {
@@ -192,6 +194,21 @@ const motorcyclesSlice = createSlice({
             ? { ...moto, sale: action.payload }
             : moto),
         );
+      })
+      .addCase(updateAttribute.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(updateAttribute.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        const updated = action.payload;
+        const motorcycle = state.motorcycles.find((m) => m.id === updated.id);
+        if (motorcycle) {
+          motorcycle.color = updated.color;
+        }
+      })
+      .addCase(updateAttribute.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.error.message;
       });
   },
 });

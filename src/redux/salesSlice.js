@@ -9,19 +9,19 @@ const SALE_STATUSES = {
 };
 
 const determineSaleStatus = (sale) => {
-  if (!sale.boleta) {
+  if (!sale.electronic_receipt) {
     return SALE_STATUSES.PROSPECT;
   }
 
-  if (sale.boleta && !sale.titulo) {
+  if (sale.electronic_receipt && !sale.title) {
     return SALE_STATUSES.PROCESSED;
   }
 
-  if (sale.titulo && !sale.placa) {
+  if (sale.title && !sale.plate) {
     return SALE_STATUSES.TITULO_REGISTERED;
   }
 
-  if (sale.placa) {
+  if (sale.plate) {
     return SALE_STATUSES.PLACA_REGISTERED;
   }
 
@@ -46,7 +46,10 @@ export const fetchSales = createAsyncThunk(
       if (!response.ok) throw new Error('Error fetching sales from DB');
       const data = await response.json();
       const salesData = getSalesDate(data);
-      return salesData;
+      return salesData.map((sale) => ({
+        ...sale,
+        issueDate: sale.electronic_receipt.issue_date,
+      }));
     } catch (error) {
       return rejectWithValue(error.message);
     }
@@ -131,6 +134,84 @@ export const updateElectronicReceipt = createAsyncThunk(
       if (!response.ok) throw new Error('Error updating sale');
       const data = await response.json();
       return data;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  },
+);
+
+export const addPayment = createAsyncThunk(
+  'sales/addPayment',
+  async (paymentStructure, { rejectWithValue }) => {
+    const { saleId, payment } = paymentStructure;
+    try {
+      const response = await fetch(`http://localhost:3000/api/v1/sales/${saleId}/add_payment`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          payment,
+        }),
+      });
+      if (!response.ok) throw new Error('Error updating sale');
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  },
+);
+
+export const deletePayment = createAsyncThunk(
+  'sales/deletePayment',
+  async (paymentStructure, { rejectWithValue }) => {
+    const { saleId, paymentId } = paymentStructure;
+    try {
+      const response = await fetch(`http://localhost:3000/api/v1/sales/${saleId}/remove_payment/${paymentId}`, {
+        method: 'DELETE',
+      });
+      if (!response.ok) throw new Error('Error deleting sale from DB');
+      return paymentStructure;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  },
+);
+
+export const addTitle = createAsyncThunk(
+  'sales/addTitle',
+  async (titleStructure, { rejectWithValue }) => {
+    const { saleId, title } = titleStructure;
+    try {
+      const response = await fetch(`http://localhost:3000/api/v1/sales/${saleId}/add_title`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          title,
+        }),
+      });
+      if (!response.ok) throw new Error('Error updating sale');
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  },
+);
+
+export const deleteTitle = createAsyncThunk(
+  'sales/deletePayment',
+  async (titleStructure, { rejectWithValue }) => {
+    const { saleId, titleId } = titleStructure;
+    try {
+      const response = await fetch(`http://localhost:3000/api/v1/sales/${saleId}/remove_payment/${titleId}`, {
+        method: 'DELETE',
+      });
+      if (!response.ok) throw new Error('Error deleting sale from DB');
+      return titleStructure;
     } catch (error) {
       return rejectWithValue(error.message);
     }
@@ -237,10 +318,51 @@ const salesSlice = createSlice({
         };
         state.sales = state.sales.map(
           (sale) => (sale.id === id
-            ? { ...sale, electronic_receipt, status: determineSaleStatus(sale) } : sale),
+            ? {
+              ...sale,
+              electronic_receipt,
+              sale_date: transformSaleDate(sale),
+              status: determineSaleStatus(sale),
+            } : sale),
         );
       })
       .addCase(updateElectronicReceipt.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.payload;
+      })
+      .addCase(addPayment.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(addPayment.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        const { id } = action.payload.sale;
+        const { amount, issue_date, transaction_number } = action.payload;
+        const payment = {
+          amount,
+          issue_date,
+          transaction_number,
+        };
+        state.sales = state.sales.map(
+          (sale) => (sale.id === id
+            ? {
+              ...sale,
+              payments: [...(sale.payments || []), payment],
+              status: determineSaleStatus(sale),
+            } : sale),
+        );
+      })
+      .addCase(addPayment.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.payload;
+      })
+      .addCase(deletePayment.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(deletePayment.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        console.log(action.payload);
+      })
+      .addCase(deletePayment.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.payload;
       });

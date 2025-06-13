@@ -1,5 +1,5 @@
 import { Outlet } from 'react-router-dom';
-import NavBar from './NavBar';
+import NavBar from '../common/NavBar';
 
 const SalesNavBar = () => {
   const links = {

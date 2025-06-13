@@ -2,16 +2,17 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Routes, Route } from 'react-router-dom';
 import './styles/style.css';
+import './styles/documentPreview.css';
+import './styles/boleta.css';
 import { fetchMotorcycles, clearMessage } from './redux/motorcyclesSlice';
-import Layout from './components/Layout';
+import Layout from './components/common/Layout';
 import Motorcycles from './routes/Motorcycles';
 import Customers from './routes/Customers';
 import Sales from './routes/Sales';
 import { fetchCustomers } from './redux/customersSlice';
 import { fetchSales } from './redux/salesSlice';
-import NewSalesTable from './components/NewSalesTable';
-import SalesTable from './components/SalesTable';
-import CartaPoderSUNARP from './components/CartaPoderSUNARP';
+import NewSalesTable from './components/sales/NewSalesTable';
+import SalesTable from './components/sales/SalesTable';
 
 function App() {
   const dispatch = useDispatch();
@@ -49,7 +50,6 @@ function App() {
           <Route path="/clientes" element={<Customers />} />
           <Route path="/ventas" element={<Sales />}>
             <Route index element={<SalesTable />} />
-            <Route path="/ventas/CartaPoderSUNARP/:id" element={<CartaPoderSUNARP />} />
             <Route path="/ventas/registrar-venta" element={<NewSalesTable />} />
           </Route>
         </Route>

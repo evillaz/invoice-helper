@@ -1,4 +1,4 @@
-import SalesView from '../components/SalesView';
+import SalesView from '../components/sales/SalesView';
 
 const Sales = () => (
   <SalesView />

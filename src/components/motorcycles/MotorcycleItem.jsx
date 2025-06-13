@@ -1,15 +1,14 @@
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
-import { toggleSelectMotorcycle, deleteMotorcycleFromDB, removeMotorcycle } from '../redux/motorcyclesSlice';
+import { toggleSelectMotorcycle, deleteMotorcycleFromDB, removeMotorcycle } from '../../redux/motorcyclesSlice';
 import MotorycleDetails from './MotorcycleDetails';
-import CopyDescriptionButton from './CopyDescriptionButton';
+import CopyDescriptionButton from '../common/CopyDescriptionButton';
 
 const MotorcycleItem = ({
   motorcycle, isUploadXml, showDetails,
 }) => {
   const dispatch = useDispatch();
   const selectedMotorcycles = useSelector((state) => state.motorcycles.selectedMotorcycles);
-
   const handleSelect = (motorcycleId) => {
     dispatch(toggleSelectMotorcycle(motorcycleId));
   };
