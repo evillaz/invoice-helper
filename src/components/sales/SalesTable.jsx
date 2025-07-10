@@ -1,5 +1,5 @@
 import { useSelector } from 'react-redux';
-import { useCallback, useState } from 'react';
+import { useMemo, useState } from 'react';
 import SaleItem from './SaleItem';
 import SearchBar from '../common/SearchBar';
 import { SearchContext } from '../../context/SearchContext';
@@ -15,20 +15,40 @@ const SalesTable = () => {
   const [endMonth, setEndMonth] = useState('');
   const [startYear, setStartYear] = useState('2025');
   const [endYear, setEndYear] = useState('2025');
-  const [filteredByDateData, setFilteredByDateData] = useState([]);
-
-  const handleFilterByDate = useCallback((newData) => {
-    const isSameLength = filteredByDateData.length === newData.length;
-
-    const isSameContent = isSameLength
-      && filteredByDateData.every((item, index) => item.id === newData[index].id);
-
-    if (!isSameContent) {
-      setFilteredByDateData(newData);
+  const filterByDate = (data) => data.filter((d) => {
+    if (!startYear || !startMonth || !endYear) return true;
+    const issueDate = new Date(d.issueDate);
+    const startDate = {
+      month: startMonth,
+      year: startYear,
+    };
+    const endDate = endMonth ? {
+      month: endMonth,
+      year: endYear,
+    } : '';
+    if (endDate) {
+      return ((issueDate.getMonth() + 1 >= Number(startDate.month))
+        && (issueDate.getFullYear() === Number(startDate.year)))
+        && (issueDate.getMonth() + 1 < Number(endDate.month))
+        && (issueDate.getFullYear() <= Number(endDate.year));
     }
-  }, [filteredByDateData]);
+    return (issueDate.getMonth() + 1 === Number(startDate.month))
+        && (issueDate.getFullYear() === Number(startDate.year));
+  });
+  const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' });
 
-  const filteredSales = sales.filter((sale) => {
+  const handleSort = (key) => {
+    setSortConfig((prev) => ({
+      key,
+      direction: prev.key === key && prev.direction === 'asc' ? 'desc' : 'asc',
+    }));
+  };
+
+  function getNestedValue(obj, path) {
+    return path.split('.').reduce((o, p) => o?.[p], obj);
+  }
+
+  const searchedSales = sales.filter((sale) => {
     const checkMatch = (obj) => Object.values(obj).some((item) => {
       if (typeof item === 'string') {
         return item.toLowerCase().includes(searchQuery.toLocaleLowerCase());
@@ -40,22 +60,9 @@ const SalesTable = () => {
     return checkMatch(sale);
   });
 
-  const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' });
+  const filteredSales = filterByDate(searchedSales);
 
-  // Handle column click
-  function getNestedValue(obj, path) {
-    return path.split('.').reduce((o, p) => o?.[p], obj);
-  }
-
-  const handleSort = (key) => {
-    setSortConfig((prev) => ({
-      key,
-      direction: prev.key === key && prev.direction === 'asc' ? 'desc' : 'asc',
-    }));
-  };
-
-  // Sort logic
-  const sortedSales = [...filteredByDateData].sort((a, b) => {
+  const sortedSales = filteredSales.sort((a, b) => {
     if (!sortConfig.key) return 0;
 
     let aValue = getNestedValue(a, sortConfig.key);
@@ -70,6 +77,14 @@ const SalesTable = () => {
     return 0;
   });
 
+  console.log(sales);
+  console.log(searchedSales);
+  console.log(sortedSales);
+  const searchContextValue = useMemo(
+    () => ({ searchQuery, setSearchQuery }),
+    [searchQuery, setSearchQuery],
+  );
+
   return (
     <>
       <FilterByDate
@@ -81,13 +96,11 @@ const SalesTable = () => {
         onChangeEndMonth={setEndMonth}
         onChangeStartYear={setStartYear}
         onChangeEndYear={setEndYear}
-        data={filteredSales}
-        onFilter={handleFilterByDate}
       />
       <DocumentPreviewButton DocumentComponent={Boleta} />
       <GetVouchersPdf />
       {sales && (
-        <SearchContext.Provider value={{ searchQuery, setSearchQuery }}>
+        <SearchContext.Provider value={searchContextValue}>
           <SearchBar />
           <table>
             <thead>
@@ -110,6 +123,7 @@ const SalesTable = () => {
                 <th>IGV</th>
                 <th onClick={() => handleSort('payments')}>PAGOS</th>
                 <th onClick={() => handleSort('issueDate')}>FECHA VENTA</th>
+                <th>TITULO</th>
                 <th>BOLETA</th>
               </tr>
             </thead>
