@@ -10,33 +10,50 @@ const SALE_STATUSES = {
 
 const determineSaleStatus = (sale) => {
   if (!sale.electronic_receipt) {
-    return SALE_STATUSES.PROSPECT;
+    return {
+      ...sale,
+      status: SALE_STATUSES.PROSPECT,
+    };
   }
 
   if (sale.electronic_receipt && !sale.title) {
-    return SALE_STATUSES.PROCESSED;
+    return {
+      ...sale,
+      status: SALE_STATUSES.PROCESSED,
+    };
   }
 
   if (sale.title && !sale.plate) {
-    return SALE_STATUSES.TITULO_REGISTERED;
+    return {
+      ...sale,
+      status: SALE_STATUSES.TITULO_REGISTERED,
+    };
   }
 
   if (sale.plate) {
-    return SALE_STATUSES.PLACA_REGISTERED;
+    return {
+      ...sale,
+      status: SALE_STATUSES.PLACA_REGISTERED,
+    };
   }
 
-  return SALE_STATUSES.PROCESSED;
+  return {
+    ...sale,
+    status: SALE_STATUSES.PROCESSED,
+  };
 };
 
 const transformSaleDate = (sale) => {
   const dateSource = sale.electronic_receipt?.issue_date || sale.created_at;
-  return formatDate(new Date(dateSource));
+  return {
+    ...sale,
+    sale_date: formatDate(new Date(dateSource)),
+  };
 };
 
-const getSalesDate = (data) => data.map((d) => ({
-  ...d,
-  sale_date: transformSaleDate(d),
-}));
+const getSalesDate = (data) => data.map((d) => (
+  transformSaleDate(d)
+));
 
 export const fetchSales = createAsyncThunk(
   'sales/fetchSales',
@@ -251,10 +268,9 @@ const salesSlice = createSlice({
       })
       .addCase(fetchSales.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        state.sales = action.payload.map((sale) => ({
-          ...sale,
-          status: determineSaleStatus(sale),
-        }));
+        state.sales = action.payload.map((sale) => (
+          determineSaleStatus(sale)
+        ));
       })
       .addCase(fetchSales.rejected, (state, action) => {
         state.status = 'failed';
@@ -266,12 +282,9 @@ const salesSlice = createSlice({
       .addCase(saveSaleToDB.fulfilled, (state, action) => {
         state.status = 'succeeded';
         state.message = action.payload.message;
-        const saleWithStatus = {
-          ...action.payload,
-          sale_date: transformSaleDate(action.payload),
-          status: determineSaleStatus(action.payload),
-        };
-        state.sales = [...state.sales, saleWithStatus];
+        transformSaleDate(action.payload);
+        determineSaleStatus(action.payload);
+        state.sales = [...state.sales, action.payload];
       })
       .addCase(saveSaleToDB.rejected, (state, action) => {
         state.status = 'failed';
@@ -291,21 +304,6 @@ const salesSlice = createSlice({
         state.status = 'failed';
         state.error = action.payload;
       })
-      .addCase(updateBoleta.pending, (state) => {
-        state.status = 'loading';
-      })
-      .addCase(updateBoleta.fulfilled, (state, action) => {
-        state.status = 'succeeded';
-        const { id, boleta } = action.payload;
-        state.sales = state.sales.map(
-          (sale) => (sale.id === id
-            ? { ...sale, boleta, status: determineSaleStatus(sale) } : sale),
-        );
-      })
-      .addCase(updateBoleta.rejected, (state, action) => {
-        state.status = 'failed';
-        state.error = action.payload;
-      })
       .addCase(updateElectronicReceipt.pending, (state) => {
         state.status = 'loading';
       })
@@ -317,13 +315,16 @@ const salesSlice = createSlice({
           issue_date: action.payload.issue_date,
         };
         state.sales = state.sales.map(
-          (sale) => (sale.id === id
-            ? {
-              ...sale,
-              electronic_receipt,
-              sale_date: transformSaleDate(sale),
-              status: determineSaleStatus(sale),
-            } : sale),
+          (sale) => {
+            if (sale.id === id) {
+              const updatedSale = {
+                ...sale,
+                electronic_receipt,
+              };
+              return transformSaleDate(determineSaleStatus(updatedSale));
+            }
+            return sale;
+          },
         );
       })
       .addCase(updateElectronicReceipt.rejected, (state, action) => {
@@ -343,12 +344,16 @@ const salesSlice = createSlice({
           transaction_number,
         };
         state.sales = state.sales.map(
-          (sale) => (sale.id === id
-            ? {
-              ...sale,
-              payments: [...(sale.payments || []), payment],
-              status: determineSaleStatus(sale),
-            } : sale),
+          (sale) => {
+            if (sale.id === id) {
+              const updatedSale = {
+                ...sale,
+                payments: [...(sale.payments || []), payment],
+              };
+              return (determineSaleStatus(updatedSale));
+            }
+            return sale;
+          },
         );
       })
       .addCase(addPayment.rejected, (state, action) => {
@@ -363,6 +368,33 @@ const salesSlice = createSlice({
         console.log(action.payload);
       })
       .addCase(deletePayment.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.payload;
+      })
+      .addCase(addTitle.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(addTitle.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        const { id } = action.payload.sale;
+        const { title_number, password } = action.payload;
+        state.sales = state.sales.map(
+          (sale) => {
+            if (sale.id === id) {
+              const updatedSale = {
+                ...sale,
+                title: {
+                  title_number,
+                  password,
+                },
+              };
+              return determineSaleStatus(updatedSale);
+            }
+            return sale;
+          },
+        );
+      })
+      .addCase(addTitle.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.payload;
       });
