@@ -55,13 +55,9 @@ const SaleDocument = React.forwardRef(({
               <strong>COLOR:</strong>
               {' '}
               {sale.motorcycle.color ? (
-                <>
-                  {sale.motorcycle.color}
-                </>
+                sale.motorcycle.color
               ) : (
-                <>
-                  AZUL
-                </>
+                'AZUL'
               )}
             </p>
             <p className="detail">

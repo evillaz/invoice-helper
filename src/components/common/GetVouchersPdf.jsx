@@ -51,65 +51,63 @@ const GetVouchersPdf = () => {
   };
 
   return (
-    <>
-      <div style={{ maxWidth: '600px', margin: '0 auto', padding: '20px' }}>
-        <input type="file" accept="image/*" multiple onChange={handleImageUpload} />
+    <div style={{ maxWidth: '600px', margin: '0 auto', padding: '20px' }}>
+      <input type="file" accept="image/*" multiple onChange={handleImageUpload} />
 
-        {images.length > 0 && (
-          <div style={{
-            display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginTop: '20px',
-          }}
-          >
-            {images.map((imgObj, idx) => (
-              <div key={idx} style={{ position: 'relative', textAlign: 'center' }}>
-                <button
-                  type="button"
-                  onClick={() => handleRemoveImage(idx)}
-                  style={{
-                    position: 'absolute',
-                    top: '5px',
-                    right: '5px',
-                    backgroundColor: 'red',
-                    color: 'white',
-                    border: 'none',
-                    borderRadius: '50%',
-                    width: '24px',
-                    height: '24px',
-                    cursor: 'pointer',
-                  }}
-                >
-                  X
-                </button>
-                <img
-                  src={imgObj.url}
-                  alt={`Uploaded ${idx + 1}`}
-                  style={{ width: '100%', borderRadius: '10px', boxShadow: '0 0 10px rgba(0,0,0,0.1)' }}
-                />
-                <button
-                  type="button"
-                  onClick={() => downloadSinglePdf(imgObj)}
-                  style={{ marginTop: '10px', width: '100%', padding: '8px' }}
-                >
-                  Download
-                  {' '}
-                  {imgObj.name}
-                  .pdf
-                </button>
-              </div>
-            ))}
+      {images.length > 0 && (
+      <div style={{
+        display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginTop: '20px',
+      }}
+      >
+        {images.map((imgObj, idx) => (
+          <div key={idx} style={{ position: 'relative', textAlign: 'center' }}>
+            <button
+              type="button"
+              onClick={() => handleRemoveImage(idx)}
+              style={{
+                position: 'absolute',
+                top: '5px',
+                right: '5px',
+                backgroundColor: 'red',
+                color: 'white',
+                border: 'none',
+                borderRadius: '50%',
+                width: '24px',
+                height: '24px',
+                cursor: 'pointer',
+              }}
+            >
+              X
+            </button>
+            <img
+              src={imgObj.url}
+              alt={`Uploaded ${idx + 1}`}
+              style={{ width: '100%', borderRadius: '10px', boxShadow: '0 0 10px rgba(0,0,0,0.1)' }}
+            />
+            <button
+              type="button"
+              onClick={() => downloadSinglePdf(imgObj)}
+              style={{ marginTop: '10px', width: '100%', padding: '8px' }}
+            >
+              Download
+              {' '}
+              {imgObj.name}
+              .pdf
+            </button>
           </div>
-        )}
-
-        <button
-          type="button"
-          onClick={handleDownloadAllPdfs}
-          disabled={images.length === 0}
-          style={{ marginTop: '20px', width: '100%', padding: '10px' }}
-        >
-          Download All as PDFs
-        </button>
+        ))}
       </div>
-    </>
+      )}
+
+      <button
+        type="button"
+        onClick={handleDownloadAllPdfs}
+        disabled={images.length === 0}
+        style={{ marginTop: '20px', width: '100%', padding: '10px' }}
+      >
+        Download All as PDFs
+      </button>
+    </div>
   );
 };
 

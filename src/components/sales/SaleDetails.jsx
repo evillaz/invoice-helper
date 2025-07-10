@@ -17,8 +17,7 @@ const SaleDetails = () => {
   };
 
   return (
-    <>
-      {sale && (
+    sale && (
       <>
         <MotorycleDetails key={`motoSaleDetails${sale.motorcycle.factura}`} motorcycle={sale.motorcycle} />
         {sale.customer && (
@@ -55,47 +54,59 @@ const SaleDetails = () => {
         </td>
         {sale.payments?.length > 0 ? (
           sale.payments.map((payment) => (
-            <>
-              <td key={`transaccion${payment.transaction_number}`}>
-                <p
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                  }}
-                >
-                  <span>
-                    {payment.amount}
-                  </span>
-                  <span>
-                    {payment.transaction_number}
-                  </span>
-                  <span>
-                    {payment.issue_date}
-                  </span>
-                </p>
-                <button
-                  type="button"
-                  onClick={() => handleDelete(sale.id, payment.id)}
-                  className="ml-4 px-3 py-1 bg-red-500 text-white rounded-lg"
-                >
-                  X
-                </button>
-              </td>
-            </>
+            <td key={`transaccion${payment.transaction_number}`}>
+              <p
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                }}
+              >
+                <span>
+                  {payment.amount}
+                </span>
+                <span>
+                  {payment.transaction_number}
+                </span>
+                <span>
+                  {payment.issue_date}
+                </span>
+              </p>
+              <button
+                type="button"
+                onClick={() => handleDelete(sale.id, payment.id)}
+                className="ml-4 px-3 py-1 bg-red-500 text-white rounded-lg"
+              >
+                X
+              </button>
+            </td>
           ))
         ) : (
-          <>
-            <td>
-              REGISTRAR PAGOS
-            </td>
-          </>
+          <td>
+            REGISTRAR PAGOS
+          </td>
         )}
         <td>
           {sale.issueDate}
         </td>
+        <td>
+          {sale.title && (
+            <p
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+              }}
+            >
+              <span>
+                {sale.title.title_number}
+              </span>
+              <span>
+                {sale.title.password}
+              </span>
+            </p>
+          )}
+        </td>
       </>
-      )}
-    </>
+    )
   );
 };
 

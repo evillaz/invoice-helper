@@ -21,8 +21,7 @@ const MotorycleDetails = ({ motorcycle/* , showDetails */ }) => {
     dispatch(updateAttribute(sentAttribute));
   };
   return (
-    <>
-      {motorcycle
+    motorcycle
       && (
       <>
         <td>{highlightText(motorcycle.factura, searchQuery)}</td>
@@ -53,8 +52,7 @@ const MotorycleDetails = ({ motorcycle/* , showDetails */ }) => {
         <td>{highlightText(motorcycle.dua, searchQuery)}</td>
         <td>{motorcycle.issueDate}</td>
       </>
-      )}
-    </>
+      )
   );
 };
 

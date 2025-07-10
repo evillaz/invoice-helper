@@ -32,51 +32,47 @@ const SaleElectronicReceiptInput = () => {
     dispatch(updateElectronicReceipt({ saleId, electronic_receipt }));
   };
   return (
-    <>
-      {(sale.electronic_receipt && !editReceipt) ? (
-        <>
-          <td>
-            <span>
-              {sale.electronic_receipt.receipt_number}
-            </span>
-            <button
-              type="button"
-              onClick={() => handleEditReceipt()}
-            >
-              Editar BOLETA
-            </button>
-          </td>
-        </>
-      ) : (
-        <>
-          <SaleGenericInput labelTxt="EB01-" type="text" handleFunction={handleChangeReceipt} saleId={sale.id} />
-          <td
+    (sale.electronic_receipt && !editReceipt) ? (
+      <td>
+        <span>
+          {sale.electronic_receipt.receipt_number}
+        </span>
+        <button
+          type="button"
+          onClick={() => handleEditReceipt()}
+        >
+          Editar BOLETA
+        </button>
+      </td>
+    ) : (
+      <>
+        <SaleGenericInput labelTxt="EB01-" type="text" handleFunction={handleChangeReceipt} saleId={sale.id} />
+        <td
+          style={{ display: 'flex' }}
+        >
+          <label
+            htmlFor={`receiptIssueDate${sale.id}`}
             style={{ display: 'flex' }}
           >
-            <label
-              htmlFor={`receiptIssueDate${sale.id}`}
-              style={{ display: 'flex' }}
-            >
-              FECHA
-              <input
-                id={`receiptIssueDate${sale.id}`}
-                type="date"
-                onBlur={(e) => handleChangeIssueDate(e.target.value)}
-                style={{ marginLeft: '4px' }}
-              />
-            </label>
-          </td>
-          <td>
-            <button
-              type="button"
-              onClick={() => handleSaveReceipt(sale.id)}
-            >
-              AGREGAR BOLETA
-            </button>
-          </td>
-        </>
-      )}
-    </>
+            FECHA
+            <input
+              id={`receiptIssueDate${sale.id}`}
+              type="date"
+              onBlur={(e) => handleChangeIssueDate(e.target.value)}
+              style={{ marginLeft: '4px' }}
+            />
+          </label>
+        </td>
+        <td>
+          <button
+            type="button"
+            onClick={() => handleSaveReceipt(sale.id)}
+          >
+            AGREGAR BOLETA
+          </button>
+        </td>
+      </>
+    )
   );
 };
 

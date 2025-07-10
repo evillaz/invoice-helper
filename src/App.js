@@ -14,7 +14,7 @@ import { fetchSales } from './redux/salesSlice';
 import NewSalesTable from './components/sales/NewSalesTable';
 import SalesTable from './components/sales/SalesTable';
 
-function App() {
+const App = () => {
   const dispatch = useDispatch();
   const { message } = useSelector((state) => state.motorcycles);
   const navBarLinks = {
@@ -43,19 +43,17 @@ function App() {
   }, [message, dispatch]);
 
   return (
-    <>
-      <Routes>
-        <Route path="/" element={<Layout links={navBarLinks} />}>
-          <Route index element={<Motorcycles />} />
-          <Route path="/clientes" element={<Customers />} />
-          <Route path="/ventas" element={<Sales />}>
-            <Route index element={<SalesTable />} />
-            <Route path="/ventas/registrar-venta" element={<NewSalesTable />} />
-          </Route>
+    <Routes>
+      <Route path="/" element={<Layout links={navBarLinks} />}>
+        <Route index element={<Motorcycles />} />
+        <Route path="/clientes" element={<Customers />} />
+        <Route path="/ventas" element={<Sales />}>
+          <Route index element={<SalesTable />} />
+          <Route path="/ventas/registrar-venta" element={<NewSalesTable />} />
         </Route>
-      </Routes>
-    </>
+      </Route>
+    </Routes>
   );
-}
+};
 
 export default App;

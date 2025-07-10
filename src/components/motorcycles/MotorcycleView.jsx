@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import MotorcyclesTable from './MotorcycleTable';
 import SearchBar from '../common/SearchBar';
@@ -57,6 +57,11 @@ const MotorcycleView = () => {
     return matchesSelected || matchesSearch;
   });
 
+  const searchContextValue = useMemo(
+    () => ({ searchQuery, setSearchQuery }),
+    [searchQuery, setSearchQuery],
+  );
+
   return (
     <>
       <FilterByDate
@@ -71,7 +76,7 @@ const MotorcycleView = () => {
         data={filteredMotorcycles}
         onFilter={handleFilterByDate}
       />
-      <SearchContext.Provider value={{ searchQuery, setSearchQuery }}>
+      <SearchContext.Provider value={searchContextValue}>
         <div className="p-4 border rounded-lg shadow-md w-96 mx-auto">
           {showXmlUploader
             ? (

@@ -82,7 +82,7 @@ const Boleta = () => (
           </td>
           <td>3813.56</td>
           <td>0.00</td>
-          <td>4500.0008</td>
+          <td>4500.0000</td>
           <td>0.00</td>
         </tr>
       </tbody>

@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+import { useMemo } from 'react';
 import { deleteSaleFromDB } from '../../redux/salesSlice';
 import CopyDescriptionButton from '../common/CopyDescriptionButton';
 import DeleteButton from '../common/DeleteButton';
@@ -12,6 +13,8 @@ import { SaleContext } from '../../context/SaleContext';
 import DocumentDownloader from '../documents/DocumentDownloader';
 import ModalForm from '../common/ModalForm';
 import PaymentForm from './PaymentForm';
+import Boleta from '../documents/Boleta';
+import TitleForm from './TitleForm';
 
 const SaleItem = ({ sale }) => {
   const statusClasses = {
@@ -32,6 +35,10 @@ const SaleItem = ({ sale }) => {
     },
   };
 
+  const saleContextValue = useMemo(
+    () => ({ sale }),
+    [sale],
+  );
   return (
     <>
       <td>
@@ -41,14 +48,16 @@ const SaleItem = ({ sale }) => {
           {sale.status}
         </span>
       </td>
-      <SaleContext.Provider value={{ sale }}>
+      <SaleContext.Provider value={saleContextValue}>
         <SaleDetails />
         <SaleElectronicReceiptInput />
         <DocumentDownloader DocumentComponent={DeclaracionJuradaMedioDePago} filePrefix="DeclaracionJuradaMedioDePago" />
         <DocumentDownloader DocumentComponent={CartaPoderSUNARP} filePrefix="DeclaracionJuradaMedioDePago" />
         <DocumentDownloader DocumentComponent={CartaPoderAPP} filePrefix="DeclaracionJuradaMedioDePago" />
         <DownloadAllDocumentsPDF />
+        <DocumentDownloader DocumentComponent={Boleta} filePrefix="Boleta" />
         <ModalForm RenderComponent={PaymentForm} buttonLabel="Add payment" />
+        <ModalForm RenderComponent={TitleForm} buttonLabel="Add Title" />
         <CopyDescriptionButton motorcycle={sale.motorcycle} />
         <DeleteButton deleteFunc={deleteSaleFromDB} item={sale} />
       </SaleContext.Provider>
