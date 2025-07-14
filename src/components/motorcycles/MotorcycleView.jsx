@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import MotorcyclesTable from './MotorcycleTable';
 import SearchBar from '../common/SearchBar';
@@ -19,18 +19,26 @@ const MotorcycleView = () => {
   const [endMonth, setEndMonth] = useState('');
   const [startYear, setStartYear] = useState('2025');
   const [endYear, setEndYear] = useState('2025');
-  const [filteredByDateData, setFilteredByDateData] = useState([]);
-
-  const handleFilterByDate = useCallback((newData) => {
-    // Evitar actualizar si los datos no han cambiado
-    const isSameLength = filteredByDateData.length === newData.length;
-    const isSameContent = isSameLength
-      && filteredByDateData.every((item, index) => item.factura === newData[index].factura);
-
-    if (!isSameContent) {
-      setFilteredByDateData(newData);
+  const filterByDate = (data) => data.filter((d) => {
+    if (!startYear || !startMonth || !endYear) return true;
+    const issueDate = new Date(d.issueDate);
+    const startDate = {
+      month: startMonth,
+      year: startYear,
+    };
+    const endDate = endMonth ? {
+      month: endMonth,
+      year: endYear,
+    } : '';
+    if (endDate) {
+      return ((issueDate.getMonth() + 1 >= Number(startDate.month))
+        && (issueDate.getFullYear() === Number(startDate.year)))
+        && (issueDate.getMonth() + 1 < Number(endDate.month))
+        && (issueDate.getFullYear() <= Number(endDate.year));
     }
-  }, [filteredByDateData]);
+    return (issueDate.getMonth() + 1 === Number(startDate.month))
+        && (issueDate.getFullYear() === Number(startDate.year));
+  });
 
   const handleShowXmluploader = () => {
     setShowXmlUploader(true);
@@ -57,6 +65,8 @@ const MotorcycleView = () => {
     return matchesSelected || matchesSearch;
   });
 
+  const filteredByDateData = filterByDate(filteredMotorcycles);
+
   const searchContextValue = useMemo(
     () => ({ searchQuery, setSearchQuery }),
     [searchQuery, setSearchQuery],
@@ -73,8 +83,6 @@ const MotorcycleView = () => {
         onChangeEndMonth={setEndMonth}
         onChangeStartYear={setStartYear}
         onChangeEndYear={setEndYear}
-        data={filteredMotorcycles}
-        onFilter={handleFilterByDate}
       />
       <SearchContext.Provider value={searchContextValue}>
         <div className="p-4 border rounded-lg shadow-md w-96 mx-auto">

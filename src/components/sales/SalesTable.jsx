@@ -77,9 +77,6 @@ const SalesTable = () => {
     return 0;
   });
 
-  console.log(sales);
-  console.log(searchedSales);
-  console.log(sortedSales);
   const searchContextValue = useMemo(
     () => ({ searchQuery, setSearchQuery }),
     [searchQuery, setSearchQuery],
