@@ -1,14 +1,17 @@
 import { useState } from 'react';
 import jsPDF from 'jspdf';
+import { useSale } from '../../context/SaleContext';
 
 const GetVouchersPdf = () => {
+  const { sale } = useSale();
+  const fileName = (sale.customer.primerApellido
+    + sale.customer.segundoApellido + sale.customer.nombre);
   const [images, setImages] = useState([]);
-
   const handleImageUpload = (e) => {
     const files = Array.from(e.target.files);
     const imageObjs = files.map((file) => ({
       url: URL.createObjectURL(file),
-      name: file.name.replace(/\.[^/.]+$/, ''), // Remove extension
+      name: fileName.replace(/\.[^/.]+$/, '').replace(/\s+/g, ''),
     }));
     setImages((prev) => [...prev, ...imageObjs]);
   };
@@ -34,7 +37,7 @@ const GetVouchersPdf = () => {
       const y = (pageHeight - imgHeight) / 2;
 
       pdf.addImage(img, 'JPEG', x, y, imgWidth, imgHeight);
-      pdf.save(`${imageObj.name}.pdf`);
+      pdf.save(`voucher${imageObj.name}.pdf`);
     };
   };
 
@@ -51,7 +54,7 @@ const GetVouchersPdf = () => {
   };
 
   return (
-    <div style={{ maxWidth: '600px', margin: '0 auto', padding: '20px' }}>
+    <td style={{ maxWidth: '600px', margin: '0 auto', padding: '20px' }}>
       <input type="file" accept="image/*" multiple onChange={handleImageUpload} />
 
       {images.length > 0 && (
@@ -79,11 +82,13 @@ const GetVouchersPdf = () => {
             >
               X
             </button>
+            {/*
             <img
               src={imgObj.url}
               alt={`Uploaded ${idx + 1}`}
               style={{ width: '100%', borderRadius: '10px', boxShadow: '0 0 10px rgba(0,0,0,0.1)' }}
-            />
+            /> image preview
+            */}
             <button
               type="button"
               onClick={() => downloadSinglePdf(imgObj)}
@@ -107,7 +112,7 @@ const GetVouchersPdf = () => {
       >
         Download All as PDFs
       </button>
-    </div>
+    </td>
   );
 };
 

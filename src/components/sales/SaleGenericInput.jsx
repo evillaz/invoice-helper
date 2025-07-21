@@ -3,19 +3,21 @@ import PropTypes from 'prop-types';
 const SaleGenericInput = ({
   labelTxt, type, handleFunction, saleId,
 }) => (
-  <label
-    htmlFor={`receipt${type}${saleId}`}
-    style={{ display: 'flex' }}
-  >
-    {labelTxt
-          && labelTxt}
-    <input
-      id={`receipt${type}${saleId}`}
-      type={type}
-      onBlur={(e) => handleFunction(e.target.value)}
-      style={{ marginLeft: '4px' }}
-    />
-  </label>
+  <td style={{ display: 'flex' }}>
+    <label
+      htmlFor={`receipt${type}${saleId}`}
+      style={{ display: 'flex' }}
+    >
+      {labelTxt
+            && labelTxt}
+      <input
+        id={`receipt${type}${saleId}`}
+        type={type}
+        onBlur={(e) => handleFunction(e.target.value)}
+        style={{ marginLeft: '4px' }}
+      />
+    </label>
+  </td>
 );
 
 SaleGenericInput.propTypes = {

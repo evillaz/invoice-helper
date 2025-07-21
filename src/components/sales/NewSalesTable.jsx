@@ -4,7 +4,6 @@ import TableHeader from '../common/TableHeader';
 import { saveSaleToDB } from '../../redux/salesSlice';
 import ShowDetailsButton from '../common/ShowDetailsButton';
 import MotorycleDetails from '../motorcycles/MotorcycleDetails';
-import SaleDetails from './SaleDetails';
 
 const NewSalesTable = () => {
   const motorcycles = useSelector((state) => state.motorcycles.selectedMotorcycles);
@@ -60,7 +59,6 @@ const NewSalesTable = () => {
               <MotorycleDetails motorcycle={motorcycle} />
               {salesData[motorcycle.factura] ? (
                 <>
-                  <SaleDetails sale={salesData[motorcycle.factura]} />
                   <td>
                     <input
                       type="number"

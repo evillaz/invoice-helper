@@ -15,6 +15,7 @@ import ModalForm from '../common/ModalForm';
 import PaymentForm from './PaymentForm';
 import Boleta from '../documents/Boleta';
 import TitleForm from './TitleForm';
+import GetVouchersPdf from '../common/GetVouchersPdf';
 
 const SaleItem = ({ sale }) => {
   const statusClasses = {
@@ -59,6 +60,7 @@ const SaleItem = ({ sale }) => {
         <ModalForm RenderComponent={PaymentForm} buttonLabel="Add payment" />
         <ModalForm RenderComponent={TitleForm} buttonLabel="Add Title" />
         <CopyDescriptionButton motorcycle={sale.motorcycle} />
+        <GetVouchersPdf />
         <DeleteButton deleteFunc={deleteSaleFromDB} item={sale} />
       </SaleContext.Provider>
     </>

@@ -3,7 +3,6 @@ import { useMemo, useState } from 'react';
 import SaleItem from './SaleItem';
 import SearchBar from '../common/SearchBar';
 import { SearchContext } from '../../context/SearchContext';
-import GetVouchersPdf from '../common/GetVouchersPdf';
 import DocumentPreviewButton from '../documents/DocumentPreviewButton';
 import Boleta from '../documents/Boleta';
 import FilterByDate from '../utils/FilterByDate';
@@ -17,7 +16,7 @@ const SalesTable = () => {
   const [endYear, setEndYear] = useState('2025');
   const filterByDate = (data) => data.filter((d) => {
     if (!startYear || !startMonth || !endYear) return true;
-    const issueDate = new Date(d.issueDate);
+    const issueDate = d.sale_date || d.issueDate;
     const startDate = {
       month: startMonth,
       year: startYear,
@@ -27,13 +26,13 @@ const SalesTable = () => {
       year: endYear,
     } : '';
     if (endDate) {
-      return ((issueDate.getMonth() + 1 >= Number(startDate.month))
-        && (issueDate.getFullYear() === Number(startDate.year)))
-        && (issueDate.getMonth() + 1 < Number(endDate.month))
-        && (issueDate.getFullYear() <= Number(endDate.year));
+      return ((issueDate.month >= startDate.month)
+        && (issueDate.year === Number(startDate.year)))
+        && (issueDate.month < endDate.month)
+        && (issueDate.year <= Number(endDate.year));
     }
-    return (issueDate.getMonth() + 1 === Number(startDate.month))
-        && (issueDate.getFullYear() === Number(startDate.year));
+    return (issueDate.month === startDate.month)
+        && (issueDate.year === Number(startDate.year));
   });
   const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' });
 
@@ -95,7 +94,6 @@ const SalesTable = () => {
         onChangeEndYear={setEndYear}
       />
       <DocumentPreviewButton DocumentComponent={Boleta} />
-      <GetVouchersPdf />
       {sales && (
         <SearchContext.Provider value={searchContextValue}>
           <SearchBar />
@@ -120,8 +118,8 @@ const SalesTable = () => {
                 <th>IGV</th>
                 <th onClick={() => handleSort('payments')}>PAGOS</th>
                 <th onClick={() => handleSort('issueDate')}>FECHA VENTA</th>
-                <th>TITULO</th>
-                <th>BOLETA</th>
+                <th onClick={() => handleSort('title.title_number')}>TITULO</th>
+                <th onClick={() => handleSort('electronic_receipt.receipt_number')}>BOLETA</th>
               </tr>
             </thead>
             <tbody>
