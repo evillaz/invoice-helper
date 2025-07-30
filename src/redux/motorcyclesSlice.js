@@ -43,6 +43,24 @@ export const saveMotorcyclesToDB = createAsyncThunk(
   },
 );
 
+export const saveMotorcycleToDB = createAsyncThunk(
+  'motorcycles/saveMotorcycleToDB',
+  async (motorcycle, { rejectWithValue }) => {
+    try {
+      console.log(motorcycle);
+      const response = await fetch('http://localhost:3000/api/v1/motorcycles', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(motorcycle),
+      });
+      if (!response.ok) throw new Error('Error saving a motorcycle');
+      return response.json();
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  },
+);
+
 // Delete motorcycles from DB
 export const deleteMotorcycleFromDB = createAsyncThunk(
   'motorcycles/deleteMotorcycleFromDB',
