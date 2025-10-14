@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import TableHeader from '../common/TableHeader';
 import { saveSaleToDB } from '../../redux/salesSlice';
 import ShowDetailsButton from '../common/ShowDetailsButton';
@@ -7,16 +7,35 @@ import MotorycleDetails from '../motorcycles/MotorcycleDetails';
 
 const NewSalesTable = () => {
   const motorcycles = useSelector((state) => state.motorcycles.selectedMotorcycles);
+  const { status } = useSelector((state) => state.sales);
+  const customers = useSelector((state) => state.customers.customers);
+
+  const [salesData, setSalesData] = useState({});
   const [showMotoDetails, setShowMotoDetails] = useState(false);
   const dispatch = useDispatch();
+
   const baseMotoHeader = ['Factura', 'Modelo', 'Numero de Chasis', 'Numero de Motor'];
   const expandedMotoHeader = ['Factura', 'Modelo', 'Marca', 'Color', 'Numero de Chasis', 'Numero de Motor', 'DUA', 'Año'];
   const customerHeader = ['DNI', 'NOMBRE', 'DIRECCION'];
   const baseHeader = [...baseMotoHeader, ...customerHeader, 'Monto', 'IGV'];
   const expandedHeader = [...expandedMotoHeader, customerHeader];
 
-  const customers = useSelector((state) => state.customers.customers);
-  const [salesData, setSalesData] = useState({});
+  // === Update local sale status whenever Redux status changes ===
+  useEffect(() => {
+    if (!status) return;
+
+    setSalesData((prev) => {
+      const updated = { ...prev };
+      Object.keys(updated).forEach((moto) => {
+        updated[moto] = {
+          ...updated[moto],
+          status,
+        };
+      });
+      return updated;
+    });
+  }, [status]);
+
   const handleCustomerChange = (motorcycle, dni) => {
     const matchedCustomer = customers.find((cust) => cust.dni === dni);
     setSalesData((prev) => ({
@@ -38,8 +57,11 @@ const NewSalesTable = () => {
       },
     }));
   };
+
   const handleCreateSale = (moto) => {
     dispatch(saveSaleToDB(salesData[moto]));
+    // no manual status update here — handled automatically by the useEffect
+    console.log('Sale dispatched:', salesData[moto]);
   };
 
   return (
@@ -57,36 +79,82 @@ const NewSalesTable = () => {
           {motorcycles.map((motorcycle) => (
             <tr key={`VENTA-${motorcycle.factura}`}>
               <MotorycleDetails motorcycle={motorcycle} />
+              {/* motorcycle.sale && (
+                  <>
+                    <td>
+                      {motorcycle.sale.customer?.nombre}
+                      {' '}
+                      {motorcycle.sale.customer?.primerApellido}
+                      {' '}
+                      {motorcycle.sale.customer?.segundoApellido}
+                    </td>
+                    <td>
+                      <span>
+                        {motorcycle.sale.total_amount}
+                      </span>
+                    </td>
+                    <td>
+                      <span className="createdSale">VENTA CREADA</span>
+                    </td>
+                  </>
+                )
+              */}
               {salesData[motorcycle.factura] ? (
                 <>
                   <td>
-                    <input
-                      type="number"
-                      placeholder="Monto"
-                      onBlur={(e) => handleAmountChange(motorcycle.factura, e.target.value)}
-                    />
+                    {salesData[motorcycle.factura].customer?.nombre}
+                    {' '}
+                    {salesData[motorcycle.factura].customer?.primerApellido}
+                    {' '}
+                    {salesData[motorcycle.factura].customer?.segundoApellido}
                   </td>
-                  <td>
-                    <button type="button" onClick={() => handleCreateSale(motorcycle.factura)}>
-                      Crear Venta
-                    </button>
-                  </td>
+
+                  {salesData[motorcycle.factura].status
+                  === 'sale created succesfully' ? (
+                    <>
+                      <td>
+                        <span>
+                          {salesData[motorcycle.factura].total_amount}
+                        </span>
+                      </td>
+                      <td>
+                        <span className="createdSale">VENTA CREADA</span>
+                      </td>
+                    </>
+                    ) : (
+                      <>
+                        <td>
+                          <input
+                            type="number"
+                            placeholder="Monto"
+                            onBlur={(e) => handleAmountChange(motorcycle.factura, e.target.value)}
+                          />
+                        </td>
+                        <td>
+                          <button
+                            type="button"
+                            onClick={() => handleCreateSale(motorcycle.factura)}
+                          >
+                            Crear Venta
+                          </button>
+                        </td>
+                      </>
+                    )}
                 </>
               ) : (
                 <>
                   <td>
-                    <select onChange={
-                  (e) => handleCustomerChange(motorcycle.factura, e.target.value)
-                }
+                    <select
+                      onChange={(e) => handleCustomerChange(motorcycle.factura, e.target.value)}
                     >
                       <option value="">Seleccionar cliente</option>
                       {customers.map((customer) => (
                         <option key={customer.dni} value={customer.dni}>
-                          {customer.nombre}
-                          {' '}
                           {customer.primerApellido}
                           {' '}
                           {customer.segundoApellido}
+                          {' '}
+                          {customer.nombre}
                         </option>
                       ))}
                     </select>
@@ -99,7 +167,10 @@ const NewSalesTable = () => {
                     />
                   </td>
                   <td>
-                    <button type="button" onClick={() => handleCreateSale(motorcycle.factura)}>
+                    <button
+                      type="button"
+                      onClick={() => handleCreateSale(motorcycle.factura)}
+                    >
                       Crear Venta
                     </button>
                   </td>

@@ -1,0 +1,125 @@
+/* === Modal overlay === */
+.document__preview__modal {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.55);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  backdrop-filter: blur(3px);
+  padding: 1rem;
+}
+
+/* === Modal frame === */
+.document__preview__frame {
+  background: #fff;
+  padding: 1.5rem;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 480px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  position: relative;
+  animation: modalFadeIn 0.25s ease-out;
+}
+
+/* Smooth appearance */
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* === Close button === */
+.document_preview_close_button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: #ef4444;
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  font-size: 1.1rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+.document_preview_close_button:hover {
+  background: #dc2626;
+}
+
+/* === Form layout === */
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  margin-top: 2.2rem;
+}
+
+input {
+  width: 100%;
+  padding: 0.65rem 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: border-color 0.2s ease;
+}
+input:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.25);
+}
+
+/* === Submit button === */
+button[type="submit"] {
+  background: #22c55e;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 0.65rem 1rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.1s ease;
+}
+button[type="submit"]:hover {
+  background: #16a34a;
+}
+button[type="submit"]:active {
+  transform: scale(0.98);
+}
+
+/* === Mobile Responsiveness === */
+@media (max-width: 480px) {
+  .document__preview__frame {
+    padding: 1.2rem;
+    border-radius: 10px;
+    max-width: 95%;
+  }
+
+  input,
+  button[type="submit"] {
+    font-size: 0.95rem;
+    padding: 0.6rem 0.7rem;
+  }
+
+  .document_preview_close_button {
+    width: 28px;
+    height: 28px;
+    font-size: 1rem;
+  }
+}
+
+/* === Accessibility enhancements === */
+.document__preview__frame:focus-within {
+  outline: 2px solid #2563eb;
+  outline-offset: 4px;
+}

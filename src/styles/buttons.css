@@ -1,0 +1,48 @@
+/* === Buttons === */
+button {
+  background: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+button:hover {
+  background: #1d4ed8;
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Utility colors */
+.bg-blue-500 {
+  background: #2563eb;
+}
+.bg-blue-500:hover {
+  background: #1e40af;
+}
+.bg-red-500 {
+  background: #dc2626;
+}
+.bg-red-500:hover {
+  background: #b91c1c;
+}
+
+@media (max-width: 768px) {
+  button {
+    font-size: 0.85rem;
+    padding: 0.4rem 0.6rem;
+  }
+}
+
+@media (max-width: 480px) {
+  td button,
+  td input {
+    font-size: 0.75rem;
+  }
+}

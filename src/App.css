@@ -37,3 +37,240 @@
     transform: rotate(360deg);
   }
 }
+
+/* === Base reset === */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: "Inter", system-ui, sans-serif;
+}
+
+body {
+  background: #f5f7fa;
+  color: #222;
+  line-height: 1.4;
+}
+
+/* === Primary Navigation Bar === */
+.navBar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: #1e40af;
+  color: white;
+  padding: 0.5rem 1rem;
+  display: flex;
+  justify-content: center;
+  z-index: 1000;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.navBar-primaryNavBar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  list-style: none;
+  gap: 0.5rem;
+}
+
+.navBar-item a {
+  display: block;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  color: white;
+  text-decoration: none;
+  transition: background 0.2s ease;
+}
+
+.navBar-item a:hover,
+.navBar-item a.active {
+  background: #2563eb;
+}
+
+/* === Secondary Navigation Bar === */
+.navBar-salesNavBar {
+  position: fixed;
+  top: 3rem; /* appears right below the first navbar */
+  left: 0;
+  width: 100%;
+  background: #1e3a8a;
+  color: white;
+  padding: 0.5rem 1rem;
+  display: flex;
+  justify-content: center;
+  z-index: 999; /* slightly below the first but still above content */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  list-style: none;
+}
+
+.navBar-salesNavBar .navBar-primaryNavBar {
+  justify-content: center;
+}
+
+/* === Wrapper === */
+.wrapper {
+  padding: 1rem;
+  margin-top: 6.5rem; /* extra space for two fixed navbars */
+}
+
+/* === Filters section === */
+label {
+  display: block;
+  margin-bottom: 0.75rem;
+  font-weight: 500;
+}
+
+select,
+input[type="text"],
+input[type="file"] {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+  margin-top: 0.25rem;
+}
+
+button {
+  background: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+button:hover {
+  background: #1d4ed8;
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* === Table === */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1.5rem;
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  font-size: 0.9rem;
+}
+
+th,
+td {
+  border: 1px solid #e5e7eb;
+  padding: 0.5rem;
+  text-align: left;
+  vertical-align: middle;
+}
+
+th {
+  background: #f1f5f9;
+  font-weight: 600;
+}
+
+/* === Buttons inside table === */
+td button {
+  margin: 0.2rem 0;
+  width: 100%;
+}
+
+.bg-blue-500 {
+  background: #2563eb;
+}
+.bg-blue-500:hover {
+  background: #1e40af;
+}
+.bg-red-500 {
+  background: #dc2626;
+}
+.bg-red-500:hover {
+  background: #b91c1c;
+}
+
+/* === Mobile responsiveness === */
+@media (max-width: 768px) {
+  /* Stack navbar vertically */
+  .navBar,
+  .navBar-salesNavBar {
+    flex-direction: column;
+    align-items: center;
+    padding: 0.5rem;
+  }
+
+  .navBar-primaryNavBar {
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+  }
+
+  .wrapper {
+    padding: 0.75rem;
+    margin-top: 9rem; /* more space for two stacked navbars */
+  }
+
+  label {
+    font-size: 0.9rem;
+  }
+
+  /* Make table scrollable */
+  table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  th,
+  td {
+    padding: 0.4rem 0.6rem;
+  }
+
+  button {
+    font-size: 0.85rem;
+    padding: 0.4rem 0.6rem;
+  }
+}
+
+@media (max-width: 480px) {
+  body {
+    font-size: 14px;
+  }
+
+  .navBar,
+  .navBar-salesNavBar {
+    padding: 0.4rem;
+  }
+
+  table {
+    font-size: 0.8rem;
+  }
+
+  td button,
+  td input {
+    font-size: 0.75rem;
+  }
+}
+
+/* === Mobile fix for table buttons === */
+@media (max-width: 768px) {
+  td {
+    display: flex;
+    flex-wrap: wrap;       /* allow wrapping */
+    justify-content: center; /* center buttons horizontally */
+    gap: 0.3rem;            /* spacing between buttons */
+  }
+
+  td button {
+    width: auto;            /* prevent buttons from stretching full width */
+    flex: 0 1 auto;         /* allow them to shrink/wrap properly */
+    min-width: 90px;        /* ensure buttons remain usable */
+  }
+}

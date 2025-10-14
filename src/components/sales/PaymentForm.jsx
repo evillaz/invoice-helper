@@ -40,10 +40,17 @@ const PaymentForm = () => {
   };
   return (
     <form onSubmit={handleSubmit} className="space-y-2 mt-2">
+      <h2>
+        Registro de pago
+        {' '}
+        {sale.customer.nombre}
+        {' '}
+        {sale.customer.primerApellido}
+      </h2>
       <input
         type="text"
         name="transaction_number"
-        placeholder="Transaction Number"
+        placeholder="Numero de transaccion"
         value={formData.transaction_number}
         onChange={handleChange}
         className="border p-2 w-full"
@@ -53,8 +60,8 @@ const PaymentForm = () => {
         type="number"
         step="0.01"
         name="amount"
-        placeholder="Amount"
-        value={formData.amount}
+        placeholder="Monto"
+        value={formData.amount === 0 ? 'Monto' : formData.amount}
         onChange={handleChange}
         className="border p-2 w-full"
         required
@@ -70,14 +77,16 @@ const PaymentForm = () => {
       />
       <input
         type="date"
+        lang="en-GB"
         name="issue_date"
+        placeholder="FECHA PAGO"
         value={formData.issue_date}
         onChange={handleChange}
         className="border p-2 w-full"
         required
       />
       <button type="submit" className="bg-green-500 text-white px-4 py-2 rounded">
-        Save Payment
+        Guardar Pago
       </button>
     </form>
   );

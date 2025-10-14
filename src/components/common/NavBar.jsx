@@ -2,9 +2,9 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 
-const NavBar = ({ links }) => (
+const NavBar = ({ links, navBarType }) => (
   <nav className="navBar">
-    <ul className="navBar-wrap">
+    <ul className={`navBar-${navBarType}`}>
       {Object.values(links).map((link) => (
         <React.Fragment key={link.text}>
           <li
@@ -27,6 +27,7 @@ NavBar.propTypes = {
       text: PropTypes.string.isRequired,
     }),
   ).isRequired,
+  navBarType: PropTypes.string.isRequired,
 };
 
 export default NavBar;

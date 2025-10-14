@@ -1,0 +1,13 @@
+/* Stronger zebra striping for table rows */
+tbody tr:nth-child(odd) {
+  background-color: #e2e8f0; /* light slate gray */
+}
+
+tbody tr:nth-child(even) {
+  background-color: #ffffff; /* white */
+}
+
+/* Hover effect for better focus */
+tbody tr:hover {
+  background-color: #cbd5e1; /* slightly darker gray-blue */
+}

@@ -16,6 +16,7 @@ import PaymentForm from './PaymentForm';
 import Boleta from '../documents/Boleta';
 import TitleForm from './TitleForm';
 import GetVouchersPdf from '../common/GetVouchersPdf';
+import CopySnippetButton from './CopySnippetButton';
 
 const SaleItem = ({ sale }) => {
   const statusClasses = {
@@ -57,9 +58,14 @@ const SaleItem = ({ sale }) => {
         <DocumentDownloader DocumentComponent={CartaPoderAPP} filePrefix="DeclaracionJuradaMedioDePago" />
         <DownloadAllDocumentsPDF />
         <DocumentDownloader DocumentComponent={Boleta} filePrefix="Boleta" />
-        <ModalForm RenderComponent={PaymentForm} buttonLabel="Add payment" />
-        <ModalForm RenderComponent={TitleForm} buttonLabel="Add Title" />
+        <ModalForm RenderComponent={PaymentForm} buttonLabel="Agregar Pago" />
+        <ModalForm RenderComponent={TitleForm} buttonLabel="Agregar Titulo" />
         <CopyDescriptionButton motorcycle={sale.motorcycle} />
+        <CopySnippetButton
+          customer={sale.customer}
+          payments={sale.payments}
+          amount={sale.total_amount}
+        />
         <GetVouchersPdf />
         <DeleteButton deleteFunc={deleteSaleFromDB} item={sale} />
       </SaleContext.Provider>
@@ -101,6 +107,13 @@ SaleItem.propTypes = {
       receipt_number: PropTypes.string,
       issue_date: PropTypes.string,
     }),
+    payments: PropTypes.arrayOf(
+      PropTypes.shape({
+        amount: PropTypes.number,
+        issue_date: PropTypes.string,
+        transaction_number: PropTypes.string,
+      }).isRequired,
+    ).isRequired,
     status: PropTypes.string.isRequired,
   }).isRequired,
 };

@@ -1,0 +1,23 @@
+/* === Filters & Forms === */
+label {
+  display: block;
+  margin-bottom: 0.75rem;
+  font-weight: 500;
+}
+
+select,
+input[type="text"],
+input[type="file"] {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+  margin-top: 0.25rem;
+}
+
+@media (max-width: 768px) {
+  label {
+    font-size: 0.9rem;
+  }
+}

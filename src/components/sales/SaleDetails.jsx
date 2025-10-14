@@ -19,12 +19,8 @@ const SaleDetails = () => {
   return (
     sale && (
       <>
-        <MotorycleDetails key={`motoSaleDetails${sale.motorcycle.factura}`} motorcycle={sale.motorcycle} />
         {sale.customer && (
           <>
-            <td>
-              {sale.customer.dni}
-            </td>
             <td>
               {sale.customer.nombre}
               {' '}
@@ -32,6 +28,14 @@ const SaleDetails = () => {
               {' '}
               {sale.customer.segundoApellido}
             </td>
+            <td>
+              {sale.customer.dni}
+            </td>
+          </>
+        )}
+        <MotorycleDetails key={`motoSaleDetails${sale.motorcycle.factura}`} motorcycle={sale.motorcycle} />
+        {sale.customer && (
+          <>
             <td>
               {sale.customer.direccion}
             </td>
@@ -97,9 +101,13 @@ const SaleDetails = () => {
               }}
             >
               <span>
+                Numero de titulo:
+                {' '}
                 {sale.title.title_number}
               </span>
               <span>
+                Contraseña:
+                {' '}
                 {sale.title.password}
               </span>
             </p>

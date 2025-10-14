@@ -37,11 +37,18 @@ const TitleForm = () => {
   };
   return (
     <form onSubmit={handleSubmit} className="space-y-2 mt-2">
+      <h2>
+        Registro de titulo
+        {' '}
+        {sale.customer.nombre}
+        {' '}
+        {sale.customer.primerApellido}
+      </h2>
       <input
         type="number"
         name="title_number"
-        placeholder="Title Number"
-        value={formData.title_number}
+        placeholder="Numero de titulo"
+        value={formData.title_number === 0 ? 'Numero de titulo' : formData.title_number}
         onChange={handleChange}
         className="border p-2 w-full"
         required
@@ -49,7 +56,7 @@ const TitleForm = () => {
       <input
         type="text"
         name="password"
-        placeholder="Password"
+        placeholder="Contraseña"
         value={formData.password}
         onChange={handleChange}
         className="border p-2 w-full"

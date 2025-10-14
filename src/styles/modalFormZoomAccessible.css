@@ -1,0 +1,25 @@
+/* Responsive adjustments & mobile accessibility only */
+
+.document__preview__modal {
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch; /* smooth scrolling on iOS */
+}
+
+.document__preview__frame {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  transform: translateY(0);
+}
+
+/* ✅ Make modal readable and properly scaled on phones */
+@media (max-width: 768px) {
+  .document__preview__frame {
+    width: 95% !important;
+    padding: 1rem !important;
+    max-height: 85vh !important;
+    font-size: 0.95rem !important;
+  }
+}
+
+.document_preview_close_button:hover {
+  background: darkred;
+}

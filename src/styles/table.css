@@ -1,0 +1,62 @@
+/* === Table === */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1.5rem;
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  font-size: 0.9rem;
+}
+
+th,
+td {
+  border: 1px solid #e5e7eb;
+  padding: 0.5rem;
+  text-align: left;
+  vertical-align: middle;
+}
+
+th {
+  background: #f1f5f9;
+  font-weight: 600;
+}
+
+/* === Buttons inside table === */
+td button {
+  margin: 0.2rem 0;
+  width: 100%;
+}
+
+/* === Mobile Responsiveness === */
+@media (max-width: 768px) {
+  table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  th,
+  td {
+    padding: 0.4rem 0.6rem;
+  }
+
+  td {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.3rem;
+  }
+
+  td button {
+    width: auto;
+    flex: 0 1 auto;
+    min-width: 90px;
+  }
+}
+
+@media (max-width: 480px) {
+  table {
+    font-size: 0.8rem;
+  }
+}

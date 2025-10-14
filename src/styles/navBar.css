@@ -1,0 +1,79 @@
+/* === Primary Navigation Bar === */
+.navBar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: #1e40af;
+  color: white;
+  padding: 0.5rem 1rem;
+  display: flex;
+  justify-content: center;
+  z-index: 1000;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.navBar-primaryNavBar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  list-style: none;
+  gap: 0.5rem;
+}
+
+.navBar-item a {
+  display: block;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  color: white;
+  text-decoration: none;
+  transition: background 0.2s ease;
+}
+
+.navBar-item a:hover,
+.navBar-item a.active {
+  background: #2563eb;
+}
+
+/* === Secondary Navigation Bar === */
+.navBar-salesNavBar {
+  position: fixed;
+  top: 3rem; /* right below the main navbar */
+  left: 0;
+  width: 100%;
+  background: #1e3a8a;
+  color: white;
+  padding: 0.5rem 1rem;
+  display: flex;
+  justify-content: center;
+  z-index: 999;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  list-style: none;
+}
+
+.navBar-salesNavBar .navBar-primaryNavBar {
+  justify-content: center;
+}
+
+/* === Mobile Navbar Adjustments === */
+@media (max-width: 768px) {
+  .navBar,
+  .navBar-salesNavBar {
+    flex-direction: column;
+    align-items: center;
+    padding: 0.5rem;
+  }
+
+  .navBar-primaryNavBar {
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .navBar,
+  .navBar-salesNavBar {
+    padding: 0.4rem;
+  }
+}

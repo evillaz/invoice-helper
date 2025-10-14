@@ -1,0 +1,12 @@
+/* === Layout & Wrapper === */
+.wrapper {
+  padding: 1rem;
+  margin-top: 6.5rem; /* space for two fixed navbars */
+}
+
+@media (max-width: 768px) {
+  .wrapper {
+    padding: 0.75rem;
+    margin-top: 9rem; /* adjust for stacked navbars */
+  }
+}

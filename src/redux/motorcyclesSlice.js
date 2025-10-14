@@ -1,16 +1,20 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { deleteSaleFromDB, saveSaleToDB } from './salesSlice';
 // Fetch motorcycles from DB
+
+const API_BASE_URL = 'http://192.168.15.19:3000';
+
 export const fetchMotorcycles = createAsyncThunk(
   'motorcycles/fetchMotorcycles',
   async (_, { rejectWithValue }) => {
     try {
-      const response = await fetch('http://localhost:3000/api/v1/motorcycles');
+      const response = await fetch(`${API_BASE_URL}/api/v1/motorcycles`);
       if (!response.ok) throw new Error('Error fetching motorcycles from DB');
       const data = await response.json();
       return data.map((d) => ({
         ...d,
         issueDate: d.fecha_emision,
+        savedToDB: true,
       }));
     } catch (error) {
       return rejectWithValue(error.message);
@@ -26,7 +30,7 @@ export const saveMotorcyclesToDB = createAsyncThunk(
       if (newMotorcycles.length === 0) return { message: 'No new motorcycles to save', savedMotorcycles: [] };
       const responses = await Promise.all(
         newMotorcycles.map(async (motorcycle) => {
-          const response = await fetch('http://localhost:3000/api/v1/motorcycles', {
+          const response = await fetch(`${API_BASE_URL}/api/v1/motorcycles`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(motorcycle),
@@ -48,7 +52,7 @@ export const saveMotorcycleToDB = createAsyncThunk(
   async (motorcycle, { rejectWithValue }) => {
     try {
       console.log(motorcycle);
-      const response = await fetch('http://localhost:3000/api/v1/motorcycles', {
+      const response = await fetch(`${API_BASE_URL}/api/v1/motorcycles`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(motorcycle),
@@ -66,7 +70,7 @@ export const deleteMotorcycleFromDB = createAsyncThunk(
   'motorcycles/deleteMotorcycleFromDB',
   async (motorcycleId, { rejectWithValue }) => {
     try {
-      const response = await fetch(`http://localhost:3000/api/v1/motorcycles/${motorcycleId}`, {
+      const response = await fetch(`${API_BASE_URL}/api/v1/motorcycles/${motorcycleId}`, {
         method: 'DELETE',
       });
       if (!response.ok) throw new Error('Error deleting motorcycle from DB');
@@ -81,7 +85,7 @@ export const updateAttribute = createAsyncThunk(
   'motorcycles/updateAttribute',
   async (sentAttribute, { rejectWithValue }) => {
     try {
-      const response = await fetch(`http://localhost:3000/api/v1/motorcycles/${sentAttribute.motorcycleId}/update_attribute`, {
+      const response = await fetch(`${API_BASE_URL}/api/v1/motorcycles/${sentAttribute.motorcycleId}/update_attribute`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -211,6 +215,9 @@ const motorcyclesSlice = createSlice({
           (moto) => (moto.factura === savedSaleMotorcycle
             ? { ...moto, sale: action.payload }
             : moto),
+        );
+        state.selectedMotorcycles = state.selectedMotorcycles.filter(
+          (moto) => moto.factura !== savedSaleMotorcycle,
         );
       })
       .addCase(updateAttribute.pending, (state) => {

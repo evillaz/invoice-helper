@@ -1,6 +1,8 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import formatDate from '../utils/format/formatDate';
 
+const API_BASE_URL = 'http://192.168.15.19:3000';
+
 const SALE_STATUSES = {
   PROSPECT: 'prospect',
   PROCESSED: 'processed',
@@ -59,7 +61,7 @@ export const fetchSales = createAsyncThunk(
   'sales/fetchSales',
   async (_, { rejectWithValue }) => {
     try {
-      const response = await fetch('http://localhost:3000/api/v1/sales');
+      const response = await fetch(`${API_BASE_URL}/api/v1/sales`);
       if (!response.ok) throw new Error('Error fetching sales from DB');
       const data = await response.json();
       const salesData = getSalesDate(data);
@@ -75,7 +77,7 @@ export const saveSaleToDB = createAsyncThunk(
   'sales/saveSaleToDB',
   async (sale, { rejectWithValue }) => {
     try {
-      const response = await fetch('http://localhost:3000/api/v1/sales', {
+      const response = await fetch(`${API_BASE_URL}/api/v1/sales`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -97,7 +99,7 @@ export const deleteSaleFromDB = createAsyncThunk(
   'sales/deleteSalesFromDB',
   async (sale, { rejectWithValue }) => {
     try {
-      const response = await fetch(`http://localhost:3000/api/v1/sales/${sale.id}`, {
+      const response = await fetch(`${API_BASE_URL}/api/v1/sales/${sale.id}`, {
         method: 'DELETE',
       });
       if (!response.ok) throw new Error('Error deleting sale from DB');
@@ -114,7 +116,7 @@ export const updateBoleta = createAsyncThunk(
     const { saleId, boleta } = sale;
 
     try {
-      const response = await fetch(`http://localhost:3000/api/v1/sales/${saleId}/update_boleta`, {
+      const response = await fetch(`${API_BASE_URL}/api/v1/sales/${saleId}/update_boleta`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -137,7 +139,7 @@ export const updateElectronicReceipt = createAsyncThunk(
   async (sale, { rejectWithValue }) => {
     const { saleId, electronic_receipt } = sale;
     try {
-      const response = await fetch(`http://localhost:3000/api/v1/sales/${saleId}/update_receipt`, {
+      const response = await fetch(`${API_BASE_URL}/api/v1/sales/${saleId}/update_receipt`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -160,7 +162,7 @@ export const addPayment = createAsyncThunk(
   async (paymentStructure, { rejectWithValue }) => {
     const { saleId, payment } = paymentStructure;
     try {
-      const response = await fetch(`http://localhost:3000/api/v1/sales/${saleId}/add_payment`, {
+      const response = await fetch(`${API_BASE_URL}/api/v1/sales/${saleId}/add_payment`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -183,7 +185,7 @@ export const deletePayment = createAsyncThunk(
   async (paymentStructure, { rejectWithValue }) => {
     const { saleId, paymentId } = paymentStructure;
     try {
-      const response = await fetch(`http://localhost:3000/api/v1/sales/${saleId}/remove_payment/${paymentId}`, {
+      const response = await fetch(`${API_BASE_URL}/api/v1/sales/${saleId}/remove_payment/${paymentId}`, {
         method: 'DELETE',
       });
       if (!response.ok) throw new Error('Error deleting sale from DB');
@@ -199,7 +201,7 @@ export const addTitle = createAsyncThunk(
   async (titleStructure, { rejectWithValue }) => {
     const { saleId, title } = titleStructure;
     try {
-      const response = await fetch(`http://localhost:3000/api/v1/sales/${saleId}/add_title`, {
+      const response = await fetch(`${API_BASE_URL}/api/v1/sales/${saleId}/add_title`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -222,7 +224,7 @@ export const deleteTitle = createAsyncThunk(
   async (titleStructure, { rejectWithValue }) => {
     const { saleId, titleId } = titleStructure;
     try {
-      const response = await fetch(`http://localhost:3000/api/v1/sales/${saleId}/remove_payment/${titleId}`, {
+      const response = await fetch(`${API_BASE_URL}/api/v1/sales/${saleId}/remove_payment/${titleId}`, {
         method: 'DELETE',
       });
       if (!response.ok) throw new Error('Error deleting sale from DB');
@@ -265,7 +267,7 @@ const salesSlice = createSlice({
         state.status = 'loading';
       })
       .addCase(fetchSales.fulfilled, (state, action) => {
-        state.status = 'succeeded';
+        state.status = 'sale fetched succesfully';
         state.sales = action.payload.map((sale) => (
           determineSaleStatus(sale)
         ));
@@ -278,10 +280,10 @@ const salesSlice = createSlice({
         state.status = 'loading';
       })
       .addCase(saveSaleToDB.fulfilled, (state, action) => {
-        state.status = 'succeeded';
+        state.status = 'sale created succesfully';
         state.message = action.payload.message;
-        transformSaleDate(action.payload);
-        determineSaleStatus(action.payload);
+        action.payload = transformSaleDate(action.payload);
+        action.payload = determineSaleStatus(action.payload);
         state.sales = [...state.sales, action.payload];
       })
       .addCase(saveSaleToDB.rejected, (state, action) => {

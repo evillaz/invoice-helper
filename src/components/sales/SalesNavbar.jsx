@@ -15,7 +15,7 @@ const SalesNavBar = () => {
 
   return (
     <>
-      <NavBar links={links} />
+      <NavBar links={links} navBarType="salesNavBar" />
       <Outlet />
     </>
   );

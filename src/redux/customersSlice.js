@@ -1,10 +1,12 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
+const API_BASE_URL = 'http://192.168.15.19:3000';
+
 export const fetchCustomers = createAsyncThunk(
   'customers/fetchCustomers',
   async (_, { rejectWithValue }) => {
     try {
-      const response = await fetch('http://localhost:3000/api/v1/customers');
+      const response = await fetch(`${API_BASE_URL}/api/v1/customers`);
       if (!response.ok) throw new Error('Error fetching motorcycles from DB');
       const data = await response.json();
       return data;
@@ -19,7 +21,7 @@ export const saveCustomerToDB = createAsyncThunk(
   async (customer, { rejectWithValue }) => {
     try {
       console.log(customer);
-      const response = await fetch('http://localhost:3000/api/v1/customers', {
+      const response = await fetch(`${API_BASE_URL}/api/v1/customers`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ customer }),

@@ -72,6 +72,9 @@ const MotorcycleView = () => {
     [searchQuery, setSearchQuery],
   );
 
+  console.log('🌐 Hostname detected:', window.location.hostname);
+  console.log(motorcycles);
+
   return (
     <>
       <FilterByDate
@@ -110,6 +113,13 @@ const MotorcycleView = () => {
           )}
         </div>
       </SearchContext.Provider>
+      <div style={{ padding: '1rem', fontFamily: 'monospace' }}>
+        <h2>Network Test</h2>
+        <p>
+          Current hostname:
+          <strong>{window.location.hostname}</strong>
+        </p>
+      </div>
     </>
   );
 };

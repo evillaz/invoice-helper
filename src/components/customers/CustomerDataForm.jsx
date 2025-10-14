@@ -24,7 +24,7 @@ const CustomerDataForm = ({
           type="text"
           id="primerApellido"
           value={primerApellido}
-          onChange={(e) => onChangePrimerApellido(e.target.value)}
+          onChange={(e) => onChangePrimerApellido(e.target.value.toUpperCase())}
         />
       </label>
     </div>
@@ -35,7 +35,7 @@ const CustomerDataForm = ({
           type="text"
           id="segundoApellido"
           value={segundoApellido}
-          onChange={(e) => onChangeSegundoApellido(e.target.value)}
+          onChange={(e) => onChangeSegundoApellido(e.target.value.toUpperCase())}
         />
       </label>
     </div>
@@ -46,7 +46,7 @@ const CustomerDataForm = ({
           type="text"
           id="nombre"
           value={nombre}
-          onChange={(e) => onChangeNombre(e.target.value)}
+          onChange={(e) => onChangeNombre(e.target.value.toUpperCase())}
         />
       </label>
     </div>
@@ -57,7 +57,7 @@ const CustomerDataForm = ({
           type="text"
           id="direccion"
           value={direccion}
-          onChange={(e) => onChangeDireccion(e.target.value)}
+          onChange={(e) => onChangeDireccion(e.target.value.toUpperCase())}
         />
       </label>
     </div>
