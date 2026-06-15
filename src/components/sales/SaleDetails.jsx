@@ -34,7 +34,8 @@ const SaleDetails = () => {
           </>
         )}
         <MotorycleDetails key={`motoSaleDetails${sale.motorcycle.factura}`} motorcycle={sale.motorcycle} />
-        {sale.customer && (
+        {/*
+        sale.customer && (
           <>
             <td>
               {sale.customer.direccion}
@@ -49,7 +50,8 @@ const SaleDetails = () => {
               {sale.customer.distrito}
             </td>
           </>
-        )}
+        )
+        */}
         <td>
           {sale.total_amount}
         </td>

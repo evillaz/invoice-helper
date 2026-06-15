@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+import safeCopytoClipboard from '../../utils/text/safeCopytoClipboard';
 
 const CopyDescriptionButton = ({ motorcycle }) => {
   const handleCopyDescription = () => {
@@ -10,17 +11,20 @@ const CopyDescriptionButton = ({ motorcycle }) => {
       dua,
       anio,
     } = motorcycle;
-    const description = `Modelo: ${modelo} /Marca: ${marca} /Numero de chasis: ${numero_de_chasis} /Numero de motor: ${numero_de_motor} /DUA: ${dua} /Año: ${anio}`;
-    navigator.clipboard.writeText(description)
-      .then(() => alert('Descripcion de moto para boleta copiada!'))
-      .catch((err) => console.error('Failed to copy', err));
+
+    const description = `Modelo: ${modelo} / Marca: ${marca} / `
+      + `Numero de chasis: ${numero_de_chasis} / `
+      + `Numero de motor: ${numero_de_motor} / `
+      + `DUA: ${dua} / Año: ${anio}`;
+
+    safeCopytoClipboard(description);
   };
 
   return (
     <td>
       <button
         type="button"
-        onClick={() => handleCopyDescription()}
+        onClick={handleCopyDescription}
         className="description-button"
       >
         Descripcion Boleta

@@ -9,7 +9,8 @@ const SaleElectronicReceiptInput = () => {
   const { sale } = useSale();
   const dispatch = useDispatch();
   const [receiptNumber, setReceiptNumber] = useState('');
-  const [issueDate, setIssueDate] = useState(new Date());
+  const today = new Date().toISOString().split('T')[0];
+  const [issueDate, setIssueDate] = useState(today);
   const [editReceipt, setEditReceipt] = useState(false);
 
   const handleChangeReceipt = (receipt) => {
@@ -30,6 +31,7 @@ const SaleElectronicReceiptInput = () => {
       issue_date: issueDate,
     };
     dispatch(updateElectronicReceipt({ saleId, electronic_receipt }));
+    setEditReceipt(false);
   };
   return (
     (sale.electronic_receipt && !editReceipt) ? (
@@ -58,6 +60,8 @@ const SaleElectronicReceiptInput = () => {
             <input
               id={`receiptIssueDate${sale.id}`}
               type="date"
+              value={issueDate}
+              onChange={(e) => setIssueDate(e.target.value)}
               onBlur={(e) => handleChangeIssueDate(e.target.value)}
               style={{ marginLeft: '4px' }}
             />

@@ -17,6 +17,7 @@ import Boleta from '../documents/Boleta';
 import TitleForm from './TitleForm';
 import GetVouchersPdf from '../common/GetVouchersPdf';
 import CopySnippetButton from './CopySnippetButton';
+import CopyElectronicInvoiceSnippetButton from './CopyElectronicInvoiceSnippetButton';
 
 const SaleItem = ({ sale }) => {
   const statusClasses = {
@@ -61,6 +62,10 @@ const SaleItem = ({ sale }) => {
         <ModalForm RenderComponent={PaymentForm} buttonLabel="Agregar Pago" />
         <ModalForm RenderComponent={TitleForm} buttonLabel="Agregar Titulo" />
         <CopyDescriptionButton motorcycle={sale.motorcycle} />
+        <CopyElectronicInvoiceSnippetButton
+          motorcycle={sale.motorcycle}
+          amount={sale.total_amount}
+        />
         <CopySnippetButton
           customer={sale.customer}
           payments={sale.payments}

@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
-const API_BASE_URL = 'http://192.168.15.19:3000';
+const API_BASE_URL = 'http://192.168.15.14:3000';
 
 export const fetchCustomers = createAsyncThunk(
   'customers/fetchCustomers',
